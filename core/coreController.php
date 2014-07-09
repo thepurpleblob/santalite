@@ -7,11 +7,13 @@ class coreController {
     /**
      * render a view 
      */
-    public function View($viewname, $variables) {
+    public function View($viewname, $variables=null) {
         global $CFG;
 
         // extract here limits scope
-        extract($variables);
+        if ($variables) {
+            extract($variables);
+        }
         require($CFG->basepath . '/view/' . $viewname . '.php');
     }
 
@@ -21,7 +23,7 @@ class coreController {
     public function Url($route) {
         global $CFG;
 
-        return 
+        return $CFG->www . '/' . $route;
     }
 
 }
