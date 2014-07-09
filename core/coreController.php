@@ -15,4 +15,13 @@ class coreController {
         require($CFG->basepath . '/view/' . $viewname . '.php');
     }
 
+    /**
+     * Create a url from route
+     */
+    public function Url($route) {
+        global $CFG;
+
+        return 
+    }
+
 }
