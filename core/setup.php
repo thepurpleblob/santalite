@@ -21,10 +21,11 @@ function __autoload($name) {
 // establish database connection
 if ($CFG->dsn) {
     try {
-        $DB = new PDO($CFG->dsn);
+        $DB = new \PDO($CFG->dsn);
     } catch (PDOException $e) {
         die( "Database connection failed: " . $e->getMessage());
     }
 } else {
     $DB = null;
 }
+

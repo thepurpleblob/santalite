@@ -3,6 +3,16 @@
 namespace core;
 
 class coreController {
+    
+    protected $gump;
+    
+    protected $data;
+    
+    public function __construct() {
+        require(dirname(__FILE__) . '/GUMP/gump.class.php');
+        $this->gump = new GUMP();
+        $this->data = $this->gump->sanitize($_POST);
+    }
 
     /**
      * render a view 

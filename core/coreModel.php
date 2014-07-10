@@ -21,11 +21,24 @@ class coreModel {
     public function Exec($sql) {
         try {
             $rowcount = $this->DB->exec($sql);
-        } catch (Exception $e) {
-            die( 'Database Exec error ' . $this->db->errorInfo());
+        } catch (PDOException $e) {
+            die( 'Database Exec error ' . $this->DB->errorInfo());
         }
 
         return $rowcount;
+    }
+    
+    /**
+     * Wrapper around PDO::query
+     */
+    public function Query($sql) {
+        try {
+            $result = $this->DB->query($sql);   
+        } catch (PDOException $e) {
+            die( 'Database Query error ' . $this->DB->errorInfo());
+        }
+        $data = $result->fetchAll(\PDO::FETCH_CLASS, 'stdClass');
+        return $data;
     }
 
 }
