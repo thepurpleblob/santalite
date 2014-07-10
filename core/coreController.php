@@ -10,7 +10,7 @@ class coreController {
     
     public function __construct() {
         require(dirname(__FILE__) . '/GUMP/gump.class.php');
-        $this->gump = new GUMP();
+        $this->gump = new \GUMP();
         $this->data = $this->gump->sanitize($_POST);
     }
 

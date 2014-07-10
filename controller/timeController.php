@@ -15,5 +15,22 @@ class timeController extends coreController {
         $this->View('time_index', array('times'=>$times));
         $this->View('footer');
     }
+    
+    /**
+     * Add or edit time
+     */
+    function editAction($timeid) {
+        $tm = new timeModel();
+        if (!$timeid) {
+            $time = new \stdClass();
+        } else {
+            // read existing time from db
+        }
+        
+        // display form
+        $this->View('header');
+        $this->View('time_edit', array('timeid'=>$timeid));
+        $this->View('footer');       
+    }
 
 }
