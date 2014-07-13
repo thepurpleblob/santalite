@@ -61,5 +61,17 @@ class dateController extends coreController {
         ));
         $this->View('footer');       
     }
+    
+    /**
+     * Show delete warning
+     */
+    public function deleteAction($dateid) {
+        $this->View('header');
+        $this->View('datetime_delete', array(
+            'confirmurl' => $this->Url('date/confirm/'.$dateid),
+            'cancelurl' => $this->Url('date/index'),
+        ));
+        $this->View('footer');
+    }
 
 }
