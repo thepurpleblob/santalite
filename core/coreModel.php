@@ -2,6 +2,9 @@
 
 namespace core;
 
+define('QUERY_SINGLE', 1);
+define('QUERY_ARRAY', 2);
+
 class coreModel {
 
     protected $DB;
@@ -19,10 +22,11 @@ class coreModel {
      * Wrapper around PDO::exec
      */
     public function Exec($sql) {
-        try {
-            $rowcount = $this->DB->exec($sql);
-        } catch (PDOException $e) {
-            die( 'Database Exec error ' . $this->DB->errorInfo());
+        $rowcount = $this->DB->exec($sql);
+        $error = $this->DB->errorInfo();
+        if ($error[1]) {
+            echo "Database exec error - "; var_dump($error);
+            die;
         }
 
         return $rowcount;
@@ -31,14 +35,30 @@ class coreModel {
     /**
      * Wrapper around PDO::query
      */
-    public function Query($sql) {
-        try {
-            $result = $this->DB->query($sql);   
-        } catch (PDOException $e) {
-            die( 'Database Query error ' . $this->DB->errorInfo());
+    public function Query($sql, $rt=QUERY_ARRAY) {
+        $result = $this->DB->query($sql);  
+        $error = $this->DB->errorInfo();
+        if ($error[1]) {
+            echo "Database query error - "; var_dump($error);
+            die;
         }
         $data = $result->fetchAll(\PDO::FETCH_CLASS, 'stdClass');
-        return $data;
+        
+        // return single record if required
+        if ($rt==QUERY_SINGLE) {
+            if (count($data) > 1) {
+                echo "Database query error - more than one records found";
+                die;
+            } else {
+                if (count($data)==1) {
+                    return $data[0];
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            return $data;
+        }    
     }
 
 }

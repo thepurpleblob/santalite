@@ -7,7 +7,7 @@ use model\timeModel;
 
 class timeController extends coreController {
 
-    function indexAction() {
+    public function indexAction() {
         $tm = new timeModel;
         $times = $tm->getAllTimes();
     //echo "<pre>"; var_dump($times); die;
@@ -19,17 +19,44 @@ class timeController extends coreController {
     /**
      * Add or edit time
      */
-    function editAction($timeid) {
+    public function editAction($timeid) {
         $tm = new timeModel();
+        $gump = $this->getGump();
+        $errors = null;
+        
+        // get time object
         if (!$timeid) {
             $time = new \stdClass();
+            $time->id = 0;
+            $time->time = time();
         } else {
-            // read existing time from db
+            $time = $tm->getTime($timeid);
         }
         
+        // process data
+        if ($request = $this->getRequest()) {
+            if (!empty($request['cancel'])) {
+                $this->redirect($this->Url('time/index'));
+            }
+            
+            $gump->validation_rules(array(
+                'time' => 'required|time',                
+            ));
+            if ($validated_data = $gump->run($request)) {
+                $unixtime = strtotime($request['time']); 
+                $time->time = $unixtime;
+                $tm->updateTime($time);
+                $this->redirect($this->Url('time/index'));
+            }
+            $errors = $gump->get_readable_errors();
+        }
+ 
         // display form
         $this->View('header');
-        $this->View('time_edit', array('timeid'=>$timeid));
+        $this->View('time_edit', array(
+            'time'=>$time,
+            'errors'=>$errors,
+        ));
         $this->View('footer');       
     }
 

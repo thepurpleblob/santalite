@@ -25,6 +25,7 @@ if ($CFG->dsn) {
     } catch (PDOException $e) {
         die( "Database connection failed: " . $e->getMessage());
     }
+    $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 } else {
     $DB = null;
 }
