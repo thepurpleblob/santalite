@@ -73,5 +73,13 @@ class dateController extends coreController {
         ));
         $this->View('footer');
     }
-
+    
+    /**
+     * Confirm delete warning
+     */
+    public function confirmAction($dateid) {
+        $tm = new dateModel();
+        $tm->deleteDate($dateid);
+        $this->redirect($this->Url('date/index'));
+    }
 }

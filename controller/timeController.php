@@ -59,5 +59,27 @@ class timeController extends coreController {
         ));
         $this->View('footer');       
     }
+    
+    
+    /**
+     * Show delete warning
+     */
+    public function deleteAction($timeid) {
+        $this->View('header');
+        $this->View('datetime_delete', array(
+            'confirmurl' => $this->Url('time/confirm/'.$timeid),
+            'cancelurl' => $this->Url('time/index'),
+        ));
+        $this->View('footer');
+    }
+    
+    /**
+     * Confirm delete warning
+     */
+    public function confirmAction($timeid) {
+        $tm = new timeModel();
+        $tm->deleteTime($timeid);
+        $this->redirect($this->Url('time/index'));
+    }    
 
 }

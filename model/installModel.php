@@ -21,5 +21,15 @@ class installModel extends coreModel {
             date INTEGER
             )';
         $this->Exec($sql);
+        
+        // limits
+        $sql = 'CREATE TABLE IF NOT EXISTS trainlimit (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timeid INTEGER,
+            dateid INTEGER,
+            maxlimit INTEGER,
+            partysize INTEGER
+            )';
+        $this->Exec($sql);
     }
 }

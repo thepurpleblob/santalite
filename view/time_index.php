@@ -31,4 +31,5 @@
 
 <div class="santa-buttons">
     <a href="<?php echo $this->Url('time/edit/0') ?>" class="btn btn-info">New service time</a>
+    <a href="<?php echo $this->Url('admin/index') ?>" class="btn btn-warning">Cancel </a>
 </div>

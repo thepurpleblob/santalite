@@ -25,4 +25,9 @@ class dateModel extends coreModel {
             $this->Exec($sql);
         }
     }
+    
+    function deleteDate($dateid) {
+        $sql = "DELETE FROM traindate WHERE id=$dateid";
+        $this->Exec($sql);
+    }
 }

@@ -4,15 +4,20 @@ namespace model;
 
 use core\coreModel;
 
-class timeModel extends coreModel {
+class limitModel extends coreModel {
 
-    function getAllTimes() {
-        $sql = "SELECT * FROM traintime ORDER BY time";
+    function getAllLimits() {
+        $sql = "SELECT * FROM trainlimit ORDER BY time";
         return $this->Query($sql);
     }
     
-    function getTime($timeid) {
-        $sql = "SELECT * FROM traintime WHERE id=$timeid";
+    function getLimit($limitid) {
+        $sql = "SELECT * FROM trainlimit WHERE id=$limitid";
+        return $this->Query($sql, QUERY_SINGLE);
+    }
+    
+    function getLimitByTime($dateid, $timeid) {
+        $sql = "SELECT * FROM trainlimit WERE dateid=$dateid AND timeid=$timeid";
         return $this->Query($sql, QUERY_SINGLE);
     }
     
@@ -25,9 +30,5 @@ class timeModel extends coreModel {
             $this->Exec($sql);
         }
     }
-    
-    function deleteTime($timeid) {
-        $sql = "DELETE FROM traintime WHERE id=$timeid";
-        $this->Exec($sql);
-    }    
+   
 }
