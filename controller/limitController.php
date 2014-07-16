@@ -22,6 +22,9 @@ class limitController extends coreController {
         // get times and dates
         $times = $tm->getAllTimes();
         $dates = $dm->getAllDates();
+        
+        // get limits
+        $limits = $lm->getFormLimits($dates, $times);
 
         // process data
         if ($request = $this->getRequest()) {
@@ -29,17 +32,20 @@ class limitController extends coreController {
                 $this->redirect($this->Url('date/index'));
             }
 
-            // date validation is weird
-            $request['date'] = str_replace('/', '-', $request['date']);
-
-            $gump->validation_rules(array(
-                'date' => 'required|time',
-            ));
+            // Loop through possibilities to validate
+            $rules = array();
+            foreach ($dates as $date) {
+                foreach ($times as $time) {
+                    $index = "{$date->id}_{$time->id}";
+                    $rules['limit'.$index] = 'required|integer';
+                    $rules['party'.$index] = 'required|integer';
+                }
+            }
+            $gump->validation_rules($rules);
+            
             if ($validated_data = $gump->run($request)) {
-                $unixtime = strtotime($request['date']);
-                $date->date = $unixtime;
-                $tm->updateDate($date);
-                $this->redirect($this->Url('date/index'));
+                $lm->saveForm($dates, $times, $request);
+                $this->redirect($this->Url('limit/index'));
             }
             $errors = $gump->get_readable_errors();
         }
@@ -49,6 +55,7 @@ class limitController extends coreController {
         $this->View('limits', array(
             'dates'=>$dates,
         	'times'=>$times,
+            'limits'=>$limits,
             'errors'=>$errors,
         ));
         $this->View('footer');

@@ -10,3 +10,8 @@ $CFG->dbpass = '';
 
 // paths
 $CFG->www = '';
+
+// defaults for limits
+$CFG->default_limit = 100;
+$CFG->default_party = 8;
+
