@@ -1,6 +1,7 @@
 <h2>Limits</h2>
 
 <form role="form" method="post" action="<?php echo $this->Url('limit/index/') ?>">
+    <?php if ($errors) {$this->formErrors($errors);} ?>
     <?php foreach($dates as $date) { ?>
         <h3><?php echo date('l d/m/Y', $date->date); ?></h3>
         <table class="table">

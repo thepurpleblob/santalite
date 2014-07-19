@@ -29,7 +29,7 @@ class limitController extends coreController {
         // process data
         if ($request = $this->getRequest()) {
             if (!empty($request['cancel'])) {
-                $this->redirect($this->Url('date/index'));
+                $this->redirect($this->Url('admin/index'));
             }
 
             // Loop through possibilities to validate
