@@ -13,14 +13,14 @@ class installModel extends coreModel {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             time INTEGER
             )';
-        $this->Exec($sql);
+        \ORM::for_table('traintime')->raw_execute($sql);
         
         // traindate
         $sql =  'CREATE TABLE IF NOT EXISTS traindate (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             date INTEGER
             )';
-        $this->Exec($sql);
+        \ORM::for_table('traindate')->raw_execute($sql);
         
         // limits
         $sql = 'CREATE TABLE IF NOT EXISTS trainlimit (
@@ -30,7 +30,7 @@ class installModel extends coreModel {
             maxlimit INTEGER,
             partysize INTEGER
             )';
-        $this->Exec($sql);
+        \ORM::for_table('trainlimit')->raw_execute($sql);
         
         // fares
         // this will only be a single record, so we'll create it now
@@ -39,11 +39,13 @@ class installModel extends coreModel {
             adult INTEGER,
             child INTEGER
             )';
-        $this->Exec($sql);      
-        $sql = 'SELECT * FROM fares WHERE id=1';
-        if (!$this->Query($sql, QUERY_SINGLE)) {
-            $sql = 'INSERT INTO fares (id, adult, child) VALUES (1, 900, 900)';
-            $this->Exec($sql);
+        \ORM::for_table('fares')->raw_execute($sql);      
+        if (!\ORM::for_table('fares')->find_one(1)) {
+            $fare = \ORM::for_table('fares')->create();
+            $fare->id = 1;
+            $fare->adult = 900;
+            $fare->child = 900;
+            $fare->save();
         }
         
         // security
@@ -54,13 +56,45 @@ class installModel extends coreModel {
             password TEXT,
             role TEXT
             )';
-        $this->Exec($sql);
-        $sql = "SELECT * FROM user WHERE username='admin'";
-        if (!$this->Query($sql, QUERY_SINGLE)) {
-            $password = md5('admin');
-            $sql = "INSERT INTO user (username, fullname, password, role)
-                VALUES ('admin', 'Administrator', '$password', 'admin')";
-            $this->Exec($sql);
+        \ORM::for_table('traintime')->raw_execute($sql);
+        if (!\ORM::for_table('user')->where(array('username'=>'admin'))->find_one()) {
+            $user = \ORM::for_table('user')->create();
+            $user->username ='admin';
+            $user->fullname = 'Administrator';
+            $user->password = md5('admin');
+            $user->role = 'admin';
+            $user->save();
         }
+        
+        // Purchase record
+        $sql = 'CREATE TABLE IF NOT EXISTS purchase (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type TEXT,
+            day INTEGER,
+            train INTEGER,
+            bkgref TEXT,
+            surname TEXT,
+            title TEXT,
+            firstname TEXT,
+            address1 TEXT,
+            address2 TEXT,
+            address3 TEXT,
+            address4 TEXT,
+            postcode TEXT,
+            phone TEXT,
+            email TEXT,
+            adult INTEGER,
+            child INTEGER,
+            infant INTEGER,
+            oap INTEGER,
+            childages TEXT,
+            comment TEXT,
+            payment INTEGER,
+            bkgdate INTEGER,
+            card INTEGER,
+            action INTEGER,
+            season INTEGER
+            )';
+        \ORM::for_table('purchase')->raw_execute($sql);
     }
 }

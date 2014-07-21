@@ -13,3 +13,10 @@
     <div class="row">
         <div class="col-md-2">&nbsp</div>
         <div class="col-md-8">
+            <h1>SRPS Santa Specials</h1>
+            <?php
+            $user = $this->getUser();
+            if ($user) {
+                echo "<p>You are logged in as {$user->fullname}</p>";
+            }
+            ?>
