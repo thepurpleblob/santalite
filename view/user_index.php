@@ -20,7 +20,7 @@
                 <a href="<?php echo $this->Url('user/edit/'.$user->id); ?>" class="btn btn-info">
                     <i class="fa fa-cogs"></i> Edit</a>
                 <?php if ($user->username != 'admin') { ?>    
-                    <a href="<?php echo $this->Url('date/delete/'.$date->id); ?>" class="btn btn-danger">
+                    <a href="<?php echo $this->Url('user/delete/'.$user->id); ?>" class="btn btn-danger">
                         <i class="fa fa-undo"></i> Delete</a>
                 <?php } ?>    
             </td>

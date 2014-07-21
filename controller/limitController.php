@@ -4,8 +4,6 @@ namespace controller;
 
 use core\coreController;
 use model\limitModel;
-use model\dateModel;
-use model\timeModel;
 
 class limitController extends coreController {
 
@@ -13,15 +11,14 @@ class limitController extends coreController {
      * Add or edit limits
      */
     public function indexAction() {
-        $tm = new timeModel();
-        $dm = new dateModel();
-        $lm = new limitModel();
+        $this->require_login('organiser', $this->Url('limit/index'));
+        $lm =  new limitModel();
         $gump = $this->getGump();
         $errors = null;
 
         // get times and dates
-        $times = $tm->getAllTimes();
-        $dates = $dm->getAllDates();
+        $times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
+        $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
         
         // get limits
         $limits = $lm->getFormLimits($dates, $times);

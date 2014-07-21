@@ -23,11 +23,11 @@ class coreForm {
         echo '</div>';
     }
     
-    public function password($name, $label, $value) {
+    public function password($name, $label) {
         $id = $name . 'Password';
         echo '<div class="form-group">';
         echo '    <label for="'.$id.'">'.$label.'</label>';
-        echo '    <input type="password" class="form-control" name="'.$name.'" id="'.$id.'" value="'.$value.'" />';
+        echo '    <input type="password" class="form-control" name="'.$name.'" id="'.$id.'" />';
         echo '</div>';
     }   
     

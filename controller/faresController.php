@@ -3,7 +3,6 @@
 namespace controller;
 
 use core\coreController;
-use model\faresModel;
 
 class faresController extends coreController {
     
@@ -11,12 +10,12 @@ class faresController extends coreController {
      * Add or edit time
      */
     public function indexAction() {
-        $fm = new faresModel();
+        $this->require_login('organiser', $this->Url('fares/index'));
         $gump = $this->getGump();
         $errors = null;
         
         // get fares object
-        if (!$fares = $fm->getFares()) {
+        if (!$fares = \ORM::for_table('fares')->find_one(1)) {
             throw new \Exception('Fares record is missing or does not have id=1');
         }
         
@@ -33,7 +32,7 @@ class faresController extends coreController {
             if ($validated_data = $gump->run($request)) {
                 $fares->adult = round($request['adult'] * 100, 0);
                 $fares->child = round($request['child'] * 100, 0);
-                $fm->updateFares($fares);
+                $fares->save();
                 $this->redirect($this->Url('admin/index'));
             }
             $errors = $gump->get_readable_errors();
@@ -52,6 +51,7 @@ class faresController extends coreController {
      * Show delete warning
      */
     public function deleteAction($dateid) {
+        $this->require_login('organiser', $this->Url('fares/index'));
         $this->View('header');
         $this->View('datetime_delete', array(
             'confirmurl' => $this->Url('date/confirm/'.$dateid),
@@ -64,6 +64,7 @@ class faresController extends coreController {
      * Confirm delete warning
      */
     public function confirmAction($dateid) {
+        $this->require_login('organiser', $this->Url('fares/index'));
         $tm = new dateModel();
         $tm->deleteDate($dateid);
         $this->redirect($this->Url('date/index'));

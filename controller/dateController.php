@@ -3,13 +3,12 @@
 namespace controller;
 
 use core\coreController;
-use model\dateModel;
 
 class dateController extends coreController {
 
     public function indexAction() {
-        $tm = new dateModel;
-        $dates = $tm->getAllDates();
+        $this->require_login('organiser', $this->Url('date/index'));
+        $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
         $this->View('header');
         $this->View('date_index', array('dates'=>$dates));
         $this->View('footer');
@@ -19,17 +18,17 @@ class dateController extends coreController {
      * Add or edit time
      */
     public function editAction($dateid) {
-        $tm = new dateModel();
+        $this->require_login('organiser', $this->Url('date/index'));
         $gump = $this->getGump();
         $errors = null;
         
         // get time object
         if (!$dateid) {
-            $date = new \stdClass();
+            $date = \ORM::for_table('traindate')->create();
             $date->id = 0;
             $date->date = time();
         } else {
-            $date = $tm->getDate($dateid);
+            $date = \ORM::for_table('traindate')->find_one($dateid);
         }
         
         // process data
@@ -47,7 +46,7 @@ class dateController extends coreController {
             if ($validated_data = $gump->run($request)) {
                 $unixtime = strtotime($request['date']); 
                 $date->date = $unixtime;
-                $tm->updateDate($date);
+                $date->save();
                 $this->redirect($this->Url('date/index'));
             }
             $errors = $gump->get_readable_errors();
@@ -66,6 +65,7 @@ class dateController extends coreController {
      * Show delete warning
      */
     public function deleteAction($dateid) {
+        $this->require_login('organiser', $this->Url('date/index'));
         $this->View('header');
         $this->View('datetime_delete', array(
             'confirmurl' => $this->Url('date/confirm/'.$dateid),
@@ -78,8 +78,9 @@ class dateController extends coreController {
      * Confirm delete warning
      */
     public function confirmAction($dateid) {
-        $tm = new dateModel();
-        $tm->deleteDate($dateid);
+        $this->require_login('organiser', $this->Url('date/index'));
+        $date = \ORM::for_table('traindate')->find_one($dateid);
+        $date->delete();
         $this->redirect($this->Url('date/index'));
     }
 }

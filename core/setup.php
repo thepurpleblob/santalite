@@ -19,14 +19,10 @@ function __autoload($name) {
 // MAIN SETUP STUFF
 
 // establish database connection
-if ($CFG->dsn) {
-    try {
-        $DB = new \PDO($CFG->dsn);
-    } catch (PDOException $e) {
-        die( "Database connection failed: " . $e->getMessage());
-    }
-    $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-} else {
-    $DB = null;
-}
+require_once('idiorm/idiorm.php');
+\ORM::configure($CFG->dsn);
+
+// start the session
+session_name('SRPS_Santas');
+session_start();
 

@@ -3,14 +3,12 @@
 namespace controller;
 
 use core\coreController;
-use model\timeModel;
 
 class timeController extends coreController {
 
     public function indexAction() {
-        $tm = new timeModel;
-        $times = $tm->getAllTimes();
-    //echo "<pre>"; var_dump($times); die;
+        $this->require_login('organiser', $this->Url('time/index'));
+        $times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
         $this->View('header');
         $this->View('time_index', array('times'=>$times));
         $this->View('footer');
@@ -20,17 +18,17 @@ class timeController extends coreController {
      * Add or edit time
      */
     public function editAction($timeid) {
-        $tm = new timeModel();
+        $this->require_login('organiser', $this->Url('time/index'));
         $gump = $this->getGump();
         $errors = null;
         
         // get time object
         if (!$timeid) {
-            $time = new \stdClass();
+            $time = \ORM::for_table('traintime')->create();
             $time->id = 0;
             $time->time = time();
         } else {
-            $time = $tm->getTime($timeid);
+            $time = \ORM::for_table('traintime')->find_one($timeid);
         }
         
         // process data
@@ -45,7 +43,7 @@ class timeController extends coreController {
             if ($validated_data = $gump->run($request)) {
                 $unixtime = strtotime($request['time']); 
                 $time->time = $unixtime;
-                $tm->updateTime($time);
+                $time->save();
                 $this->redirect($this->Url('time/index'));
             }
             $errors = $gump->get_readable_errors();
@@ -65,6 +63,7 @@ class timeController extends coreController {
      * Show delete warning
      */
     public function deleteAction($timeid) {
+        $this->require_login('organiser', $this->Url('time/index'));
         $this->View('header');
         $this->View('datetime_delete', array(
             'confirmurl' => $this->Url('time/confirm/'.$timeid),
@@ -77,8 +76,9 @@ class timeController extends coreController {
      * Confirm delete warning
      */
     public function confirmAction($timeid) {
-        $tm = new timeModel();
-        $tm->deleteTime($timeid);
+        $this->require_login('organiser', $this->Url('time/index'));
+        $time = \ORM::for_table('traintime')->find_one($timeid);
+        $time->delete();
         $this->redirect($this->Url('time/index'));
     }    
 

@@ -14,6 +14,23 @@ class coreController {
         \GUMP::add_validator("time", function($field, $input, $param=null) {
             return strtotime($input[$field]) !== false;
         });
+        
+        // valid role
+        \GUMP::add_validator('role', function($field, $input, $param=null) {
+            $role = $input[$field];
+            return ($role=='admin') || ($role=='organiser');    
+        });
+        
+        // valid password
+        \GUMP::add_validator('password', function($field, $input, $param=null) {
+            $password = $input['password'];
+            $username = $input['username'];
+            $user = \ORM::for_table('user')->where(array(
+                'username' => $username,
+                'password' => md5($password),
+                ))->find_one();
+            return !($user === false);
+        });
     }
     
     public function __construct() {
@@ -83,9 +100,41 @@ class coreController {
     /**
      * Redirect to some other location
      */
-    function redirect($url) {
+    public function redirect($url) {
         header("Location: $url");
         die;
+    }
+    
+    /**
+     * Check for login/security
+     */
+    public function require_login($role, $wantsurl) {
+        if (!empty($_SESSION['user'])) {
+            $user = $_SESSION['user'];
+            if ($role=='admin') {
+                if ($user->role == 'admin') {
+                    return true;
+                } else {
+                    $this->redirect($this->Url('user/roleerror'));
+                }
+            } else {
+                return true;
+            }
+        }
+        
+        $_SESSION['wantsurl'] = $wantsurl;
+        $this->redirect($this->Url('user/login'));
+    }
+    
+    /**
+     * Get logged in user
+     */
+    public function getUser() {
+        if (!empty($_SESSION['user'])) {
+            return $_SESSION['user'];
+        } else {
+            return false;
+        }
     }
 
 }
