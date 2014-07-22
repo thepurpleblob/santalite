@@ -2,9 +2,8 @@
 
 namespace model;
 
-use core\coreModel;
 
-class installModel extends coreModel {
+class installModel {
 
     function install_tables() {
         
