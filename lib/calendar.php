@@ -18,7 +18,7 @@ class calendar {
 
     public function render($daysinmonth, $firstday) {
         $days = $this->isoDays();
-        $html = '<table class="table santa_table">';
+        $html = '<table class="table table-bordered santa-table">';
         $html .= '<thead>';
         $html .= '<tr>';
         foreach ($days as $day) {
@@ -37,11 +37,11 @@ class calendar {
                 	$dom = 1;
                 }
                 if (!$dom or ($dom > $daysinmonth)) {
-                	$html .= '<td>&nbsp;</td>';
+                	$html .= '<td class="santa-cell">&nbsp;</td>';
                 } else {
-                	$html .= '<td>'.$dom.'</td>';
+                	$html .= '<td class="santa-cell">'.$dom.'</td>';
+                    $dom++;
                 }
-                $dom++;
             }
             $html .= '</tr>';
         }
@@ -61,7 +61,7 @@ class calendar {
     	// how many days in that month
     	$dim = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-    	return $this->render($dim, $firstday);
+    	return "<p>$month $year $day $dim</p>" . $this->render($dim, $day);
     }
 }
 

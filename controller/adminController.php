@@ -19,5 +19,9 @@ class adminController extends coreController {
     public function cssAction() {
         echo $this->getHeaderAssets();
     }
+    
+    public function jsAction() {
+        echo $this->getFooterAssets();
+    }
 
 }

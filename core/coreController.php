@@ -25,6 +25,18 @@ class coreController {
         return $css->dump();
     }
     
+    public function getFooterAssets() {
+        global $CFG;
+        
+        $js = new AssetCollection(array(
+            new HttpAsset('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'),
+            new HttpAsset('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'),
+            new GlobAsset($CFG->dirroot . '/assets/js/*'),
+        ));
+        
+        $js->dump();
+    }
+    
     private function extendGump() {
         
         // valid time

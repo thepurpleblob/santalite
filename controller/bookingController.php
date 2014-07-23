@@ -23,10 +23,22 @@ class bookingController extends coreController {
     public function dateAction() {
         $cal = $this->getLib('calendar');
 
-        //
-        $cal->showMonth(11, 2014);
+        // get dates
+        $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
+        
+        // work out what months we need to show
+        $months = array();
+        foreach ($dates as $date) {
+            $month_number = date('m', $date->date);
+            $months[$month_number] = $month_number;
+        }
 
-        $calendar = $cal->render(30, 28);
+        // build calendars
+        $calendar = '';
+        foreach ($months as $month) {
+            $calendar .= $cal->showMonth($month, 2014);           
+        }
+
         $this->View('header');
         $this->View('booking_date', array(
             'calendar' => $calendar,
