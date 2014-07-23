@@ -33,6 +33,16 @@ class coreController {
         });
     }
     
+    /**
+     * Instantiate class in library
+     * @param type $name
+     */
+    public function getLib($name) {
+        $namespace = 'lib';
+        $classname = $namespace . '\\' . $name;
+        return new $classname;
+    }
+    
     public function __construct() {
         $this->form = new coreForm();  
         require_once(dirname(__FILE__) . '/GUMP/gump.class.php');
