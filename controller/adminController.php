@@ -6,7 +6,7 @@ use core\coreController;
 
 class adminController extends coreController {
 
-    function indexAction() {
+    public function indexAction() {
         $this->require_login('organiser', $this->Url('user/index'));
         $user = $this->getUser();
         $this->View('header');
@@ -14,6 +14,10 @@ class adminController extends coreController {
             'user' => $user,
         ));
         $this->View('footer');
+    }
+    
+    public function cssAction() {
+        echo $this->getHeaderAssets();
     }
 
 }

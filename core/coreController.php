@@ -2,11 +2,28 @@
 
 namespace core;
 
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\FileAsset;
+use Assetic\Asset\HttpAsset;
+use Assetic\Asset\GlobAsset;
+
 class coreController {
     
     protected $gump;
     
     protected $form;
+    
+    public function getHeaderAssets() {
+        global $CFG;
+        
+        $css = new AssetCollection(array(
+            new HttpAsset('//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css'),
+            new HttpAsset('//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css'),
+            new GlobAsset($CFG->dirroot . '/assets/css/*'),
+        )); 
+        
+        return $css->dump();
+    }
     
     private function extendGump() {
         

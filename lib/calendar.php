@@ -18,7 +18,7 @@ class calendar {
 
     public function render($daysinmonth, $firstday) {
         $days = $this->isoDays();
-        $html = '<table class="table">';
+        $html = '<table class="table santa_table">';
         $html .= '<thead>';
         $html .= '<tr>';
         foreach ($days as $day) {
