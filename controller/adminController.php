@@ -15,13 +15,19 @@ class adminController extends coreController {
         ));
         $this->View('footer');
     }
-    
+
     public function cssAction() {
         echo $this->getHeaderAssets();
     }
-    
+
     public function jsAction() {
         echo $this->getFooterAssets();
+    }
+
+    public function imageAction($image) {
+    	global $CFG;
+
+    	readfile($CFG->dirroot . '/assets/images/' . $image);
     }
 
 }

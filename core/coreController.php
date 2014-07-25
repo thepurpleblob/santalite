@@ -8,48 +8,48 @@ use Assetic\Asset\HttpAsset;
 use Assetic\Asset\GlobAsset;
 
 class coreController {
-    
+
     protected $gump;
-    
+
     protected $form;
-    
+
     public function getHeaderAssets() {
         global $CFG;
-        
+
         $css = new AssetCollection(array(
             new HttpAsset('//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css'),
             new HttpAsset('//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css'),
             new GlobAsset($CFG->dirroot . '/assets/css/*'),
-        )); 
-        
+        ));
+
         return $css->dump();
     }
-    
+
     public function getFooterAssets() {
         global $CFG;
-        
+
         $js = new AssetCollection(array(
             new HttpAsset('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'),
             new HttpAsset('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'),
             new GlobAsset($CFG->dirroot . '/assets/js/*'),
         ));
-        
+
         $js->dump();
     }
-    
+
     private function extendGump() {
-        
+
         // valid time
         \GUMP::add_validator("time", function($field, $input, $param=null) {
             return strtotime($input[$field]) !== false;
         });
-        
+
         // valid role
         \GUMP::add_validator('role', function($field, $input, $param=null) {
             $role = $input[$field];
-            return ($role=='admin') || ($role=='organiser');    
+            return ($role=='admin') || ($role=='organiser');
         });
-        
+
         // valid password
         \GUMP::add_validator('password', function($field, $input, $param=null) {
             $password = $input['password'];
@@ -61,7 +61,7 @@ class coreController {
             return !($user === false);
         });
     }
-    
+
     /**
      * Instantiate class in library
      * @param type $name
@@ -71,21 +71,21 @@ class coreController {
         $classname = $namespace . '\\' . $name;
         return new $classname;
     }
-    
+
     public function __construct() {
-        $this->form = new coreForm();  
+        $this->form = new coreForm();
         require_once(dirname(__FILE__) . '/GUMP/gump.class.php');
         $this->extendGump();
         $this->gump = new \GUMP();
     }
-    
+
     /**
      * Get GUMP (form verification software)
      */
     public function getGump() {
         return $this->gump;
     }
-    
+
     /**
      * Get request data
      */
@@ -94,11 +94,11 @@ class coreController {
             return false;
         } else {
             return $this->gump->sanitize($_POST);
-        }    
+        }
     }
 
     /**
-     * render a view 
+     * render a view
      */
     public function View($viewname, $variables=null) {
         global $CFG;
@@ -107,16 +107,16 @@ class coreController {
         if ($variables) {
             extract($variables);
         }
-        
+
         // also need the form class in scope
         $form = $this->form;
-        
+
         require($CFG->basepath . '/view/' . $viewname . '.php');
     }
-    
+
     /**
      * Display form errors
-     * 
+     *
      */
     public function formErrors($errors) {
         echo '<div class="alert alert-danger">';
@@ -133,9 +133,9 @@ class coreController {
     public function Url($route) {
         global $CFG;
 
-        return $CFG->www . '/' . $route;
+        return $CFG->www . '/index.php/' . $route;
     }
-    
+
     /**
      * Redirect to some other location
      */
@@ -143,7 +143,7 @@ class coreController {
         header("Location: $url");
         die;
     }
-    
+
     /**
      * Check for login/security
      */
@@ -160,11 +160,11 @@ class coreController {
                 return true;
             }
         }
-        
+
         $_SESSION['wantsurl'] = $wantsurl;
         $this->redirect($this->Url('user/login'));
     }
-    
+
     /**
      * Get logged in user
      */

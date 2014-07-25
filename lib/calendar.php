@@ -41,7 +41,7 @@ class calendar {
                 } else if (isset($bookingdays[$dom])) {
                     $html .= '<td class="santa-cell available"><a href="'.$url.$bookingdays[$dom].'"><b>'.$dom.'</b></a></td>';
                     $dom++;
-                } else {    
+                } else {
                 	$html .= '<td class="santa-cell dimmed">'.$dom.'</td>';
                     $dom++;
                 }
@@ -56,7 +56,7 @@ class calendar {
     }
 
     public function showMonth($month, $year, $bookingdays, $url) {
-        
+
         $dateObj   = \DateTime::createFromFormat('!m', $month);
         $monthName = $dateObj->format('F');
 
@@ -67,7 +67,8 @@ class calendar {
     	// how many days in that month
     	$dim = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-    	return "<div class=\"santa-cal\"><p>$monthName $year</p>" . $this->render($dim, $day, $bookingdays, $url) . '</div>';
+    	return "<div class=\"santa-cal\"><p class=\"badge\">$monthName $year</p>" .
+    	    $this->render($dim, $day, $bookingdays, $url) . '</div>';
     }
 }
 

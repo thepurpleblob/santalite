@@ -1,11 +1,31 @@
+body {
+	background-color: #69923a;
+}
+
+div#santa-content {
+	background-color: #fff;
+	margin: 20px 0;
+	padding: 8px;
+	border-radius: 8px;
+	box-shadow: 7px 7px 5px #34491d;
+}
+
 .santa-table {
-    width: 200px;
-    background-color: #bbb;
+    width: 296px;
+    height: 260px;
+    background: #eee;
+    box-shadow: 7px 7px 5px #aaa;
+}
+
+.santa-cal {
+	width: 320px;
+	float: left;
 }
 
 .santa-cell {
     text-align: center;
     font-size: 16px;
+    border-radius: 5px;
 }
 
 td.dimmed {

@@ -1,8 +1,8 @@
-<h2>Choose the day...</h2>
+<h3>Choose the day...</h3>
+
+<p class="alert alert-info">The trains run on the highlighted days. Click the one you would like to travel on.</p>
 
 <?php echo $calendar; ?>
+<div class="clearfix"></div>
 
-<div class="santa-buttons">
-    <a href="<?php echo $this->Url('booking/date') ?>" class="btn btn-info">Next page...</a>
-</div>
 

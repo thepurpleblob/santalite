@@ -6,6 +6,7 @@ require(dirname(__FILE__) . '/core/setup.php');
 $CFG->basepath = dirname(__FILE__);
 
 error_reporting(E_ALL);
+ini_set('display_errors', 'stdout');
 
 $info = $_SERVER['PATH_INFO'];
 if ($info) {
