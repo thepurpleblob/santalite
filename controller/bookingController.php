@@ -56,7 +56,12 @@ class bookingController extends coreController {
     }
 
     public function timeAction($timeid=0) {
-    	echo "got here";
+    	$bm = new bookingModel();
+
+    	// need dateid from session
+    	$dateid = $this->getFromSession('dateid');
+
+    	echo "<pre>Session $dateid";
     }
 
 }
