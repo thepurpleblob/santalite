@@ -1,9 +1,18 @@
 .santa-table {
     width: 200px;
+    background-color: #bbb;
 }
 
 .santa-cell {
     text-align: center;
-    font-weight: bold;
     font-size: 16px;
+}
+
+td.dimmed {
+    color: #ddd;
+}
+
+td.available {
+    background-color: #ff0;
+    font-size: 18px;
 }

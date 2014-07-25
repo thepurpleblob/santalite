@@ -6,17 +6,17 @@ class calendar {
 
     private function isoDays() {
         return array(
-            1 => 'Monday',
-            2 => 'Tuesday',
-            3 => 'Wednesday',
-            4 => 'Thursday',
-            5 => 'Friday',
-            6 => 'Saturday',
-            7 => 'Sunday',
+            1 => 'Mon',
+            2 => 'Tue',
+            3 => 'Wed',
+            4 => 'Thu',
+            5 => 'Fri',
+            6 => 'Sat',
+            7 => 'Sun',
         );
     }
 
-    public function render($daysinmonth, $firstday) {
+    public function render($daysinmonth, $firstday, $bookingdays, $url) {
         $days = $this->isoDays();
         $html = '<table class="table table-bordered santa-table">';
         $html .= '<thead>';
@@ -38,8 +38,11 @@ class calendar {
                 }
                 if (!$dom or ($dom > $daysinmonth)) {
                 	$html .= '<td class="santa-cell">&nbsp;</td>';
-                } else {
-                	$html .= '<td class="santa-cell">'.$dom.'</td>';
+                } else if (isset($bookingdays[$dom])) {
+                    $html .= '<td class="santa-cell available"><a href="'.$url.$bookingdays[$dom].'"><b>'.$dom.'</b></a></td>';
+                    $dom++;
+                } else {    
+                	$html .= '<td class="santa-cell dimmed">'.$dom.'</td>';
                     $dom++;
                 }
             }
@@ -52,7 +55,10 @@ class calendar {
         return $html;
     }
 
-    public function showMonth($month, $year) {
+    public function showMonth($month, $year, $bookingdays, $url) {
+        
+        $dateObj   = \DateTime::createFromFormat('!m', $month);
+        $monthName = $dateObj->format('F');
 
     	// work out what day the first is
     	$firstday = mktime(0, 0, 0, $month, 1, $year);
@@ -61,7 +67,7 @@ class calendar {
     	// how many days in that month
     	$dim = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-    	return "<p>$month $year $day $dim</p>" . $this->render($dim, $day);
+    	return "<div class=\"santa-cal\"><p>$monthName $year</p>" . $this->render($dim, $day, $bookingdays, $url) . '</div>';
     }
 }
 

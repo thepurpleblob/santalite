@@ -20,23 +20,21 @@ class bookingController extends coreController {
         $this->View('footer');
     }
 
-    public function dateAction() {
+    public function dateAction($dateid=0) {
         $cal = $this->getLib('calendar');
+        $bm = new bookingModel();
 
         // get dates
         $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
+        $months = $bm->getMonthsDays($dates);
         
-        // work out what months we need to show
-        $months = array();
-        foreach ($dates as $date) {
-            $month_number = date('m', $date->date);
-            $months[$month_number] = $month_number;
-        }
+        // TODO: need to work out *available* dates from purchases
 
         // build calendars
         $calendar = '';
-        foreach ($months as $month) {
-            $calendar .= $cal->showMonth($month, 2014);           
+        foreach ($months as $month => $days) {
+            list($month_number, $year) = explode('/', $month);
+            $calendar .= $cal->showMonth($month_number, $year, $days, $this->Url('booking/date/'));           
         }
 
         $this->View('header');
