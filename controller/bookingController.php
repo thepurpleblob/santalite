@@ -60,8 +60,20 @@ class bookingController extends coreController {
 
     	// need dateid from session
     	$dateid = $this->getFromSession('dateid');
+    	$date = \ORM::for_table('traindate')->find_one($dateid);
+    	if (!$date) {
+    		throw new Exception('Traindate not found in database for id='.$dateid);
+    	}
 
-    	echo "<pre>Session $dateid";
+    	// get available times
+    	$times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
+
+        $this->View('header');
+        $this->View('booking_time', array(
+            'date' => $date,
+            'times' => $times,
+        ));
+        $this->View('footer');
     }
 
 }
