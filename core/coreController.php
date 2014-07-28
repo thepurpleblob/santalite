@@ -186,7 +186,7 @@ class coreController {
     		if ($default) {
     			return $default;
     		} else
-    			throw new Exception("Session data for '$name' was not found");
+    			throw new \Exception("Session data for '$name' was not found");
     	}
     }
 

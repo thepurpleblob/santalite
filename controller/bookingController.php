@@ -62,11 +62,22 @@ class bookingController extends coreController {
     	$dateid = $this->getFromSession('dateid');
     	$date = \ORM::for_table('traindate')->find_one($dateid);
     	if (!$date) {
-    		throw new Exception('Traindate not found in database for id='.$dateid);
+    		throw new \Exception('Traindate not found in database for id='.$dateid);
     	}
 
     	// get available times
     	$times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
+
+    	// check for submission
+    	if ($timeid) {
+    		$time = \ORM::for_table('traintime')->find_one($timeid);
+    		if (!$time) {
+    			throw new \Exception('Time not found in database id='.$timeid);
+    		}
+
+    		$_SESSION['timeid'] = $timeid;
+    		$this->redirect($this->Url('booking/partysize'));
+    	}
 
         $this->View('header');
         $this->View('booking_time', array(
@@ -74,6 +85,16 @@ class bookingController extends coreController {
             'times' => $times,
         ));
         $this->View('footer');
+    }
+
+    public function partysizeAction() {
+    	$bm = new bookingModel();
+
+    	// get session data
+    	$dateid = $this->getFromSession('dateid');
+    	$timeid = $this->getFromSession('timeid');
+
+    	echo "Date: $dateid   Time: $timeid";
     }
 
 }
