@@ -3,48 +3,89 @@
 namespace model;
 
 class bookingRecord {
-	
+
 	protected $dateid = null;
-	
+
 	protected $timeid = null;
-	
+
+	protected $adults = null;
+
+	protected $children = null;
+
+	protected $infants = null;
+
 	public function setDateid($dateid) {
 		$this->dateid = $dateid;
 	}
-	
+
 	public function getDateid() {
 		return $this->dateid;
 	}
-	
+
 	public function setTimeid($timeid) {
 		$this->timeid = $timeid;
 	}
-	
+
 	public function getTimeid() {
 		return $this->timeid;
 	}
-	
-	public function __construct() {
-		$sess = $_SESSION;
-		
-		if (isset($sess['dateid'])) {
-			$this->dateid = $sess['dateid'];
-		}
-		
-		if (isset($sess['timeid'])) {
-			$this->timeid = $sess['timeid'];
+
+	public function setAdults($adults) {
+		$this->adults = $adults;
+	}
+
+	public function getAdults() {
+		return $this->adults;
+	}
+
+	public function setChildren($children) {
+		$this->children = $children;
+	}
+
+	public function getChildren() {
+		return $this->children;
+	}
+
+	public function setInfants($infants) {
+		$this->infants = $infants;
+	}
+
+	public function getInfants() {
+		return $this->infants;
+	}
+
+	private function get($name) {
+		if (isset($_SESSION[$name])) {
+			$this->$name = $_SESSION[$name];
+		} else {
+			$this->$name = null;
 		}
 	}
-	
+
+	private function put($name) {
+		if ($this->$name) {
+			$_SESSION[$name] = $this->$name;
+		} else {
+			unset($_SESSION[$name]);
+		}
+	}
+
+	public function __construct() {
+
+		$this->get('dateid');
+		$this->get('timeid');
+		$this->get('adults');
+		$this->get('children');
+		$this->get('infants');
+
+	}
+
 	public function save() {
-		$sess = $_SESSION;
-		
-		if ($this->dateid) {
-			$sess['dateid'] = $this->dateid;
-		}
-		
-		if ($this->timeid) {
-			$sess['timeid'] = $this->timeid;
-		}
+
+		$this->put('dateid');
+		$this->put('timeid');
+		$this->put('adults');
+		$this->put('children');
+		$this->put('infants');
 	}
 }

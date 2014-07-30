@@ -8,6 +8,11 @@
     <?php echo date('jS F Y', $date->date); ?></p>
 
 <form role="form" class="form-horizontal" method="post" action="<?php echo $this->Url('booking/numbers'); ?>">
+    <?php if ($errors) { ?>
+    <div class="alert alert-danger">
+        Please check that your total party size does not exceed <?php echo $limit->partysize; ?>
+    </div>
+    <?php } ?>
     <?php $form->select('adults',
     		'Number of adults £'.number_format($fares->adult/100, 2).' each',
     		1,
@@ -21,9 +26,9 @@
     		0,
     		$infantchoices)?>
   <div class="alert alert-warning">
-    Infants travel free but are not allocated a seat. 
-</div> 		
-    		
+    Infants travel free but are not allocated a seat.
+</div>
+
     <?php $form->buttons('Next', 'Back', true); ?>
 </form>
 
