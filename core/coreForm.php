@@ -33,12 +33,15 @@ class coreForm {
         echo '</div></div>';
     }   
     
-    public function select($name, $label, $selected, $options) {
+    public function select($name, $label, $selected, $options, $choose='') {
         $id = $name . 'Select';
         echo '<div class="form-group">';
         echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
         echo '    <div class="col-sm-8">';
         echo '    <select class="form-control" name="'.$name.'">';
+        if ($choose) {
+        	echo '<option selected disabled="disabled">'.$choose.'</option>';
+        }
         foreach ($options as $value => $option) {
             if ($value == $selected) {
                 $strsel = 'selected';

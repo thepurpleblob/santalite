@@ -42,3 +42,9 @@ td.available {
     background-color: #ff0;
     font-size: 18px;
 }
+
+.santa-child {
+	text-align: right;
+	font-size: 18px;
+	padding-top: 6px;
+}

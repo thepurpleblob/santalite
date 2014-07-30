@@ -181,15 +181,59 @@ class bookingController extends coreController {
         $this->View('footer');
     }
 
+    
     public function agesAction() {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
+    	
+    	// need number of children
+    	$children = $br->getChildren();
+    	if (!$children) {
+    		throw new Exception('There are no children in this booking');
+    	}
+    	
+    	// form submitted?
+    	if ($request = $this->getRequest()) {
+    		if (!empty($request['cancel'])) {
+    			$this->redirect($this->Url('booking/numbers'));
+    		}
+    		
+    		$rules = array();
+    		for ($i=1; $i<=$children; $i++) {
+    			$rules['sex'.$i] = "required|alpha";
+    			$rules['age'.$i] = "required|numeric|min_numeric,1|max_numeric,15";
+    		}
+    		$gump->validation_rules($rules);
+    		if ($data = $gump->run($request)) {
+    			$ages = array();
+    			$sexes = array();
+    			for ($i=1; $i<=$children; $i++) {
+    				$ages[$i] = $data['age'.$i];
+    				$sexes[$i] = $data['sex'.$i];
+    			}
+                $br->setAges($ages);
+                $br->setSexes($sexes);
+    			$br->save();
+    			$this->redirect($this->Url('booking/contact'));
+    		}
+    	}
 
     	$this->View('header');
-    	$this->View('booking_ages');
+    	$this->View('booking_ages', array(
+    		'children' => $children,
+    		'ages' => $bm->getAges(),
+    	));
     	$this->View('footer');
 
     }
+    
+    public function contactAction() {
+    	$bm = new bookingModel();
+    	$br = new bookingRecord();
+    	$gump = $this->getGump();
+    	
+    	echo "<pre>"; var_dump($br); die;
 
+    }
 }

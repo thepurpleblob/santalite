@@ -13,6 +13,10 @@ class bookingRecord {
 	protected $children = null;
 
 	protected $infants = null;
+	
+	protected $ages = null;
+	
+	protected $sexes = null;
 
 	public function setDateid($dateid) {
 		$this->dateid = $dateid;
@@ -53,6 +57,22 @@ class bookingRecord {
 	public function getInfants() {
 		return $this->infants;
 	}
+	
+	public function setAges($ages) {
+		$this->ages = $ages;
+	}
+	
+	public function getAges() {
+		return $this->ages;
+	}
+	
+	public function setSexes($sexes) {
+		$this->sexes = $sexes;
+	}
+	
+	public function getSexes() {
+		return $this->sexes;
+	}
 
 	private function get($name) {
 		if (isset($_SESSION[$name])) {
@@ -77,6 +97,8 @@ class bookingRecord {
 		$this->get('adults');
 		$this->get('children');
 		$this->get('infants');
+		$this->get('sexes');
+		$this->get('ages');
 
 	}
 
@@ -87,5 +109,7 @@ class bookingRecord {
 		$this->put('adults');
 		$this->put('children');
 		$this->put('infants');
+		$this->put('ages');
+		$this->put('sexes');
 	}
 }
