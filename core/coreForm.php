@@ -18,23 +18,26 @@ class coreForm {
     public function text($name, $label, $value) {
         $id = $name . 'Text';
         echo '<div class="form-group">';
-        echo '    <label for="'.$id.'">'.$label.'</label>';
+        echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
+        echo '    <div class="col-sm-8">';
         echo '    <input type="text" class="form-control" name="'.$name.'" id="'.$id.'" value="'.$value.'" />';
-        echo '</div>';
+        echo '</div></div>';
     }
     
     public function password($name, $label) {
         $id = $name . 'Password';
         echo '<div class="form-group">';
-        echo '    <label for="'.$id.'">'.$label.'</label>';
+        echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
+        echo '    <div class="col-sm-8">';
         echo '    <input type="password" class="form-control" name="'.$name.'" id="'.$id.'" />';
-        echo '</div>';
+        echo '</div></div>';
     }   
     
     public function select($name, $label, $selected, $options) {
         $id = $name . 'Select';
         echo '<div class="form-group">';
-        echo '    <label for="'.$id.'">'.$label.'</label>';
+        echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
+        echo '    <div class="col-sm-8">';
         echo '    <select class="form-control" name="'.$name.'">';
         foreach ($options as $value => $option) {
             if ($value == $selected) {
@@ -44,7 +47,7 @@ class coreForm {
             }
             echo '<option value="'.$value.'" '.$strsel.'>'.$option.'</option>';            
         }
-        echo '    </select>';
+        echo '    </select></div>';
         echo "</div>";
     }
     
@@ -52,11 +55,17 @@ class coreForm {
         echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
     }
     
-    public function buttons($save='Save', $cancel='Cancel') {
+    public function buttons($save='Save', $cancel='Cancel', $swap=false) {
         echo '<div class="form-group">';
-        echo '    <button type="submit" name="save" value="save" class="btn btn-primary">'.$save.'</button>';
-        echo '    <button type="submit" name="cancel" value="cancel" class="btn btn-warning">'.$cancel.'</button>';        
-        echo '</div>';
+        echo '<div class="col-sm-offset-4 col-sm-8">';
+        if (!$swap) {
+            echo '    <button type="submit" name="save" value="save" class="btn btn-primary">'.$save.'</button>';
+            echo '    <button type="submit" name="cancel" value="cancel" class="btn btn-warning">'.$cancel.'</button>'; 
+        } else {
+        	echo '    <button type="submit" name="cancel" value="cancel" class="btn btn-warning">'.$cancel.'</button>';
+        	echo '    <button type="submit" name="save" value="save" class="btn btn-primary">'.$save.'</button>';        	
+        }       
+        echo '</div></div>';
     }
 }
 

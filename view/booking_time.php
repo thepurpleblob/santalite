@@ -1,4 +1,4 @@
-<h3>Choose your train time...</h3>
+<!-- <h3>Choose your train time...</h3> -->
 
 <p class="alert alert-info">Santa trains leave Bo'ness at the following times. Choose the train
     you would like to travel on.</p>

@@ -7,6 +7,6 @@
 <form role="form" method="post" action="<?php echo $this->Url('time/edit/'.$time->id) ?>">
     <?php if ($errors) {$this->formErrors($errors);} ?>
     <?php $form->text('time', 'Service time', date('H:i', $time->time)); ?>
-    <?php $form->buttons(); ?>
+    <?php $form->buttons('Next', 'Back'); ?>
 </form>
 

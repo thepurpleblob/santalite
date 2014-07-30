@@ -4,10 +4,19 @@ namespace controller;
 
 use core\coreController;
 use model\bookingModel;
+use model\bookingRecord;
 
 class bookingController extends coreController {
 
     protected $bm;
+    
+    private function fill($low, $high) {
+    	$a = array();
+    	for ($i=$low; $i<=$high; $i++) {
+    		$a[$i] = $i;
+    	}
+    	return $a;
+    }
 
     public function __construct() {
         parent::__construct();
@@ -23,6 +32,7 @@ class bookingController extends coreController {
     public function dateAction($dateid=0) {
         $cal = $this->getLib('calendar');
         $bm = new bookingModel();
+        $br = new bookingRecord();
 
         // process data
         if ($dateid) {
@@ -31,7 +41,8 @@ class bookingController extends coreController {
             	throw new Exception("Date id $dateid not found in database");
             }
 
-            $_SESSION['dateid'] = $dateid;
+            $br->setDateid($dateid);
+            $br->save();
             $this->redirect($this->Url('booking/time'));
         }
 
@@ -57,9 +68,10 @@ class bookingController extends coreController {
 
     public function timeAction($timeid=0) {
     	$bm = new bookingModel();
+    	$br = new bookingRecord();
 
     	// need dateid from session
-    	$dateid = $this->getFromSession('dateid');
+    	$dateid = $br->getDateid();
     	$date = \ORM::for_table('traindate')->find_one($dateid);
     	if (!$date) {
     		throw new \Exception('Traindate not found in database for id='.$dateid);
@@ -75,7 +87,8 @@ class bookingController extends coreController {
     			throw new \Exception('Time not found in database id='.$timeid);
     		}
 
-    		$_SESSION['timeid'] = $timeid;
+    		$br->setTimeid($timeid);
+    		$br->save();
     		$this->redirect($this->Url('booking/partysize'));
     	}
 
@@ -89,12 +102,69 @@ class bookingController extends coreController {
 
     public function partysizeAction() {
     	$bm = new bookingModel();
+    	$br = new bookingRecord();
+    	$gump = $this->getGump();
 
     	// get session data
-    	$dateid = $this->getFromSession('dateid');
-    	$timeid = $this->getFromSession('timeid');
+    	$dateid = $br->getDateid();
+    	$timeid = $br->getTimeid();
+        
+        // get stuff from database
+        $date = \ORM::for_table('traindate')->find_one($dateid);
+    	if (!$date) {
+    		throw new \Exception('Traindate not found in database for id='.$dateid);
+    	}
+        $time = \ORM::for_table('traintime')->find_one($timeid);
+    	if (!$time) {
+    		throw new \Exception('Traintime not found in database for id='.$timeid);
+    	}
+    	
+        // get limits for above
+        $limit = \ORM::for_table('trainlimit')->where(array(
+        	'dateid' => $dateid,
+            'timeid' => $timeid,
+            ))->find_one();
+        if (!$limit) {
+        	throw new \Exception('No limit found for timeid='.$timeid.', dateid='.$dateid);
+        }
+        
+        // get fares
+        $fares = \ORM::for_table('fares')->find_one(1);
+        
+        // choices
+        $adultchoices = $this->fill(1, $limit->partysize);
+        $childrenchoices = $this->fill(0, $limit->partysize);
+        $childrenchoices[0] = 'None';
+        $infantchoices = $this->fill(0, $limit->partysize);
+        $infantchoices[0] = 'None';
+        
+        // form submitted?
+        if ($request = $this->getRequest()) {
+        	if (!empty($request['cancel'])) {
+        		$this->redirect($this->Url('booking/time'));
+        	}
+        	
+        	$gump->validation_rules(array(
+        		'adults' => 'required|numeric|min_numeric,1|max_numeric,'.$limit->partysize,
+        		'children' => 'required|numeric|min_numeric,0|max_numeric,'.$limit->partysize,
+        		'infants' => 'required|numeric|min_numeric,0|max_numeric,'.$limit->partysize,
+        	));
+        	if ($validated_data = $gump->run($request)) {
+        		
+        	}
+        }
 
-    	echo "Date: $dateid   Time: $timeid";
+        $this->View('header');
+        $this->View('booking_numbers', array(
+            'date' => $date,
+            'time' => $time,
+            'adultchoices' => $adultchoices,
+            'childrenchoices' => $childrenchoices,
+        	'infantchoices' => $infantchoices,
+            'limit' => $limit,
+        	'fares' => $fares,
+        ));
+        $this->View('footer');
     }
 
 }
