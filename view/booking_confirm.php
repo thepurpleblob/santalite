@@ -1,10 +1,12 @@
 
 <p class="alert alert-info">
-    Please tell us your billing address and contact details.
+    You will now be passed to our secure payment partner. Please check your booking details
+    carefully before pressing 'Pay now'.
 </p>
 
+<div class="santa-confirm">
 
-<form role="form" class="form-horizontal" method="post" action="<?php echo $this->Url('booking/contact'); ?>">
+</div>
 
     <?php if ($errors) {$this->formErrors($errors);} ?>
     <?php $form->text('title', 'Title', $br->getTitle()); ?>
@@ -18,7 +20,6 @@
     <?php $form->select('country', 'Country', 'GB', $countries); ?>
     <?php $form->text('phone', 'Phone', $br->getPhone()); ?>
     <?php $form->buttons('Next', 'Back', true); ?>
-</form>
 
 
 

@@ -22,8 +22,17 @@ class bookingController extends coreController {
         parent::__construct();
         $this->bm = new bookingModel;
     }
+    
+    public function expiredAction() {
+    	$this->View('header');
+    	$this->View('booking_expired');
+    	$this->View('footer');    	
+    }
 
     public function startAction() {
+    	$br = new bookingRecord();
+    	$br->save();
+    	
         $this->View('header');
         $this->View('booking_start');
         $this->View('footer');
@@ -33,6 +42,11 @@ class bookingController extends coreController {
         $cal = $this->getLib('calendar');
         $bm = new bookingModel();
         $br = new bookingRecord();
+        
+        // check the session is still around
+        if ($br->expired()) {
+        	$this->redirect($this->url('booking/expired'));
+        }
 
         // process data
         if ($dateid) {
@@ -69,6 +83,11 @@ class bookingController extends coreController {
     public function timeAction($timeid=0) {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
+    	
+    	// check the session is still around
+    	if ($br->expired()) {
+    		$this->redirect($this->url('booking/expired'));
+    	}
 
     	// need dateid from session
     	$dateid = $br->getDateid();
@@ -104,6 +123,11 @@ class bookingController extends coreController {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
+    	
+    	// check the session is still around
+    	if ($br->expired()) {
+    		$this->redirect($this->url('booking/expired'));
+    	}
 
     	// get session data
     	$dateid = $br->getDateid();
@@ -186,6 +210,11 @@ class bookingController extends coreController {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
+    	
+    	// check the session is still around
+    	if ($br->expired()) {
+    		$this->redirect($this->url('booking/expired'));
+    	}
 
     	// need number of children
     	$children = $br->getChildren();
@@ -227,15 +256,74 @@ class bookingController extends coreController {
     	$this->View('footer');
 
     }
+    
+    private function set_record($br, $data) {
+        $br->setTitle($data['title']);
+        $br->setFirstname($data['firstname']);
+        $br->setLastname($data['lastname']);
+        $br->setEmail($data['email']);
+        $br->setAddress1($data['address1']);
+        $br->setCity($data['city']);
+        $br->setPostcode($data['postcode']);
+        $br->setCountry($data['country']);
+        $br->setPhone($data['phone']);
+    }
 
     public function contactAction() {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
+    	$errors = array();
+    	
+    	// check the session is still around
+    	if ($br->expired()) {
+    		$this->redirect($this->url('booking/expired'));
+    	}
+    	
+    	// list of countries (for select)
+    	$countries = $bm->getCountries();
+    	
+    	// form submitted?
+    	if ($request = $this->getRequest()) {
+    		if (!empty($request['cancel'])) {
+    			$this->redirect($this->Url('booking/ages'));
+    		}
+    		
+    		$gump->validation_rules(array(
+    			//'title' => '',
+    			'firstname' => 'required|valid_name',
+    		    'lastname' => 'required|valid_name',
+    		    'email' => 'required|valid_email',
+    		    'address1' => 'required|street_address',
+    		    //'address2' => '',
+    		    'city' => 'required',
+    		    'postcode' => 'required',
+    		    'country' => 'required',
+    		    //'phone' => '',
+    		));
+    		$this->set_record($br, $request);
+    		if ($data = $gump->run($request)) {
+    		    $this->set_record($br, $data);
+    		    $br->save();
+    		    $this->redirect($this->Url('booking/confirm'));
+    		}
+    		$errors = $gump->get_readable_errors();
+    	}
 
     	$this->View('header');
-    	$this->View('booking_contact');
+    	$this->View('booking_contact', array(
+    		'br' => $br,
+    		'countries' => $countries,
+    	    'errors' => $errors,
+    	));
     	$this->View('footer');
-
+    }
+    
+    
+    public function confirmAction() {
+        $bm = new bookingModel();
+        $br = new bookingRecord();
+        
+        echo "<pre>"; var_dump($br); die;
     }
 }

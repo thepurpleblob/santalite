@@ -119,7 +119,7 @@ class bookingRecord {
 	}
 
 	public function setEmail($email) {
-		$this->email = $email
+		$this->email = $email;
 	}
 
 	public function getEmail() {
@@ -213,6 +213,9 @@ class bookingRecord {
 	}
 
 	public function save() {
+		
+		// save update time
+		$_SESSION['santa_updated'] = time();
 
 		$this->put('dateid');
 		$this->put('timeid');
@@ -231,5 +234,9 @@ class bookingRecord {
 		$this->put('postcode');
 		$this->put('country');
 		$this->put('phone');
+	}
+	
+	public function expired() {
+		return !isset($_SESSION['santa_updated']);
 	}
 }
