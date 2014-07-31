@@ -48,3 +48,7 @@ td.available {
 	font-size: 18px;
 	padding-top: 6px;
 }
+
+.santa-numrow {
+	border-bottom: #eee 1px solid;
+}

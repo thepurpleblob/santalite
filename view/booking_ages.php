@@ -6,21 +6,23 @@
 
 
 <form role="form" class="form-horizontal" method="post" action="<?php echo $this->Url('booking/ages'); ?>">
-    <?php for ($i=1; $i<=$children; $i++) { ?>
-     <div class="row">
-         <div class="col-md-2 santa-child">
+<table class="table table-striped">
+    <tbody>
+    <?php for ($i=1; $i<=$children; $i++) {?>
+     <tr>
+         <td class="santa-child">
              <b>Child <?php echo $i?></b>
-         </div>
-         <div class="col-md-4">
+         </td>
+         <td>
              <?php $form->select('sex'.$i, 'Girl/Boy?', '', array('girl'=>'Girl', 'boy'=>'Boy'), 'Choose...')?>
-         </div>
-         <div class="col-md-4">
+         </td>
+         <td>
              <?php $form->select('age'.$i, 'Age?', '', $ages, 'Choose...')?>
-         </div>
-         <div class="col-md-2">
-         </div>
-     </div>
+         </td>
+     </tr>
     <?php } ?>
+    </tbody>
+    </table>
     <?php $form->buttons('Next', 'Back', true); ?>
 </form>
 
