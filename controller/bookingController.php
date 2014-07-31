@@ -181,24 +181,24 @@ class bookingController extends coreController {
         $this->View('footer');
     }
 
-    
+
     public function agesAction() {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
-    	
+
     	// need number of children
     	$children = $br->getChildren();
     	if (!$children) {
-    		throw new Exception('There are no children in this booking');
+    		throw new \Exception('There are no children in this booking');
     	}
-    	
+
     	// form submitted?
     	if ($request = $this->getRequest()) {
     		if (!empty($request['cancel'])) {
     			$this->redirect($this->Url('booking/numbers'));
     		}
-    		
+
     		$rules = array();
     		for ($i=1; $i<=$children; $i++) {
     			$rules['sex'.$i] = "required|alpha";
@@ -227,13 +227,15 @@ class bookingController extends coreController {
     	$this->View('footer');
 
     }
-    
+
     public function contactAction() {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
-    	
-    	echo "<pre>"; var_dump($br); die;
+
+    	$this->View('header');
+    	$this->View('booking_contact');
+    	$this->View('footer');
 
     }
 }
