@@ -324,6 +324,15 @@ class bookingController extends coreController {
         $bm = new bookingModel();
         $br = new bookingRecord();
         
-        echo "<pre>"; var_dump($br); die;
+        // check the session is still around
+        if ($br->expired()) {
+            $this->redirect($this->url('booking/expired'));
+        }
+        
+        $this->View('header');
+        $this->View('booking_confirm', array(
+                'br' => $br,
+        ));
+        $this->View('footer');
     }
 }
