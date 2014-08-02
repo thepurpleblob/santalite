@@ -2,6 +2,7 @@
 
 require(dirname(__FILE__) . '/config.php');
 require(dirname(__FILE__) . '/core/setup.php');
+require_once(dirname(__FILE__) . '/lib/sagelib.php');
 
 $CFG->basepath = dirname(__FILE__);
 

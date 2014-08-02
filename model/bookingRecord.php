@@ -3,6 +3,8 @@
 namespace model;
 
 class bookingRecord {
+    
+    protected $reference = null;
 
 	protected $dateid = null;
 
@@ -37,6 +39,16 @@ class bookingRecord {
 	protected $country = null;
 
 	protected $phone = null;
+	
+	protected $amount = null;
+	
+	public function setReference($reference) {
+	    $this->reference = $reference;
+	}
+	
+	public function getReference() {
+	    return $this->reference;
+	}
 
 	public function setDateid($dateid) {
 		$this->dateid = $dateid;
@@ -55,7 +67,7 @@ class bookingRecord {
 	}
 
 	public function setAdults($adults) {
-		$this->adults = $adults;
+		$this->adults = (int)$adults;
 	}
 
 	public function getAdults() {
@@ -63,7 +75,7 @@ class bookingRecord {
 	}
 
 	public function setChildren($children) {
-		$this->children = $children;
+		$this->children = (int)$children;
 	}
 
 	public function getChildren() {
@@ -71,7 +83,7 @@ class bookingRecord {
 	}
 
 	public function setInfants($infants) {
-		$this->infants = $infants;
+		$this->infants = (int)$infants;
 	}
 
 	public function getInfants() {
@@ -173,6 +185,14 @@ class bookingRecord {
 	public function getPhone() {
 		return $this->phone;
 	}
+	
+	public function setAmount($amount) {
+	    $this->amount = $amount;
+	}
+	
+	public function getAmount() {
+	    return $this->amount;
+	}
 
 	private function get($name) {
 		if (isset($_SESSION[$name])) {
@@ -183,7 +203,7 @@ class bookingRecord {
 	}
 
 	private function put($name) {
-		if ($this->$name) {
+		if ($this->$name!==null) {
 			$_SESSION[$name] = $this->$name;
 		} else {
 			unset($_SESSION[$name]);
@@ -191,7 +211,8 @@ class bookingRecord {
 	}
 
 	public function __construct() {
-
+	    
+	    $this->get('reference');
 		$this->get('dateid');
 		$this->get('timeid');
 		$this->get('adults');
@@ -217,6 +238,7 @@ class bookingRecord {
 		// save update time
 		$_SESSION['santa_updated'] = time();
 
+		$this->put('reference');
 		$this->put('dateid');
 		$this->put('timeid');
 		$this->put('adults');

@@ -4,6 +4,7 @@
  * class autoloader
  */
 function __autoload($name) {
+
     $parts = explode('\\', $name);
 
     // get class's filename

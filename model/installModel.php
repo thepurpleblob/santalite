@@ -86,13 +86,20 @@ class installModel {
             child INTEGER,
             infant INTEGER,
             oap INTEGER,
-            childages TEXT,
+            childagesboy TEXT,
+            childagesgirl TEXT,
             comment TEXT,
             payment INTEGER,
             bkgdate INTEGER,
-            card INTEGER,
-            action INTEGER,
-            season INTEGER
+            card TEXT,
+            action TEXT,
+            season INTEGER,
+            eticket TEXT,
+            einfo TEXT,
+            status,
+            statusdetail,
+            txauthno,
+            last4digits
             )';
         \ORM::for_table('purchase')->raw_execute($sql);
     }

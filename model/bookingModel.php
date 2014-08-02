@@ -22,6 +22,9 @@ class bookingModel {
         return $months;
     }
     
+    /*
+     * Create select array for child's ages
+     */
     public function getAges() {
     	$ages = array(
     		1 => '1 year',
@@ -30,6 +33,225 @@ class bookingModel {
     		$ages[$i] = "$i years";
     	}
     	return $ages;
+    }
+    
+    /**
+     * Get the date in a readable format given dateid
+     * @param unknown $dateid
+     */
+    public function getReadableDate($dateid) {
+        $date = \ORM::for_table('traindate')->find_one($dateid);
+        if (!$date) {
+            throw new \Exception('Date not found in DB for id='.$dateid);
+        }
+        return date('d/M/Y', $date->date);
+    }
+    
+    /**
+     * Get the time in a readable format given timeid
+     *
+     */
+    public function getReadableTime($timeid) {
+        $time = \ORM::for_table('traintime')->find_one($timeid);
+        if (!$time) {
+            throw new \Exception('Time not found in DB for id='.$timeid);
+        }
+        return date('H:i', $time->time);
+    }
+    
+    /**
+     * Make the SagePay basket
+     * @param unknown $br
+     */
+    private function makeBasket($br) {
+        return '';    
+    }
+    
+    /**
+     * Filter for SagePay's crypt fields
+     * @param unknown $value
+     * @return unknown
+     */
+    private function filter($value, $maxchars, $filter) {
+        
+        // use sagepay's clean functions
+        $value = \sagelib::cleanInput($value, $filter);
+        
+        // truncate to maxchars
+        $value = substr($value, 0, $maxchars);
+        
+        return $value;
+    }
+    
+    /**
+     * Construct SagePay crypt string
+     * @param unknown $br
+     */
+    public function crypt($br) {
+        global $CFG;
+        
+        // sort some basic stuff
+        $description = "Bo'ness & Kinneil Railway Santa Steam Train booking on " .
+            $this->getReadableDate($br->getDateid()) . ' departing ' . $this->getReadableTime($br->getTimeid());
+        
+        // build transaction data into string
+        $cryptfields = array(
+            'VendorTXCode' => $CFG->sage_prefix . $br->getReference(),
+            'Amount' => number_format($br->getAmount(), 2),
+            'Currency' => 'GBP',
+            'Description' => $description,
+            'SuccessURL' => $CFG->www . '/index.php/booking/return/success',  
+            'FailureURL' => $CFG->www . '/index.php/booking/return/failure',
+            'CustomerName' => $this->filter($br->getTitle() . ' ' . $br->getFirstname() . ' ' . $br->getLastname(), 100,
+                CLEAN_INPUT_FILTER_ALPHABETIC_AND_ACCENTED),
+            'CustomerEmail' => $this->filter($br->getEmail(), 100, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE), 
+            'VendorEmail' => $this->filter($CFG->sage_email, 255, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE), 
+            'SendEmail' => '1',
+            'eMailMessage' => $this->filter($CFG->sage_message, 7500, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE),
+            'BillingSurname' => $this->filter($br->getLastname(), 20, CLEAN_INPUT_FILTER_ALPHABETIC_AND_ACCENTED),
+            'BillingFirstnames' => $this->filter($br->getFirstname(), 20, CLEAN_INPUT_FILTER_ALPHABETIC_AND_ACCENTED),
+            'BillingAddress1' => $this->filter($br->getAddress1(), 100, CLEAN_INPUT_FILTER_ALPHANUMERIC_AND_ACCENTED),
+            'BillingAddress2' => $this->filter($br->getAddress2(), 100, CLEAN_INPUT_FILTER_ALPHANUMERIC_AND_ACCENTED),
+            'BillingCity' => $this->filter($br->getCity(), 40, CLEAN_INPUT_FILTER_ALPHANUMERIC_AND_ACCENTED),
+            'BillingPostCode' => $this->filter($br->getPostcode(), 10, CLEAN_INPUT_FILTER_ALPHANUMERIC),
+            'BillingCountry' => $br->getCountry(),
+            'BillingPhone' => $this->filter($br->getPhone(), 20, CLEAN_INPUT_FILTER_ALPHANUMERIC),
+            'DeliverySurname' => $this->filter($br->getLastname(), 20, CLEAN_INPUT_FILTER_ALPHABETIC_AND_ACCENTED),
+            'DeliveryFirstnames' => $this->filter($br->getFirstname(), 20, CLEAN_INPUT_FILTER_ALPHABETIC_AND_ACCENTED),
+            'DeliveryAddress1' => $this->filter($br->getAddress1(), 100, CLEAN_INPUT_FILTER_ALPHANUMERIC_AND_ACCENTED),
+            'DeliveryAddress2' => $this->filter($br->getAddress2(), 100, CLEAN_INPUT_FILTER_ALPHANUMERIC_AND_ACCENTED),
+            'DeliveryCity' => $this->filter($br->getCity(), 40, CLEAN_INPUT_FILTER_ALPHANUMERIC_AND_ACCENTED),
+            'DeliveryPostCode' => $this->filter($br->getPostcode(), 10, CLEAN_INPUT_FILTER_ALPHANUMERIC),
+            'DeliveryCountry' => $br->getCountry(),
+            'DeliveryPhone' => $this->filter($br->getPhone(), 20, CLEAN_INPUT_FILTER_ALPHANUMERIC),
+            'Basket' => $this->filter($this->makeBasket($br), 7500, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE),
+        );
+        
+        // translate to name=value array
+        $namevalue = array();
+        foreach ($cryptfields as $name => $value) {
+            $namevalue[] = "$name=$value";
+        }
+                
+        $cryptstring = implode('&', $namevalue);
+        
+        return \sagelib::encryptAndEncode($cryptstring, $CFG->sage_encrypt);
+    }
+    
+    /**
+     * Get the nth date/time in the database for output record
+     */
+    private function getNth($table, $sort, $id) {
+        $records = \ORM::for_table($table)->order_by_asc($sort)->find_many();
+        $count = 1;
+        foreach ($records as $record) {
+            if ($record->id == $id) {
+                return $count;
+            }
+            $count++;
+        }
+        throw new Exception('ID '.$id.' not found in table '.$table);
+    }
+    
+    /**
+     * Convert boy/girl ages records into hex strings
+     */
+    private function encodeAges($br) {
+        $ages = $br->getAges();
+        $sexes = $br->getSexes();
+        $boys = '';
+        $girls = '';
+        foreach ($sexes as $sex) {
+            $age = array_shift($ages);
+            if ($sex=='boy') {
+                $boys .= dechex($age);
+            } else {
+                $girls .= dechex($age);
+            }
+        }
+        return array($boys, $girls);
+    }
+    
+    /**
+     * Update or create purchase record (checks for id)
+     * @param unknown $br
+     */
+    public function updatePurchase($br) {
+        
+        // if br has a reference number this should match the database record
+        if ($br->getReference()) {
+            $purchase = \ORM::for_table('purchase')->find_one($br->getReference());
+            if (!$purchase) {
+                throw new \Exception('Cannot find record in DB for purchase id='.$br->getReference());
+            }
+        } else {
+            $purchase = \ORM::for_table('purchase')->create();
+        }
+        
+        // country
+        $countries = $this->getCountries();
+        $country = $countries[$br->getCountry()];
+        
+        // update all the data (can't update reference until sure we have an ID)
+        $purchase->type = 'O';
+        $purchase->day = $this->getNth('traindate', 'date', $br->getDateid());
+        $purchase->train = $this->getNth('traintime', 'time', $br->getTimeid());
+        $purchase->surname = $br->getLastname();
+        $purchase->title = $br->getTitle();
+        $purchase->firstname = $br->getFirstname();
+        $purchase->address1 = $br->getAddress1();
+        $purchase->address2 = $br->getAddress2();
+        $purchase->address3 = $br->getCity();
+        $purchase->address4 = $country;
+        $purchase->postcode = $br->getPostcode();
+        $purchase->phone = $br->getPhone();
+        $purchase->email = $br->getEmail();
+        $purchase->adult = $br->getAdults();
+        $purchase->child = $br->getChildren();
+        $purchase->infant = $br->getInfants();
+        $purchase->oap = 0;
+        list($purchase->childagesboy, $purchase->childagesgirl) = $this->encodeAges($br);
+        $purchase->comment = '';
+        $purchase->payment = floor($br->getAmount() * 100);
+        $purchase->card = 'Y';
+        $purchase->action = 'N';
+        $purchase->eticket = 'N';
+        $purchase->einfo = 'N';
+        
+        $purchase->save();
+        $br->setReference($purchase->id());
+        $br->save();
+        
+        return $br->getReference();
+    }
+    
+    /**
+     * Decrypt returndata from sage
+     */
+    public function decrypt($br, $crypt) {
+        global $CFG;
+        
+        $decode = \sagelib::decodeAndDecrypt($crypt, $CFG->sage_encrypt);
+        $pairs = explode('&', $decode);
+        $data = array();
+        foreach($pairs as $pair) {
+            $split = explode('=', $pair);
+            $data[$split[0]] = $split[1];
+        }
+        
+        // Update the database record
+        $purchase = \ORM::for_table('purchase')->find_one($br->getReference());
+        if (!$purchase) {
+            throw new \Exception('Cannot find record in DB for purchase id='.$br->getReference());
+        }
+        
+        $purchase->bkgref = $data['VendorTxCode'];
+        $purchase->status = $data['Status'];
+        $purchase->statusdetail = $data['StatusDetail'];
+        $purchase->txauthno = $data['TxAuthNo'];
+        $purchase->last4digits = $data['Last4Digits'];
+        $purchase->save();
+        echo "<pre>"; var_dump($data); die;
     }
     
     public function getCountries() {

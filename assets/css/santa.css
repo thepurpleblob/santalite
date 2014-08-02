@@ -52,3 +52,7 @@ td.available {
 .santa-numrow {
 	border-bottom: #eee 1px solid;
 }
+
+.santa-address {
+	margin-bottom: 0;
+}

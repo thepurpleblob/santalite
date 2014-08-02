@@ -30,6 +30,10 @@ class bookingController extends coreController {
     }
 
     public function startAction() {
+        
+        // invalidate the session (new booking)
+        session_unset();
+        
     	$br = new bookingRecord();
     	$br->save();
     	
@@ -238,7 +242,7 @@ class bookingController extends coreController {
     			$ages = array();
     			$sexes = array();
     			for ($i=1; $i<=$children; $i++) {
-    				$ages[$i] = $data['age'.$i];
+    				$ages[$i] = (int)$data['age'.$i];
     				$sexes[$i] = $data['sex'.$i];
     			}
                 $br->setAges($ages);
@@ -263,6 +267,7 @@ class bookingController extends coreController {
         $br->setLastname($data['lastname']);
         $br->setEmail($data['email']);
         $br->setAddress1($data['address1']);
+        $br->setAddress2($data['address2']);
         $br->setCity($data['city']);
         $br->setPostcode($data['postcode']);
         $br->setCountry($data['country']);
@@ -329,10 +334,58 @@ class bookingController extends coreController {
             $this->redirect($this->url('booking/expired'));
         }
         
+        // resave session just to bump its time
+        $br->save();
+        
+        // list of countries (for select)
+        $countries = $bm->getCountries();
+        $country = $countries[$br->getCountry()];
+        
+        // get fares
+        $fares = \ORM::for_table('fares')->find_one(1);
+        
+        // sums
+        $price_adults = $br->getAdults() * $fares->adult / 100;
+        $price_children = $br->getChildren() * $fares->child / 100;
+        $price_total = $price_adults + $price_children;
+        $br->setAmount($price_total);
+        
+        // we need to come up with a booking code about now
+        $purchaseid = $bm->updatePurchase($br);
+        
+        // get encrypted data to send to SagePay
+        $crypt = $bm->crypt($br);
+        
         $this->View('header');
         $this->View('booking_confirm', array(
                 'br' => $br,
+                'country' => $country,
+                'fares' => $fares,
+                'price_adults' => $price_adults,
+                'price_children' => $price_children,
+                'price_total' => $price_total,
+                'crypt' => $crypt,
         ));
         $this->View('footer');
+    }
+    
+    public function returnAction($result) {
+        $bm = new bookingModel();
+        $br = new bookingRecord();
+        
+        // check the session is still around
+        if ($br->expired()) {
+            $this->redirect($this->url('booking/expired'));
+        }
+        
+        if ($request = $_GET) {
+            if (!isset($request['crypt'])) {
+                throw new \Exception("No crypt field on return from SagePay");
+            }
+            $crypt = $request['crypt'];
+            $bm->decrypt($br, $crypt);
+            
+        }
+        
     }
 }
