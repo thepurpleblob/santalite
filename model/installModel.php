@@ -96,7 +96,7 @@ class installModel {
             season INTEGER,
             eticket TEXT,
             einfo TEXT,
-            status,
+            `status`,
             statusdetail,
             txauthno,
             last4digits
