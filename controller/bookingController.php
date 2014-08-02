@@ -156,7 +156,6 @@ class bookingController extends coreController {
         	throw new \Exception('No limit found for timeid='.$timeid.', dateid='.$dateid);
         }
 
-
         // add validator for maximum partysize
         \GUMP::add_validator("partysize", function($field, $input, $param=null) {
         	$total = $input['adults'] + $input['children'] + $input['infants'];
@@ -192,7 +191,6 @@ class bookingController extends coreController {
         		$br->save();
         		$this->redirect($this->Url('booking/ages'));
         	}
-;
         }
 
         $this->View('header');

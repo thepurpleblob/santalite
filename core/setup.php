@@ -22,6 +22,8 @@ function __autoload($name) {
 // establish database connection
 require_once('idiorm/idiorm.php');
 \ORM::configure($CFG->dsn);
+\ORM::configure('username', $CFG->dbuser);
+\ORM::configure('password', $CFG->dbpass);
 
 // start the session
 session_name('SRPS_Santas');
