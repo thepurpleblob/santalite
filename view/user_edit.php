@@ -4,7 +4,7 @@
     <h2>New user</h2>
 <?php } ?>
 
-<form role="form" method="post" action="<?php echo $this->Url('user/edit/'.$user->id) ?>">
+<form class="form-horizontal" role="form" method="post" action="<?php echo $this->Url('user/edit/'.$user->id) ?>">
     <?php if ($errors) {$this->formErrors($errors);} ?>
     <?php $form->text('username', 'Username', $user->username); ?>
     <?php $form->text('fullname', 'Full name', $user->fullname); ?>
