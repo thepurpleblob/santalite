@@ -56,3 +56,16 @@ td.available {
 .santa-address {
 	margin-bottom: 0;
 }
+
+.santa-admin dt {
+	padding-bottom: 5px;
+}
+
+.santa-admin .btn {
+	width: 70px;
+}
+
+.santa-admin dd {
+	font-size: 18px;
+	padding-top: 5px;
+}

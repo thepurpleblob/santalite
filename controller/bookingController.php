@@ -383,9 +383,15 @@ class bookingController extends coreController {
                 throw new \Exception("No crypt field on return from SagePay");
             }
             $crypt = $request['crypt'];
-            $bm->decrypt($br, $crypt);
+            $purchase = $bm->decrypt($br, $crypt);
             
         }
-        
+        $this->View('header');
+        $this->View('booking_result', array(
+                'br' => $br,
+                'purchase' => $purchase,
+                'result' => $result,
+        ));
+        $this->View('footer');
     }
 }

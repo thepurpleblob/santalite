@@ -20,12 +20,12 @@
         <dt>Email</dt><dd><?php echo $br->getEmail(); ?>
         <dt>Phone</dt><dd><?php echo $br->getPhone(); ?>
         <dt>Number of adults</dt>
-        <dd><?php echo $br->getAdults() . ' at £' . number_format($fares->adult/100,2) . ' each'; ?></dd>
+        <dd><?php echo $br->getAdults() . ' at &pound;' . number_format($fares->adult/100,2) . ' each'; ?></dd>
         <dt>Number of children</dt>
-        <dd><?php echo $br->getChildren() . ' at £' . number_format($fares->child/100,2) . ' each'; ?></dd>
+        <dd><?php echo $br->getChildren() . ' at &pound;' . number_format($fares->child/100,2) . ' each'; ?></dd>
         <dt>Number of infants</dt><dd><?php echo $br->getInfants(); ?>
         <dt>&nbsp;</dt><dd></dd>
-        <dt>&nbsp;</dt><dd><b>Total price to pay £<?php echo number_format($price_total, 2);?></b></dd>
+        <dt>&nbsp;</dt><dd><b>Total price to pay &pound;<?php echo number_format($price_total, 2);?></b></dd>
     </dl>
 </div>
 
@@ -34,7 +34,10 @@
     <input type="hidden" name="TxType" value="PAYMENT" />
     <input type="hidden" name="Vendor" value="<?php echo $CFG->sage_vendor; ?>" />
     <input type="hidden" name="Crypt" value="<?php echo $crypt; ?>" />
-    <button type="submit" class="btn btn-default">Pay now</button>
+    <dl class="dl-horizontal">
+        <dt>&nbsp;</dt>
+        <dd><button type="submit" class="btn btn-primary">Pay now</button></dd>
+    </dl>
 </form>
 
 

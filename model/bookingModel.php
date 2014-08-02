@@ -213,6 +213,7 @@ class bookingModel {
         list($purchase->childagesboy, $purchase->childagesgirl) = $this->encodeAges($br);
         $purchase->comment = '';
         $purchase->payment = floor($br->getAmount() * 100);
+        $purchase->bkgdate = date('Ymd');
         $purchase->card = 'Y';
         $purchase->action = 'N';
         $purchase->eticket = 'N';
@@ -251,7 +252,8 @@ class bookingModel {
         $purchase->txauthno = $data['TxAuthNo'];
         $purchase->last4digits = $data['Last4Digits'];
         $purchase->save();
-        echo "<pre>"; var_dump($data); die;
+        
+        return $purchase;
     }
     
     public function getCountries() {
