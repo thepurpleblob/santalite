@@ -9,21 +9,21 @@ class installModel {
         
         // traintime
         $sql =  'CREATE TABLE IF NOT EXISTS traintime (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             time INTEGER
             )';
         \ORM::for_table('traintime')->raw_execute($sql);
         
         // traindate
         $sql =  'CREATE TABLE IF NOT EXISTS traindate (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             date INTEGER
             )';
         \ORM::for_table('traindate')->raw_execute($sql);
         
         // limits
         $sql = 'CREATE TABLE IF NOT EXISTS trainlimit (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             timeid INTEGER,
             dateid INTEGER,
             maxlimit INTEGER,
@@ -49,7 +49,7 @@ class installModel {
         
         // security
         $sql = 'CREATE TABLE IF NOT EXISTS user (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             username TEXT,
             fullname TEXT,
             password TEXT,
@@ -67,7 +67,7 @@ class installModel {
         
         // Purchase record
         $sql = 'CREATE TABLE IF NOT EXISTS purchase (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             type TEXT,
             day INTEGER,
             train INTEGER,
