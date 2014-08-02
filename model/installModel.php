@@ -96,10 +96,10 @@ class installModel {
             season INTEGER,
             eticket TEXT,
             einfo TEXT,
-            `status`,
-            statusdetail,
-            txauthno,
-            last4digits
+            status TEXT,
+            statusdetail TEXT,
+            txauthno TEXT,
+            last4digits TEXT
             )';
         \ORM::for_table('purchase')->raw_execute($sql);
     }
