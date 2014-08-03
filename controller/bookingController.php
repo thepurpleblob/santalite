@@ -252,6 +252,7 @@ class bookingController extends coreController {
         $br->setAddress2($data['address2']);
         $br->setCity($data['city']);
         $br->setPostcode($data['postcode']);
+        $br->setCounty($data['county']);
         $br->setCountry($data['country']);
         $br->setPhone($data['phone']);
     }

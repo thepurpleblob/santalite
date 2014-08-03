@@ -15,6 +15,7 @@
     <?php $form->text('address2', 'Address line 2', $br->getAddress2()); ?>
     <?php $form->text('city', 'Town/city', $br->getCity()); ?>
     <?php $form->text('postcode', 'Postcode', $br->getPostcode()); ?>
+    <?php $form->text('county', 'County', $br->getCounty()); ?>
     <?php $form->select('country', 'Country', 'GB', $countries); ?>
     <?php $form->text('phone', 'Phone', $br->getPhone()); ?>
     <?php $form->buttons('Next', 'Back', true); ?>
