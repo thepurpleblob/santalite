@@ -282,7 +282,7 @@ class bookingController extends coreController {
     			'firstname' => 'required|valid_name',
     		    'lastname' => 'required|valid_name',
     		    'email' => 'required|valid_email',
-    		    'address1' => 'required|street_address',
+    		    'address1' => 'required',
     		    //'address2' => '',
     		    'city' => 'required',
     		    'postcode' => 'required',
