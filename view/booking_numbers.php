@@ -1,18 +1,9 @@
 
 <p class="alert alert-info">
     Who is traveling in your party. Please tell us how many adults, children and infants.
-    <br /><b>Note: Online booking for this train is limited to <?php echo $limit->partysize;?></b>
 </p>
 
-<p class="santa-traintime">Selected train departs at <?php echo date('H:i', $time->time)?> on
-    <?php echo date('jS F Y', $date->date); ?></p>
-
 <form role="form" class="form-horizontal" method="post" action="<?php echo $this->Url('booking/numbers'); ?>">
-    <?php if ($errors) { ?>
-    <div class="alert alert-danger">
-        Please check that your total party size does not exceed <?php echo $limit->partysize; ?>
-    </div>
-    <?php } ?>
     <?php $form->select('adults',
     		'Number of adults - £'.number_format($fares->adult/100, 2).' each',
     		1,

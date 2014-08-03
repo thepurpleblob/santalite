@@ -18,6 +18,12 @@
                 <td>
                     <?php $form->text('party'.$formid, 'Party size', $limits[$date->id][$time->id]->partysize); ?>
                 </td>
+                <td nowrap>
+                    <b>Remaining:</b>&nbsp;
+                    <span class="lead">
+                        <?php echo $limits[$date->id][$time->id]->maxlimit - $limits[$date->id][$time->id]->count; ?>
+                    </span>
+                </td>
             </tr>
         <?php } ?>
         </table>

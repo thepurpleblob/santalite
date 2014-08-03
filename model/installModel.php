@@ -68,6 +68,7 @@ class installModel {
         // Purchase record
         $sql = 'CREATE TABLE IF NOT EXISTS purchase (
             id INTEGER PRIMARY KEY AUTO_INCREMENT,
+            trainlimitid INTEGER,
             type TEXT,
             day INTEGER,
             train INTEGER,

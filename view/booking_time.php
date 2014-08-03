@@ -1,4 +1,4 @@
-<!-- <h3>Choose your train time...</h3> -->
+<?php if ($available) { ?>
 
 <p class="alert alert-info">Santa trains leave Bo'ness at the following times. Choose the train
     you would like to travel on.</p>
@@ -21,6 +21,13 @@
     <?php } ?>
     </tbody>
 </table>
+
+<?php } else { ?>
+<div class="alert alert-danger">
+    There are no remaining services that can accomodate your party on the chosen day. You
+    can click 'Go back' and try a different day.
+</div>
+<?php }?>
 
 <div class="santa-buttons">
     <a href="<?php echo $this->Url('booking/date') ?>" class="btn btn-warning">Go back</a>

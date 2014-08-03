@@ -8,7 +8,7 @@ class bookingModel {
      * get operating months and days therein(numbers)
      * encode month/year, bit of a bodge
      */
-    public function getMonthsDays($dates) {
+    public function getMonthsDays($dates, $dmax, $seatsneeded) {
         $months = array();
         foreach ($dates as $date) {
             $month = date('m/Y', $date->date);
@@ -16,10 +16,43 @@ class bookingModel {
             if (!isset($months[$month])) {
                 $months[$month] = array();
             }
-            $months[$month][$day] = $date->id;
+            if ($seatsneeded <= $dmax[$date->id()]) {
+                $months[$month][$day] = $date->id;
+            }
         }
         
         return $months;
+    }
+   
+    /**
+     * Get (2d) array of passenger remaining counts
+     */
+    public function getRemaining() {
+        $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
+        $times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
+        $pcounts = array();
+        $daymax = array();
+        foreach ($dates as $date) {
+            $pcounts[$date->id()] = array();
+            $daymax[$date->id()] = 0;
+            foreach ($times as $time) {
+                $limit = \ORM::for_table('trainlimit')->where(array(
+                    'dateid' => $date->id(),
+                    'timeid' => $time->id(),
+                ))->find_one();
+                if (!$limit) {
+                    throw new \Exception("No limit record found in DB for timeid=".$time->id()." dateid=".$date->id());
+                }
+                $sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->sum('adult');
+                $sumchild = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->sum('child');
+                $total = $limit->maxlimit - ($sumadult + $sumchild);
+                $pcounts[$date->id()][$time->id()] = $total;
+                if ($total > $daymax[$date->id()]) {
+                    $daymax[$date->id()] = $total;
+                }
+            }
+        }
+        return array($pcounts, $daymax);
     }
     
     /*
@@ -201,7 +234,7 @@ class bookingModel {
         $purchase->firstname = $br->getFirstname();
         $purchase->address1 = $br->getAddress1();
         $purchase->address2 = $br->getAddress2();
-        $purchase->address3 = $br->getCity();
+        $purchase->address3 = $br->getCity() . ' ' . $br->getCounty();
         $purchase->address4 = $country;
         $purchase->postcode = $br->getPostcode();
         $purchase->phone = $br->getPhone();

@@ -41,7 +41,59 @@ class bookingController extends coreController {
         $this->View('booking_start');
         $this->View('footer');
     }
+    public function numbersAction() {
+        global $CFG;
+        
+        $bm = new bookingModel();
+        $br = new bookingRecord();
+        $gump = $this->getGump();
+         
+        // check the session is still around
+        if ($br->expired()) {
+            $this->redirect($this->url('booking/expired'));
+        }
+            // get fares
+        $fares = \ORM::for_table('fares')->find_one(1);
 
+        // choices
+        $adultchoices = $this->fill(1, $CFG->select_limit);
+        $childrenchoices = $this->fill(0, $CFG->select_limit);
+        $childrenchoices[0] = 'None';
+        $infantchoices = $this->fill(0, $CFG->select_limit);
+        $infantchoices[0] = 'None';
+
+        // form submitted?
+        if ($request = $this->getRequest()) {
+            if (!empty($request['cancel'])) {
+                $this->redirect($this->Url('booking/start'));
+            }
+
+            $lim = $CFG->select_limit;;
+            $gump->validation_rules(array(
+                    'adults' => "required|numeric|min_numeric,1|max_numeric,$lim",
+                    'children' => "required|numeric|min_numeric,0|max_numeric,$lim",
+                    'infants' => "required|numeric|min_numeric,0|max_numeric,$lim",
+            ));
+            if ($data = $gump->run($request)) {
+                $br->setAdults($data['adults']);
+                $br->setChildren($data['children']);
+                $br->setInfants($data['infants']);
+                $br->save();
+                $this->redirect($this->Url('booking/date'));
+            }
+        }
+
+        $this->View('header');
+        $this->View('booking_numbers', array(
+                'adultchoices' => $adultchoices,
+                'childrenchoices' => $childrenchoices,
+                'infantchoices' => $infantchoices,
+                'fares' => $fares,
+                'errors' => $gump->errors(),
+        ));
+        $this->View('footer');
+    }
+    
     public function dateAction($dateid=0) {
         $cal = $this->getLib('calendar');
         $bm = new bookingModel();
@@ -51,6 +103,10 @@ class bookingController extends coreController {
         if ($br->expired()) {
         	$this->redirect($this->url('booking/expired'));
         }
+        
+        // get the remaining seats counts
+        list($pcounts, $dmax) = $bm->getRemaining();
+        $seatsneeded = $br->getAdults() + $br->getChildren();
 
         // process data
         if ($dateid) {
@@ -66,9 +122,7 @@ class bookingController extends coreController {
 
         // get dates
         $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
-        $months = $bm->getMonthsDays($dates);
-
-        // TODO: need to work out *available* dates from purchases
+        $months = $bm->getMonthsDays($dates, $dmax, $seatsneeded);
 
         // build calendars
         $calendar = '';
@@ -92,6 +146,11 @@ class bookingController extends coreController {
     	if ($br->expired()) {
     		$this->redirect($this->url('booking/expired'));
     	}
+    	
+    	// get the remaining seats counts
+    	list($pcounts, $dmax) = $bm->getRemaining();
+    	$seatsavailable = $pcounts[$br->getDateid()];
+    	$seatsneeded = $br->getAdults() + $br->getChildren();
 
     	// need dateid from session
     	$dateid = $br->getDateid();
@@ -102,9 +161,17 @@ class bookingController extends coreController {
 
     	// get available times
     	$times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
+    	
+    	// check if any are actually available
+    	$available = false;
+    	foreach($times as $time) {
+    	    if ($seatsavailable[$time->id()] > $seatsneeded) {
+    	        $available = true;
+    	    }
+    	}
 
     	// check for submission
-    	if ($timeid) {
+    	if ($timeid && $available) {
     		$time = \ORM::for_table('traintime')->find_one($timeid);
     		if (!$time) {
     			throw new \Exception('Time not found in database id='.$timeid);
@@ -112,97 +179,14 @@ class bookingController extends coreController {
 
     		$br->setTimeid($timeid);
     		$br->save();
-    		$this->redirect($this->Url('booking/numbers'));
+    		$this->redirect($this->Url('booking/ages'));
     	}
 
         $this->View('header');
         $this->View('booking_time', array(
             'date' => $date,
             'times' => $times,
-        ));
-        $this->View('footer');
-    }
-
-    public function numbersAction() {
-    	$bm = new bookingModel();
-    	$br = new bookingRecord();
-    	$gump = $this->getGump();
-    	
-    	// check the session is still around
-    	if ($br->expired()) {
-    		$this->redirect($this->url('booking/expired'));
-    	}
-
-    	// get session data
-    	$dateid = $br->getDateid();
-    	$timeid = $br->getTimeid();
-
-        // get stuff from database
-        $date = \ORM::for_table('traindate')->find_one($dateid);
-    	if (!$date) {
-    		throw new \Exception('Traindate not found in database for id='.$dateid);
-    	}
-        $time = \ORM::for_table('traintime')->find_one($timeid);
-    	if (!$time) {
-    		throw new \Exception('Traintime not found in database for id='.$timeid);
-    	}
-
-        // get limits for above
-        $limit = \ORM::for_table('trainlimit')->where(array(
-        	'dateid' => $dateid,
-            'timeid' => $timeid,
-            ))->find_one();
-        if (!$limit) {
-        	throw new \Exception('No limit found for timeid='.$timeid.', dateid='.$dateid);
-        }
-
-        // add validator for maximum partysize
-        \GUMP::add_validator("partysize", function($field, $input, $param=null) {
-        	$total = $input['adults'] + $input['children'] + $input['infants'];
-        	return $total<=$param;
-        });
-
-        // get fares
-        $fares = \ORM::for_table('fares')->find_one(1);
-
-        // choices
-        $adultchoices = $this->fill(1, $limit->partysize);
-        $childrenchoices = $this->fill(0, $limit->partysize);
-        $childrenchoices[0] = 'None';
-        $infantchoices = $this->fill(0, $limit->partysize);
-        $infantchoices[0] = 'None';
-
-        // form submitted?
-        if ($request = $this->getRequest()) {
-        	if (!empty($request['cancel'])) {
-        		$this->redirect($this->Url('booking/time'));
-        	}
-
-        	$lim = $limit->partysize;
-        	$gump->validation_rules(array(
-        		'adults' => "required|numeric|min_numeric,1|max_numeric,$lim|partysize,$lim",
-        		'children' => "required|numeric|min_numeric,0|max_numeric,$lim|partysize,$lim",
-        		'infants' => "required|numeric|min_numeric,0|max_numeric,$lim|partysize,$lim",
-        	));
-        	if ($data = $gump->run($request)) {
-        		$br->setAdults($data['adults']);
-        		$br->setChildren($data['children']);
-        		$br->setInfants($data['infants']);
-        		$br->save();
-        		$this->redirect($this->Url('booking/ages'));
-        	}
-        }
-
-        $this->View('header');
-        $this->View('booking_numbers', array(
-            'date' => $date,
-            'time' => $time,
-            'adultchoices' => $adultchoices,
-            'childrenchoices' => $childrenchoices,
-        	'infantchoices' => $infantchoices,
-            'limit' => $limit,
-        	'fares' => $fares,
-        	'errors' => $gump->errors(),
+            'available' => $available,
         ));
         $this->View('footer');
     }

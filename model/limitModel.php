@@ -4,6 +4,12 @@ namespace model;
 
 class limitModel {
     
+    public function getPassengerCount($limitid) {
+        $sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limitid)->sum('adult');
+        $sumchild = \ORM::for_table('purchase')->where('trainlimitid', $limitid)->sum('child');
+        return $sumadult + $sumchild;
+    }
+    
     public function getFormLimits($dates, $times) {
         global $CFG;
         
@@ -24,6 +30,7 @@ class limitModel {
                     $limit->partysize = $CFG->default_party;
                     $limit->save();
                 }
+                $limit->count = $this->getPassengerCount($limit->id());
                 $limits[$date->id][$time->id] = $limit;
             }
         }

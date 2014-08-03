@@ -8,6 +8,6 @@
 </div>
 
 <div class="santa-buttons">
-    <a href="<?php echo $this->Url('booking/date') ?>" class="btn btn-info">Next page...</a>
+    <a href="<?php echo $this->Url('booking/numbers') ?>" class="btn btn-info">Next page...</a>
 </div>
 

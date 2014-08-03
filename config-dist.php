@@ -17,6 +17,9 @@ $CFG->dirroot = '';
 $CFG->default_limit = 100;
 $CFG->default_party = 8;
 
+// number of people limit in each select
+$CFG->select_limit = 8;
+
 // Sagepay stuff
 $CFG->sage_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
 $CFG->sage_vendor = 'srpsrailtours';

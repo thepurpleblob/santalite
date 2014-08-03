@@ -35,6 +35,8 @@ class bookingRecord {
 	protected $city = null;
 
 	protected $postcode = null;
+	
+	protected $county = null;
 
 	protected $country = null;
 
@@ -176,6 +178,14 @@ class bookingRecord {
 
 	public function getCountry() {
 		return $this->country;
+	}
+	
+	public function setCounty($county) {
+	    $this->county = $county;
+	}
+	
+	public function getCounty() {
+	    return $this->county;
 	}
 
 	public function setPhone($phone) {
