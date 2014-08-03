@@ -176,6 +176,16 @@ class bookingController extends coreController {
     		if (!$time) {
     			throw new \Exception('Time not found in database id='.$timeid);
     		}
+    		
+    		// get/set limit
+    		$limit = \ORM::for_table('trainlimit')->where(array(
+    		    'dateid' => $dateid,
+    		    'timeid' => $timeid,
+    		))->find_one();
+    		if (!$limit) {
+    		    throw new Exception('Could not find limit in db');
+    		}
+    		$br->setTrainlimitid($limit->id());
 
     		$br->setTimeid($timeid);
     		$br->save();

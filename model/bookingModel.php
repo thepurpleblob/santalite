@@ -227,6 +227,7 @@ class bookingModel {
         
         // update all the data (can't update reference until sure we have an ID)
         $purchase->type = 'O';
+        $purchase->trainlimitid = 0;
         $purchase->day = $this->getNth('traindate', 'date', $br->getDateid());
         $purchase->train = $this->getNth('traintime', 'time', $br->getTimeid());
         $purchase->surname = $br->getLastname();

@@ -5,6 +5,8 @@ namespace model;
 class bookingRecord {
     
     protected $reference = null;
+    
+    protected $trainlimitid = null;
 
 	protected $dateid = null;
 
@@ -50,6 +52,14 @@ class bookingRecord {
 	
 	public function getReference() {
 	    return $this->reference;
+	}
+	
+	public function setTrainlimitid($trainlimitid) {
+	    $this->trainlimitid = $trainlimitid;
+	}
+	
+	public function getTrainlimitid() {
+	    return $this->trainlimitid;
 	}
 
 	public function setDateid($dateid) {
