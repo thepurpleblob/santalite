@@ -14,7 +14,7 @@
             <?php if ($br->getAddress2()) { echo $br->getAddress2() . '<br />'; } ?>
             <?php echo $br->getCity(); ?><br />
             <?php echo $br->getPostcode(); ?><br />
-            <?php echo $country; ?>
+            <?php echo $br->getCounty(); ?>
             </address>
         </dd>
         <dt>Email</dt><dd><?php echo $br->getEmail(); ?>
