@@ -3,7 +3,7 @@
 namespace model;
 
 class bookingModel {
-    
+
     /**
      * get operating months and days therein(numbers)
      * encode month/year, bit of a bodge
@@ -20,10 +20,10 @@ class bookingModel {
                 $months[$month][$day] = $date->id;
             }
         }
-        
+
         return $months;
     }
-   
+
     /**
      * Get (2d) array of passenger remaining counts
      */
@@ -54,7 +54,7 @@ class bookingModel {
         }
         return array($pcounts, $daymax);
     }
-    
+
     /*
      * Create select array for child's ages
      */
@@ -67,7 +67,7 @@ class bookingModel {
     	}
     	return $ages;
     }
-    
+
     /**
      * Get the date in a readable format given dateid
      * @param unknown $dateid
@@ -79,7 +79,7 @@ class bookingModel {
         }
         return date('d/M/Y', $date->date);
     }
-    
+
     /**
      * Get the time in a readable format given timeid
      *
@@ -91,54 +91,54 @@ class bookingModel {
         }
         return date('H:i', $time->time);
     }
-    
+
     /**
      * Make the SagePay basket
      * @param unknown $br
      */
     private function makeBasket($br) {
-        return '';    
+        return '';
     }
-    
+
     /**
      * Filter for SagePay's crypt fields
      * @param unknown $value
      * @return unknown
      */
     private function filter($value, $maxchars, $filter) {
-        
+
         // use sagepay's clean functions
         $value = \sagelib::cleanInput($value, $filter);
-        
+
         // truncate to maxchars
         $value = substr($value, 0, $maxchars);
-        
+
         return $value;
     }
-    
+
     /**
      * Construct SagePay crypt string
      * @param unknown $br
      */
     public function crypt($br) {
         global $CFG;
-        
+
         // sort some basic stuff
         $description = "Bo'ness & Kinneil Railway Santa Steam Train booking on " .
             $this->getReadableDate($br->getDateid()) . ' departing ' . $this->getReadableTime($br->getTimeid());
-        
+
         // build transaction data into string
         $cryptfields = array(
             'VendorTXCode' => $CFG->sage_prefix . $br->getReference(),
             'Amount' => number_format($br->getAmount(), 2),
             'Currency' => 'GBP',
             'Description' => $description,
-            'SuccessURL' => $CFG->www . '/index.php/booking/return/success',  
+            'SuccessURL' => $CFG->www . '/index.php/booking/return/success',
             'FailureURL' => $CFG->www . '/index.php/booking/return/failure',
             'CustomerName' => $this->filter($br->getTitle() . ' ' . $br->getFirstname() . ' ' . $br->getLastname(), 100,
                 CLEAN_INPUT_FILTER_ALPHABETIC_AND_ACCENTED),
-            'CustomerEmail' => $this->filter($br->getEmail(), 100, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE), 
-            'VendorEmail' => $this->filter($CFG->sage_email, 255, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE), 
+            'CustomerEmail' => $this->filter($br->getEmail(), 100, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE),
+            'VendorEmail' => $this->filter($CFG->sage_email, 255, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE),
             'SendEmail' => '1',
             'eMailMessage' => $this->filter($CFG->sage_message, 7500, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE),
             'BillingSurname' => $this->filter($br->getLastname(), 20, CLEAN_INPUT_FILTER_ALPHABETIC_AND_ACCENTED),
@@ -159,18 +159,18 @@ class bookingModel {
             'DeliveryPhone' => $this->filter($br->getPhone(), 20, CLEAN_INPUT_FILTER_ALPHANUMERIC),
             'Basket' => $this->filter($this->makeBasket($br), 7500, CLEAN_INPUT_FILTER_WIDEST_ALLOWABLE_CHARACTER_RANGE),
         );
-        
+
         // translate to name=value array
         $namevalue = array();
         foreach ($cryptfields as $name => $value) {
             $namevalue[] = "$name=$value";
         }
-                
+
         $cryptstring = implode('&', $namevalue);
-        
+
         return \sagelib::encryptAndEncode($cryptstring, $CFG->sage_encrypt);
     }
-    
+
     /**
      * Get the nth date/time in the database for output record
      */
@@ -185,7 +185,7 @@ class bookingModel {
         }
         throw new Exception('ID '.$id.' not found in table '.$table);
     }
-    
+
     /**
      * Convert boy/girl ages records into hex strings
      */
@@ -204,13 +204,13 @@ class bookingModel {
         }
         return array($boys, $girls);
     }
-    
+
     /**
      * Update or create purchase record (checks for id)
      * @param unknown $br
      */
     public function updatePurchase($br) {
-        
+
         // if br has a reference number this should match the database record
         if ($br->getReference()) {
             $purchase = \ORM::for_table('purchase')->find_one($br->getReference());
@@ -220,11 +220,11 @@ class bookingModel {
         } else {
             $purchase = \ORM::for_table('purchase')->create();
         }
-        
+
         // country
         $countries = $this->getCountries();
         $country = $countries[$br->getCountry()];
-        
+
         // update all the data (can't update reference until sure we have an ID)
         $purchase->type = 'O';
         $purchase->trainlimitid = 0;
@@ -235,8 +235,8 @@ class bookingModel {
         $purchase->firstname = $br->getFirstname();
         $purchase->address1 = $br->getAddress1();
         $purchase->address2 = $br->getAddress2();
-        $purchase->address3 = $br->getCity() . ' ' . $br->getCounty();
-        $purchase->address4 = $country;
+        $purchase->address3 = $br->getCity();
+        $purchase->address4 = $br->getCounty();
         $purchase->postcode = $br->getPostcode();
         $purchase->phone = $br->getPhone();
         $purchase->email = $br->getEmail();
@@ -252,20 +252,20 @@ class bookingModel {
         $purchase->action = 'N';
         $purchase->eticket = 'N';
         $purchase->einfo = 'N';
-        
+
         $purchase->save();
         $br->setReference($purchase->id());
         $br->save();
-        
+
         return $br->getReference();
     }
-    
+
     /**
      * Decrypt returndata from sage
      */
     public function decrypt($br, $crypt) {
         global $CFG;
-        
+
         $decode = \sagelib::decodeAndDecrypt($crypt, $CFG->sage_encrypt);
         $pairs = explode('&', $decode);
         $data = array();
@@ -273,23 +273,23 @@ class bookingModel {
             $split = explode('=', $pair);
             $data[$split[0]] = $split[1];
         }
-        
+
         // Update the database record
         $purchase = \ORM::for_table('purchase')->find_one($br->getReference());
         if (!$purchase) {
             throw new \Exception('Cannot find record in DB for purchase id='.$br->getReference());
         }
-        
+
         $purchase->bkgref = $data['VendorTxCode'];
         $purchase->status = $data['Status'];
         $purchase->statusdetail = $data['StatusDetail'];
         $purchase->txauthno = $data['TxAuthNo'];
         $purchase->last4digits = $data['Last4Digits'];
         $purchase->save();
-        
+
         return $purchase;
     }
-    
+
     public function getCountries() {
     	$countries = array
     	(
@@ -539,7 +539,7 @@ class bookingModel {
     			'ZM' => 'Zambia',
     			'ZW' => 'Zimbabwe',
     	);
-    	
+
     	return $countries;
     }
 }

@@ -13,10 +13,15 @@
     </thead>
     <tbody>
     <?php foreach ($times as $time) { ?>
+
         <tr>
             <td class="lead"><b><?php echo date('H:i', $time->time) ?></b></td>
             <td>Bo'ness</td>
+            <?php if ($seatsavailable[$time->id()] >= $seatsneeded) { ?>
             <td><a class="btn btn-primary" href="<?php echo $this->Url('booking/time/'.$time->id) ?>">Select</a></td>
+            <?php } else { ?>
+            <td><button class="btn btn-warning" disabled="disabled">Sorry - no seats</button></td>
+            <?php } ?>
         </tr>
     <?php } ?>
     </tbody>

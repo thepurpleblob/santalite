@@ -22,32 +22,32 @@ class bookingController extends coreController {
         parent::__construct();
         $this->bm = new bookingModel;
     }
-    
+
     public function expiredAction() {
     	$this->View('header');
     	$this->View('booking_expired');
-    	$this->View('footer');    	
+    	$this->View('footer');
     }
 
     public function startAction() {
-        
+
         // invalidate the session (new booking)
         session_unset();
-        
+
     	$br = new bookingRecord();
     	$br->save();
-    	
+
         $this->View('header');
         $this->View('booking_start');
         $this->View('footer');
     }
     public function numbersAction() {
         global $CFG;
-        
+
         $bm = new bookingModel();
         $br = new bookingRecord();
         $gump = $this->getGump();
-         
+
         // check the session is still around
         if ($br->expired()) {
             $this->redirect($this->url('booking/expired'));
@@ -93,17 +93,17 @@ class bookingController extends coreController {
         ));
         $this->View('footer');
     }
-    
+
     public function dateAction($dateid=0) {
         $cal = $this->getLib('calendar');
         $bm = new bookingModel();
         $br = new bookingRecord();
-        
+
         // check the session is still around
         if ($br->expired()) {
         	$this->redirect($this->url('booking/expired'));
         }
-        
+
         // get the remaining seats counts
         list($pcounts, $dmax) = $bm->getRemaining();
         $seatsneeded = $br->getAdults() + $br->getChildren();
@@ -141,12 +141,12 @@ class bookingController extends coreController {
     public function timeAction($timeid=0) {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
-    	
+
     	// check the session is still around
     	if ($br->expired()) {
     		$this->redirect($this->url('booking/expired'));
     	}
-    	
+
     	// get the remaining seats counts
     	list($pcounts, $dmax) = $bm->getRemaining();
     	$seatsavailable = $pcounts[$br->getDateid()];
@@ -161,7 +161,7 @@ class bookingController extends coreController {
 
     	// get available times
     	$times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
-    	
+
     	// check if any are actually available
     	$available = false;
     	foreach($times as $time) {
@@ -176,7 +176,7 @@ class bookingController extends coreController {
     		if (!$time) {
     			throw new \Exception('Time not found in database id='.$timeid);
     		}
-    		
+
     		// get/set limit
     		$limit = \ORM::for_table('trainlimit')->where(array(
     		    'dateid' => $dateid,
@@ -197,6 +197,8 @@ class bookingController extends coreController {
             'date' => $date,
             'times' => $times,
             'available' => $available,
+            'seatsavailable' => $seatsavailable,
+        	'seatsneeded' => $seatsneeded,
         ));
         $this->View('footer');
     }
@@ -206,7 +208,7 @@ class bookingController extends coreController {
     	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
-    	
+
     	// check the session is still around
     	if ($br->expired()) {
     		$this->redirect($this->url('booking/expired'));
@@ -252,7 +254,7 @@ class bookingController extends coreController {
     	$this->View('footer');
 
     }
-    
+
     private function set_record($br, $data) {
         $br->setTitle($data['title']);
         $br->setFirstname($data['firstname']);
@@ -263,7 +265,7 @@ class bookingController extends coreController {
         $br->setCity($data['city']);
         $br->setPostcode($data['postcode']);
         $br->setCounty($data['county']);
-        $br->setCountry($data['country']);
+        $br->setCountry('GB');
         $br->setPhone($data['phone']);
     }
 
@@ -272,21 +274,21 @@ class bookingController extends coreController {
     	$br = new bookingRecord();
     	$gump = $this->getGump();
     	$errors = array();
-    	
+
     	// check the session is still around
     	if ($br->expired()) {
     		$this->redirect($this->url('booking/expired'));
     	}
-    	
+
     	// list of countries (for select)
     	$countries = $bm->getCountries();
-    	
+
     	// form submitted?
     	if ($request = $this->getRequest()) {
     		if (!empty($request['cancel'])) {
     			$this->redirect($this->Url('booking/ages'));
     		}
-    		
+
     		$gump->validation_rules(array(
     			//'title' => '',
     			'firstname' => 'required|valid_name',
@@ -296,7 +298,6 @@ class bookingController extends coreController {
     		    //'address2' => '',
     		    'city' => 'required',
     		    'postcode' => 'required',
-    		    'country' => 'required',
     		    //'phone' => '',
     		));
     		$this->set_record($br, $request);
@@ -316,39 +317,39 @@ class bookingController extends coreController {
     	));
     	$this->View('footer');
     }
-    
-    
+
+
     public function confirmAction() {
         $bm = new bookingModel();
         $br = new bookingRecord();
-        
+
         // check the session is still around
         if ($br->expired()) {
             $this->redirect($this->url('booking/expired'));
         }
-        
+
         // resave session just to bump its time
         $br->save();
-        
+
         // list of countries (for select)
         $countries = $bm->getCountries();
         $country = $countries[$br->getCountry()];
-        
+
         // get fares
         $fares = \ORM::for_table('fares')->find_one(1);
-        
+
         // sums
         $price_adults = $br->getAdults() * $fares->adult / 100;
         $price_children = $br->getChildren() * $fares->child / 100;
         $price_total = $price_adults + $price_children;
         $br->setAmount($price_total);
-        
+
         // we need to come up with a booking code about now
         $purchaseid = $bm->updatePurchase($br);
-        
+
         // get encrypted data to send to SagePay
         $crypt = $bm->crypt($br);
-        
+
         $this->View('header');
         $this->View('booking_confirm', array(
                 'br' => $br,
@@ -361,23 +362,23 @@ class bookingController extends coreController {
         ));
         $this->View('footer');
     }
-    
+
     public function returnAction($result) {
         $bm = new bookingModel();
         $br = new bookingRecord();
-        
+
         // check the session is still around
         if ($br->expired()) {
             $this->redirect($this->url('booking/expired'));
         }
-        
+
         if ($request = $_GET) {
             if (!isset($request['crypt'])) {
                 throw new \Exception("No crypt field on return from SagePay");
             }
             $crypt = $request['crypt'];
             $purchase = $bm->decrypt($br, $crypt);
-            
+
         }
         $this->View('header');
         $this->View('booking_result', array(

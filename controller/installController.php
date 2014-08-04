@@ -8,7 +8,7 @@ use model\installModel;
 class installController extends coreController {
 
     function installAction() {
-        $this->require_login('admin', $this->Url('install/install'));
+        //$this->require_login('admin', $this->Url('install/install'));
         $installer = new installModel();
         $installer->install_tables();
         $this->View('header');
