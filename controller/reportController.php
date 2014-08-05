@@ -5,7 +5,7 @@ namespace controller;
 use core\coreController;
 
 class reportController extends coreController {
-    
+
     private function printCsvLine($items) {
         foreach($items as $index => $item) {
             if ($item==null) {
@@ -24,19 +24,19 @@ class reportController extends coreController {
 
         // get completed purchases
         $purchases = \ORM::for_table('purchase')->where('status', 'OK')->find_many();
-        
+
         $date = date('Y_M_d');
         header("Content-type: text/csv");
         header("Content-Disposition: attachment; filename=santa_$date.csv");
         header("Pragma: no-cache");
         header("Expires: 0");
-        
+
         foreach ($purchases as $purchase) {
             $line = array(
                 $purchase->type,
+            	$purchase->bkgref,
                 $purchase->day,
                 $purchase->train,
-                $purchase->bkgref,
                 $purchase->surname,
                 $purchase->title,
                 $purchase->firstname,
@@ -63,7 +63,7 @@ class reportController extends coreController {
             );
             $this->printCsvLine($line);
         }
-        
+
     }
 
 
