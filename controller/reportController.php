@@ -28,7 +28,7 @@ class reportController extends coreController {
         // get completed purchases
         $purchases = \ORM::for_table('purchase')->where('status', 'OK')->find_many();
 
-        $date = date('Y_M_d');
+        $date = date('Y');
         header("Content-type: text/csv");
         header("Content-Disposition: attachment; filename=santa_$date.csv");
         header("Pragma: no-cache");
