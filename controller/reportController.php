@@ -14,6 +14,9 @@ class reportController extends coreController {
             $item = (string)$item;
             $item = str_replace("'", "\'", $item);
             $item = str_replace("\t", ' ', $item);
+            if (!$item) {
+            	$item = ' ';
+            }
             $items[$index] = $item;
         }
         $line = implode("\t", $items);
