@@ -7,7 +7,7 @@ use core\coreController;
 class timeController extends coreController {
 
     public function indexAction() {
-        $this->require_login('organiser', $this->Url('time/index'));
+        $this->require_login('admin', $this->Url('time/index'));
         $times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
         $this->View('header');
         $this->View('time_index', array('times'=>$times));
@@ -18,7 +18,7 @@ class timeController extends coreController {
      * Add or edit time
      */
     public function editAction($timeid) {
-        $this->require_login('organiser', $this->Url('time/index'));
+        $this->require_login('admin', $this->Url('time/index'));
         $gump = $this->getGump();
         $errors = null;
         
@@ -63,7 +63,7 @@ class timeController extends coreController {
      * Show delete warning
      */
     public function deleteAction($timeid) {
-        $this->require_login('organiser', $this->Url('time/index'));
+        $this->require_login('admin', $this->Url('time/index'));
         $this->View('header');
         $this->View('datetime_delete', array(
             'confirmurl' => $this->Url('time/confirm/'.$timeid),

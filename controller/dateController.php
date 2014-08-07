@@ -7,7 +7,7 @@ use core\coreController;
 class dateController extends coreController {
 
     public function indexAction() {
-        $this->require_login('organiser', $this->Url('date/index'));
+        $this->require_login('admin', $this->Url('date/index'));
         $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
         $this->View('header');
         $this->View('date_index', array('dates'=>$dates));
@@ -65,7 +65,7 @@ class dateController extends coreController {
      * Show delete warning
      */
     public function deleteAction($dateid) {
-        $this->require_login('organiser', $this->Url('date/index'));
+        $this->require_login('admin', $this->Url('date/index'));
         $this->View('header');
         $this->View('datetime_delete', array(
             'confirmurl' => $this->Url('date/confirm/'.$dateid),

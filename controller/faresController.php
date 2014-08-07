@@ -10,7 +10,7 @@ class faresController extends coreController {
      * Add or edit time
      */
     public function indexAction() {
-        $this->require_login('organiser', $this->Url('fares/index'));
+        $this->require_login('admin', $this->Url('fares/index'));
         $gump = $this->getGump();
         $errors = null;
         
@@ -51,7 +51,7 @@ class faresController extends coreController {
      * Show delete warning
      */
     public function deleteAction($dateid) {
-        $this->require_login('organiser', $this->Url('fares/index'));
+        $this->require_login('admin', $this->Url('fares/index'));
         $this->View('header');
         $this->View('datetime_delete', array(
             'confirmurl' => $this->Url('date/confirm/'.$dateid),
