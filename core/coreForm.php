@@ -15,12 +15,16 @@ class coreForm {
         return $a;
     }
     
-    public function text($name, $label, $value) {
+    public function text($name, $label, $value, $required=false) {
         $id = $name . 'Text';
-        echo '<div class="form-group">';
+        $reqclass = $required ? 'has-feedback has-warning' : '';
+        echo '<div class="form-group '.$reqclass.'">';
         echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
         echo '    <div class="col-sm-8">';
-        echo '    <input type="text" class="form-control" name="'.$name.'" id="'.$id.'" value="'.$value.'" />';
+        echo '    <input type="text" class="form-control input-sm" name="'.$name.'" id="'.$id.'" value="'.$value.'" />';
+        if ($required) {
+            echo '    <span class="glyphicon glyphicon-asterisk form-control-feedback"></span>';
+        }
         echo '</div></div>';
     }
     
@@ -29,7 +33,7 @@ class coreForm {
         echo '<div class="form-group">';
         echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
         echo '    <div class="col-sm-8">';
-        echo '    <input type="password" class="form-control" name="'.$name.'" id="'.$id.'" />';
+        echo '    <input type="password" class="form-control input-sm" name="'.$name.'" id="'.$id.'" />';
         echo '</div></div>';
     }   
     
@@ -38,7 +42,7 @@ class coreForm {
         echo '<div class="form-group">';
         echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
         echo '    <div class="col-sm-8">';
-        echo '    <select class="form-control" name="'.$name.'">';
+        echo '    <select class="form-control input-sm" name="'.$name.'">';
         if ($choose) {
         	echo '<option selected disabled="disabled">'.$choose.'</option>';
         }

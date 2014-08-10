@@ -34,7 +34,7 @@ class coreController {
             new GlobAsset($CFG->dirroot . '/assets/js/*'),
         ));
 
-        $js->dump();
+        return $js->dump();
     }
 
     private function extendGump() {

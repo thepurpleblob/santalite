@@ -60,7 +60,7 @@ class bookingModel {
      */
     public function getAges() {
     	$ages = array(
-    		1 => '1 year',
+    		1 => '18-23 months',
     	);
     	for ($i=2; $i<=15; $i++) {
     		$ages[$i] = "$i years";

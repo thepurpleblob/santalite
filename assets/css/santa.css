@@ -1,5 +1,5 @@
 body {
-	background-color: #69923a;
+	background: url(../admin/image/bg.jpg);
 }
 
 div#santa-content {
@@ -7,7 +7,8 @@ div#santa-content {
 	margin: 20px 0;
 	padding: 8px;
 	border-radius: 8px;
-	box-shadow: 7px 7px 5px #34491d;
+	border: 4px solid #55557d;
+	box-shadow: 7px 7px 5px #014991;
 }
 
 .santa-table {
