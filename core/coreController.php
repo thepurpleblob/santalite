@@ -72,11 +72,15 @@ class coreController {
         return new $classname;
     }
 
-    public function __construct() {
-        $this->form = new coreForm();
-        require_once(dirname(__FILE__) . '/GUMP/gump.class.php');
-        $this->extendGump();
-        $this->gump = new \GUMP();
+    public function __construct($exception=false) {
+        
+        // if exception handler, don't bother with this stuff
+        if (!$exception) {
+            $this->form = new coreForm();
+            require_once(dirname(__FILE__) . '/GUMP/gump.class.php');
+            $this->extendGump();
+            $this->gump = new \GUMP();
+        }
     }
 
     /**

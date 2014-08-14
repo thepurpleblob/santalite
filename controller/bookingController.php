@@ -217,7 +217,7 @@ class bookingController extends coreController {
     	// need number of children
     	$children = $br->getChildren();
     	if (!$children) {
-    		throw new \Exception('There are no children in this booking');
+    		$this->redirect($this->Url('booking/contact'));
     	}
 
     	// form submitted?

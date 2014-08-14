@@ -194,12 +194,14 @@ class bookingModel {
         $sexes = $br->getSexes();
         $boys = '';
         $girls = '';
-        foreach ($sexes as $sex) {
-            $age = array_shift($ages);
-            if ($sex=='boy') {
-                $boys .= dechex($age);
-            } else {
-                $girls .= dechex($age);
+        if ($sexes) {
+            foreach ($sexes as $sex) {
+                $age = array_shift($ages);
+                if ($sex=='boy') {
+                    $boys .= dechex($age);
+                } else {
+                    $girls .= dechex($age);
+                }
             }
         }
         return array($boys, $girls);
