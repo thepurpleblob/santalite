@@ -39,7 +39,8 @@ class calendar {
                 if (!$dom or ($dom > $daysinmonth)) {
                 	$html .= '<td class="santa-cell">&nbsp;</td>';
                 } else if (isset($bookingdays[$dom])) {
-                    $html .= '<td class="santa-cell available"><a href="'.$url.$bookingdays[$dom].'"><b>'.$dom.'</b></a></td>';
+                    $html .= '<td class="santa-cell available" data-toggle="tooltip" title="stuff">';
+                    $html .= '<a href="'.$url.$bookingdays[$dom].'"><b>'.$dom.'</b></a></td>';
                     $dom++;
                 } else {
                 	$html .= '<td class="santa-cell dimmed">'.$dom.'</td>';
