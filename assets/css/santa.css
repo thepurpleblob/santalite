@@ -1,5 +1,5 @@
 body {
-	background: url(../admin/image/bg.jpg);
+	background: url(../admin/image/bg.png);
 }
 
 .santa-title {
@@ -7,7 +7,8 @@ body {
 }
 
 .santa-title .santa-minor-title {
-	margin: 0;
+	margin: 0 0 15px;
+	
 }
 
 .santa-title .santa-main-title {
