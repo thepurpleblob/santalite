@@ -15,17 +15,21 @@
         <div class="col-md-2">&nbsp</div>
         <div class="col-md-8" id="santa-content">
             <div class="row">
-                <div class="col-md-3">
-                    <img src="<?php echo $CFG->www ?>/assets/images/logo.png" />
+                <div class="col-md-1"></div>
+                <div class="col-md-10 santa-title">
+                    <h4 class="santa-minor-title">The Scottish Railway Preservation Society</h5>
+                    <h2 class="santa-main-title">SANTA STEAM TRAINS</h1>
+                    <h5 class="santa-minor-title">on the</h5>
+                    <h4 class="santa-minor-title">Bo'ness & Kinneil Railway</h5>
                 </div>
-                <div class="col-md-9">
-                    <h2>SANTA TRAINS</h2>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="row">
                     <?php
                     $user = $this->getUser();
                     if ($user) {
                         echo "<p>You are logged in as {$user->fullname}</p>";
                     }
                     ?>
-                </div>
             </div>
 

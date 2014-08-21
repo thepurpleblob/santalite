@@ -16,7 +16,7 @@ class calendar {
         );
     }
 
-    public function render($daysinmonth, $firstday, $bookingdays, $url) {
+    public function render($daysinmonth, $firstday, $bookingdays, $url, $month, $year) {
         $days = $this->isoDays();
         $html = '<table class="table table-bordered santa-table">';
         $html .= '<thead>';
@@ -36,11 +36,13 @@ class calendar {
                 if (!$dom and ($daynum == $firstday)) {
                 	$dom = 1;
                 }
+                $now = mktime(null, null, null, $month, $dom, $year);
                 if (!$dom or ($dom > $daysinmonth)) {
                 	$html .= '<td class="santa-cell">&nbsp;</td>';
                 } else if (isset($bookingdays[$dom])) {
-                    $html .= '<td class="santa-cell available" data-toggle="tooltip" title="stuff">';
-                    $html .= '<a href="'.$url.$bookingdays[$dom].'"><b>'.$dom.'</b></a></td>';
+                    $tooltip = date('l jS F Y', $now);
+                    $html .= '<td class="santa-cell available" >';
+                    $html .= '<a class="santa-tooltip" data-toggle="tooltip" title="'.$tooltip.'" href="'.$url.$bookingdays[$dom].'"><b>'.$dom.'</b></a></td>';
                     $dom++;
                 } else {
                 	$html .= '<td class="santa-cell dimmed">'.$dom.'</td>';
@@ -68,8 +70,8 @@ class calendar {
     	// how many days in that month
     	$dim = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-    	return "<div class=\"santa-cal\"><p class=\"badge\">$monthName $year</p>" .
-    	    $this->render($dim, $day, $bookingdays, $url) . '</div>';
+    	return "<div class=\"santa-cal\"><h2><span class=\"label label-primary\">$monthName $year</span></h2>" .
+    	    $this->render($dim, $day, $bookingdays, $url, $month, $year) . '</div>';
     }
 }
 

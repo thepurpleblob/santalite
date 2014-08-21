@@ -1,0 +1,1 @@
+$(".santa-tooltip").tooltip();

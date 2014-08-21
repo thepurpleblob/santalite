@@ -2,6 +2,20 @@ body {
 	background: url(../admin/image/bg.jpg);
 }
 
+.santa-title {
+	text-align: center;
+}
+
+.santa-title .santa-minor-title {
+	margin: 0;
+}
+
+.santa-title .santa-main-title {
+	color: #ff0000;
+	margin: 5px 0;
+	font-weight: bold;
+}
+
 div#santa-content {
 	background-color: #fff;
 	margin: 20px 0;
@@ -21,6 +35,11 @@ div#santa-content {
 .santa-cal {
 	width: 320px;
 	float: left;
+	text-align: center;
+}
+
+.santa-cal-container {
+	padding-left: 55px;
 }
 
 .santa-cell {

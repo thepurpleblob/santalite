@@ -9,7 +9,7 @@ class reportController extends coreController {
     private function printCsvLine($items) {
         foreach($items as $index => $item) {
             if ($item==null) {
-                $item = '';
+                $item = ' ';
             }
             $item = (string)$item;
             $item = str_replace("'", "\'", $item);
