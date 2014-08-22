@@ -18,7 +18,7 @@ class coreController {
 
         $css = new AssetCollection(array(
             new HttpAsset('//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css'),
-            new HttpAsset('//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css'),
+            //new HttpAsset('//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css'),
             new GlobAsset($CFG->dirroot . '/assets/css/*'),
         ));
 
