@@ -14,6 +14,8 @@
 <?php } ?>
 <dt><a class="btn btn-info" href="<?php echo $this->Url('limit/index') ?>">Limits</a></dt>
     <dd>Set passenger limits and group sizes</dd>
+<dt><a class="btn btn-info" href="<?php echo $this->Url('report/purchases') ?>">Purchases</a></dt>
+    <dd>Show purchases</dd>
 <dt><a class="btn btn-info" href="<?php echo $this->Url('report/export') ?>">Export</a></dt>
     <dd>Export bookings as CSV</dd>
 <dt><a class="btn btn-info" href="<?php echo $this->Url('booking/start') ?>">Booking</a></dt>

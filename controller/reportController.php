@@ -66,7 +66,21 @@ class reportController extends coreController {
             );
             $this->printCsvLine($line);
         }
-
+    }
+    
+    public function purchasesAction() {
+        
+        $this->require_login('organiser', $this->Url('report/purchases'));
+        
+        // get completed purchases
+        $purchases = \ORM::for_table('purchase')->find_many();
+        
+        $this->View('header');
+        $this->View('report_purchases', array(
+            'purchases' => $purchases,
+        ));
+        $this->View('footer');
+        
     }
 
 
