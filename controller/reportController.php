@@ -82,6 +82,65 @@ class reportController extends coreController {
         $this->View('footer');
         
     }
+    
+    private function row($label, $value) {
+        if (!$value) {
+            $value = '-';
+        }
+        $html = '<tr>';
+        $html .= '<th>' . $label . '</th>';
+        $html .= '<td>' . $value . '</td>';
+        $html .= '</tr>';
+        
+        return $html;
+    }
+    
+    public function purchaseAction($id) {
+        
+        $this->require_login('organiser', $this->url('report/purchase/'.$id));
+        
+        // find the purchase
+        $purchase = \ORM::for_table('purchase')->find_one($id);
+        if (!$purchase) {
+            throw new \Exception('could not find purchase record for id='.$id);
+        }
+        
+        // create table 'filling'
+        $rows = array(
+            'Booking reference' => $purchase->bkgref,
+            'Status' => $purchase->status,
+            'Booking date' => $purchase->bkgdate,
+            'Booked day number' => $purchase->day,
+            'Booked train number' => $purchase->train,
+            'Name' => $purchase->title . ' ' . $purchase->firstname . ' ' . $purchase->surname,
+            'Address 1' => $purchase->address1,
+            'Address 2' => $purchase->address2,
+            'Address 3' => $purchase->address3,
+            'Address 4' => $purchase->address4,
+            'Phone' => $purchase->phone,
+            'Email' => $purchase->email,
+            'Adults' => $purchase->adult,
+            'Children' => $purchase->child,
+            'Infants' => $purchase->infant,
+            'Boys ages' => $purchase->childagesboy,
+            'Girls ages' => $purchase->childagesgirl,
+            'Payment' => '&pound; ' . number_format($purchase->payment / 100, 2),
+            'Sage detail' => $purchase->statusdetail,
+            'Sage auth number' => $purchase->txauthno,
+            'Sage last 4 digits' => $purchase->last4digits,
+        );
+        $body = '';
+        foreach ($rows as $label => $value) {
+            $body .= $this->row($label, $value);
+        }
+        
+        $this->View("header");
+        $this->View('report_purchase', array(
+            'statusok' => $purchase->status == 'OK',
+            'body' => $body,
+        ));
+        $this->View('footer');
+    }
 
 
 }

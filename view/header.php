@@ -27,11 +27,13 @@
                 <div class="col-md-3"></div>
             </div>
             <div class="row">
+                <div class="col-md-12">
                     <?php
                     $user = $this->getUser();
                     if ($user) {
                         echo "<p>You are logged in as {$user->fullname}</p>";
                     }
                     ?>
+                </div>
             </div>
 

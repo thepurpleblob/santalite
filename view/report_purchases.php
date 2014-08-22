@@ -3,7 +3,7 @@
         There are no recorded purchases
     </div>
 <?php } else { ?>
-    <table class="table">
+    <table class="table table-condensed">
         <thead>
             <th>Reference</th>
             <th>Date</th>
