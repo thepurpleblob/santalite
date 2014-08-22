@@ -90,3 +90,8 @@ td.available {
 	font-size: 18px;
 	padding-top: 5px;
 }
+
+.santa-fail td {
+	background-color: #f2dede;
+}
+}

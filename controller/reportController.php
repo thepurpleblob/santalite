@@ -73,7 +73,7 @@ class reportController extends coreController {
         $this->require_login('organiser', $this->Url('report/purchases'));
         
         // get completed purchases
-        $purchases = \ORM::for_table('purchase')->find_many();
+        $purchases = \ORM::for_table('purchase')->order_by_asc('bkgdate')->find_many();
         
         $this->View('header');
         $this->View('report_purchases', array(
