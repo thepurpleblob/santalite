@@ -91,7 +91,7 @@ class installModel {
             childagesgirl TEXT,
             comment TEXT,
             payment INTEGER,
-            bkgdate INTEGER,
+            bkgdate TEXT,
             card TEXT,
             action TEXT,
             season INTEGER,

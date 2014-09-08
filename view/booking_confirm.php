@@ -13,8 +13,8 @@
             <?php echo $br->getAddress1(); ?><br />
             <?php if ($br->getAddress2()) { echo $br->getAddress2() . '<br />'; } ?>
             <?php echo $br->getCity(); ?><br />
+            <?php if ($br->getCounty()) { echo $br->getCounty() . '<br />'; } ?>
             <?php echo $br->getPostcode(); ?><br />
-            <?php echo $br->getCounty(); ?>
             </address>
         </dd>
         <dt>Email</dt><dd><?php echo $br->getEmail(); ?>
@@ -56,7 +56,7 @@
         <h4 class="modal-title" id="santaTermsLabel">Terms and Conditions</h4>
       </div>
       <div class="modal-body">
-          <?php include('http://www.srps.org.uk/railway'); ?>
+          <?php include('http://www.srps.org.uk/srps/santa-conditions.inc.php'); ?>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

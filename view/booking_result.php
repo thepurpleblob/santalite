@@ -4,7 +4,7 @@
 <div class="alert alert-success">
     <p><b>Your booking reference is <?php echo $purchase->bkgref; ?></b></p>
     <p>Your booking is now complete. Thank you.</p>
-    <p>You will receive and email with your booking details shortly.</p>
+    <p>You will receive an email with your booking details shortly.</p>
 </div>
 
 <?php } else { ?>

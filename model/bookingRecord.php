@@ -247,6 +247,7 @@ class bookingRecord {
 		$this->get('address1');
 		$this->get('address2');
 		$this->get('city');
+           $this->get('county');
 		$this->get('postcode');
 		$this->get('country');
 		$this->get('phone');
@@ -273,6 +274,7 @@ class bookingRecord {
 		$this->put('address1');
 		$this->put('address2');
 		$this->put('city');
+            $this->put('county');
 		$this->put('postcode');
 		$this->put('country');
 		$this->put('phone');

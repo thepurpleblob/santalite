@@ -249,7 +249,7 @@ class bookingModel {
         list($purchase->childagesboy, $purchase->childagesgirl) = $this->encodeAges($br);
         $purchase->comment = '';
         $purchase->payment = floor($br->getAmount() * 100);
-        $purchase->bkgdate = date('Y-m-d');
+        $purchase->bkgdate = date('Ymd');
         $purchase->card = 'Y';
         $purchase->action = 'N';
         $purchase->eticket = 'N';
