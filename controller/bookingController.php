@@ -363,6 +363,37 @@ class bookingController extends coreController {
         $this->View('footer');
     }
 
+    private function confirmationEmail($purchase) {
+        global $CFG;
+
+        require_once($CFG->dirroot . '/lib/swiftmailer/swift_required.php' );
+
+        // create mail transport
+        $transport = \Swift_SmtpTransport::newInstance($CFG->smtp_host);
+
+        // create mailer
+        $mailer = \Swift_Mailer::newInstance($transport);
+
+        // message text;
+        $mb = "Dear {$purchase->firstname} {$purchase->surname}, \n\n";
+        $mb .= "Thank you for booking the Santa Steam Special. Please allow 28 days for your tickets to arrive.\n\n";
+        $mb .= "If there are any important details we need to know regarding your booking,\n";
+        $mb .= "or if your ticket does not arrive within 28 days, please contact us by email\n";
+        $mb .= "at office@srps.org.uk or phone the Santa Line on 01506 824356 (10am to 12 noon /\n";
+        $mb .= "1pm to 3pm weekdays). Note that changes to your booking once your ticket has been sent\n";
+        $mb .= "out may incur a £5 administration charge.\n\n";
+        $mb .= "Please refer to your booking reference, '{$purchase->bkgref}' in any correspondence.\n\n";
+        $mb .= "We look forward to seeing you soon,\n";
+        $mb .= "your Santa Steam Trains Team!";
+
+        // create message
+        $message = \Swift_Message::newInstance('Santa Steam Trains Confirmation - ' . $purchase->bkgref)
+            ->setFrom(array('office@srps.org.uk' => 'SRPS Santa Trains'))
+            ->setTo(array($purchase->email))
+            ->setBody($mb);
+        $result = $mailer->send($message);
+    }
+
     public function returnAction($result) {
         $bm = new bookingModel();
         $br = new bookingRecord();
@@ -380,6 +411,12 @@ class bookingController extends coreController {
             $purchase = $bm->decrypt($br, $crypt);
 
         }
+
+        // Send confirmation email
+        if ($purchase->status == 'OK') {
+            $this->confirmationEmail($purchase);
+        }
+
         $this->View('header');
         $this->View('booking_result', array(
                 'br' => $br,

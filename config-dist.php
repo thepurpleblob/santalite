@@ -27,3 +27,6 @@ $CFG->sage_encrypt = 'Qpu7H4zy5L5Wbwpb';
 $CFG->sage_email = 'howardsmiller@gmail.com'; // multiple separate with colons
 $CFG->sage_message = ''; // message inserted into sage email (up to 700 chars)
 $CFG->sage_prefix = 'TS'; // prefix for booking codes (MUST be unique for installation)
+
+// Email stuff
+$CFG->smtpd_host = 'mail-relay.gla.ac.uk';
