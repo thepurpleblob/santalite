@@ -94,4 +94,15 @@ td.available {
 .santa-fail td {
 	background-color: #f2dede;
 }
+ 
+.santa-child {
+	padding-top: 14px !important;
+}
+
+.has-warning .control-label {
+	color: #ff0000;
+}
+
+.has-warning .form-control {
+	border-color: #ff0000;
 }

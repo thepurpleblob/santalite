@@ -21,10 +21,11 @@ class coreForm {
         echo '<div class="form-group '.$reqclass.'">';
         echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
         echo '    <div class="col-sm-8">';
-        echo '    <input type="text" class="form-control input-sm" name="'.$name.'" id="'.$id.'" value="'.$value.'" />';
         if ($required) {
             echo '    <span class="glyphicon glyphicon-asterisk form-control-feedback"></span>';
         }
+        echo '    <input type="text" class="form-control input-sm" name="'.$name.'" id="'.$id.'" value="'.$value.'" />';
+
         echo '</div></div>';
     }
     
@@ -37,11 +38,12 @@ class coreForm {
         echo '</div></div>';
     }   
     
-    public function select($name, $label, $selected, $options, $choose='') {
+    public function select($name, $label, $selected, $options, $choose='', $labelcol=4) {
         $id = $name . 'Select';
+        $inputcol = 12 - $labelcol;
         echo '<div class="form-group">';
-        echo '    <label for="'.$id.'" class="col-sm-4 control-label">'.$label.'</label>';
-        echo '    <div class="col-sm-8">';
+        echo '    <label for="'.$id.'" class="col-sm-' . $labelcol . ' control-label">'.$label.'</label>';
+        echo '    <div class="col-sm-' . $inputcol .'">';
         echo '    <select class="form-control input-sm" name="'.$name.'">';
         if ($choose) {
         	echo '<option selected disabled="disabled">'.$choose.'</option>';

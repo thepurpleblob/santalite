@@ -41,6 +41,7 @@ class bookingController extends coreController {
         $this->View('booking_start');
         $this->View('footer');
     }
+    
     public function numbersAction() {
         global $CFG;
 
@@ -85,6 +86,7 @@ class bookingController extends coreController {
 
         $this->View('header');
         $this->View('booking_numbers', array(
+                'br' => $br,
                 'adultchoices' => $adultchoices,
                 'childrenchoices' => $childrenchoices,
                 'infantchoices' => $infantchoices,
@@ -223,7 +225,7 @@ class bookingController extends coreController {
     	// form submitted?
     	if ($request = $this->getRequest()) {
     		if (!empty($request['cancel'])) {
-    			$this->redirect($this->Url('booking/numbers'));
+    			$this->redirect($this->Url('booking/time'));
     		}
 
     		$rules = array();
@@ -249,7 +251,9 @@ class bookingController extends coreController {
     	$this->View('header');
     	$this->View('booking_ages', array(
     		'children' => $children,
-    		'ages' => $bm->getAges(),
+    		'chooseages' => $bm->getAges(),
+    	    'ages' => $br->getAges(),
+    	    'sexes' => $br->getSexes(),
     	));
     	$this->View('footer');
 

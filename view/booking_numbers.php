@@ -6,16 +6,23 @@
 <form role="form" class="form-horizontal" method="post" action="<?php echo $this->Url('booking/numbers'); ?>">
     <?php $form->select('adults',
     		'Number of adults - £'.number_format($fares->adult/100, 2).' each',
-    		1,
-    		$adultchoices)?>
+    		$br->getAdults(),
+    		$adultchoices,
+            '',
+            8);
+    ?>
     <?php $form->select('children',
-    		'Number of children - £'.number_format($fares->child/100, 2).' each<br /><p class="santa-subtext">(18 months to 15 years)</p>',
-    		1,
-    		$childrenchoices)?>
+    		'Number of children - £'.number_format($fares->child/100, 2).' each <small class="santa-subtext">(18 months to 15 years)</small>',
+    		$br->getChildren(),
+    		$childrenchoices,
+            '',
+            8)?>
     <?php $form->select('infants',
-    		'Number of infants, <br /><p class="santa-subtext">(up to 17 months on day of travel)</p>',
-    		0,
-    		$infantchoices)?>
+    		'Number of infants, <small class="santa-subtext">(up to 17 months on day of travel)</small>',
+    		$br->getInfants(),
+    		$infantchoices,
+            '',
+            8)?>
   <div class="alert alert-warning">
     Infants travel free but are not allocated a seat.
 </div>

@@ -214,11 +214,11 @@ class bookingRecord {
 	    return $this->amount;
 	}
 
-	private function get($name) {
+	private function get($name, $default=null) {
 		if (isset($_SESSION[$name])) {
 			$this->$name = $_SESSION[$name];
 		} else {
-			$this->$name = null;
+			$this->$name = $default;
 		}
 	}
 
@@ -235,11 +235,11 @@ class bookingRecord {
 	    $this->get('reference');
 		$this->get('dateid');
 		$this->get('timeid');
-		$this->get('adults');
-		$this->get('children');
-		$this->get('infants');
-		$this->get('sexes');
-		$this->get('ages');
+		$this->get('adults', 1);
+		$this->get('children', 1);
+		$this->get('infants', 0);
+		$this->get('sexes', array());
+		$this->get('ages', array());
 		$this->get('title');
 		$this->get('firstname');
 		$this->get('lastname');

@@ -6,7 +6,7 @@
 
 <div class="santa-confirm">
     <dl class="dl-horizontal">
-        <dt>Title &amp; Name</dt><dd><?php echo $br->getTitle().' '.$br->getFirstname().' '.$br->getLastname(); ?>
+        <dt>Name</dt><dd><?php echo $br->getTitle().' '.$br->getFirstname().' '.$br->getLastname(); ?>
         <dt>Address</dt>
         <dd>
             <address class="santa-address">

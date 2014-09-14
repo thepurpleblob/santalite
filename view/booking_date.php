@@ -7,4 +7,8 @@
 </div>
 <div class="clearfix"></div>
 
+<div class="santa-buttons">
+    <a href="<?php echo $this->Url('booking/numbers') ?>" class="btn btn-warning">Go back</a>
+</div>
+
 

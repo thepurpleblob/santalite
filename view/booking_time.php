@@ -7,9 +7,11 @@
 
 <table class="table table-striped">
     <thead>
-        <th>Depart</th>
-        <th>From</th>
-        <th>&nbsp;</th>
+        <tr>
+            <th>Depart</th>
+            <th>From</th>
+            <th>&nbsp;</th>
+        </tr>
     </thead>
     <tbody>
     <?php foreach ($times as $time) { ?>

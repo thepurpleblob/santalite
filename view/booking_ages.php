@@ -14,10 +14,22 @@
              <b>Child <?php echo $i?></b>
          </td>
          <td>
-             <?php $form->select('sex'.$i, 'Girl/Boy?', '', array('girl'=>'Girl', 'boy'=>'Boy'), 'Choose...')?>
+             <?php $form->select(
+                     'sex'.$i, 
+                     'Girl/Boy?',
+                     isset($sexes[$i]) ? $sexes[$i] : '',
+                     array('girl'=>'Girl', 'boy'=>'Boy'),
+                     'Choose...');
+             ?>
          </td>
          <td>
-             <?php $form->select('age'.$i, 'Age?', '', $ages, 'Choose...')?>
+             <?php $form->select(
+                     'age'.$i,
+                     'Age?',
+                     isset($ages[$i]) ? $ages[$i] : '',
+                     $chooseages,
+                     'Choose...');
+             ?>
          </td>
      </tr>
     <?php } ?>
