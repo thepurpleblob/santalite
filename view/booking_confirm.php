@@ -19,6 +19,7 @@
         </dd>
         <dt>Email</dt><dd><?php echo $br->getEmail(); ?>
         <dt>Phone</dt><dd><?php echo $br->getPhone(); ?>
+        <dt>Santa train booking</dt><dd><?php echo $date . ' at ' . $time; ?></dd>
         <dt>Number of adults</dt>
         <dd><?php echo $br->getAdults() . ' at &pound;' . number_format($fares->adult/100,2) . ' each'; ?></dd>
         <dt>Number of children</dt>

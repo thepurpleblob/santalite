@@ -347,6 +347,8 @@ class bookingController extends coreController {
         $price_children = $br->getChildren() * $fares->child / 100;
         $price_total = $price_adults + $price_children;
         $br->setAmount($price_total);
+        
+        // get the time and date
 
         // we need to come up with a booking code about now
         $purchaseid = $bm->updatePurchase($br);
@@ -359,6 +361,8 @@ class bookingController extends coreController {
                 'br' => $br,
                 'country' => $country,
                 'fares' => $fares,
+                'date' => $bm->getReadableDate($br->getDateid()),
+                'time' => $bm->getReadableTime($br->getTimeid()),
                 'price_adults' => $price_adults,
                 'price_children' => $price_children,
                 'price_total' => $price_total,
@@ -367,7 +371,7 @@ class bookingController extends coreController {
         $this->View('footer');
     }
 
-    private function confirmationEmail($purchase) {
+    private function confirmationEmail($purchase, $date, $time) {
         global $CFG;
 
         require_once($CFG->dirroot . '/lib/swiftmailer/swift_required.php' );
@@ -380,20 +384,29 @@ class bookingController extends coreController {
 
         // message text;
         $mb = "Dear {$purchase->firstname} {$purchase->surname}, \n\n";
-        $mb .= "Thank you for booking the Santa Steam Special. Please allow 28 days for your tickets to arrive.\n\n";
+        $mb .= "Thank you for booking the Santa Steam Special. Please allow 28 days for your\n";
+        $mb .= "tickets to arrive.\n\n";
         $mb .= "If there are any important details we need to know regarding your booking,\n";
         $mb .= "or if your ticket does not arrive within 28 days, please contact us by email\n";
         $mb .= "at office@srps.org.uk or phone the Santa Line on 01506 824356 (10am to 12 noon /\n";
-        $mb .= "1pm to 3pm weekdays). Note that changes to your booking once your ticket has been sent\n";
-        $mb .= "out may incur a £5 administration charge.\n\n";
-        $mb .= "Please refer to your booking reference, '{$purchase->bkgref}' in any correspondence.\n\n";
+        $mb .= "1pm to 3pm weekdays). Note that changes to your booking once your ticket has\n";
+        $mb .= " been sent out may incur a £5 administration charge.\n\n";
+        $mb .= "Please quote your booking reference, '{$purchase->bkgref}' in any correspondence.\n\n";
         $mb .= "We look forward to seeing you soon,\n";
-        $mb .= "your Santa Steam Trains Team!";
+        $mb .= "your Santa Steam Trains Team!\n\n\n";
+        $mb .= "Your booking details...\n\n";
+        $mb .= "Santa train booking         : $date at $time\n";
+        $mb .= "Adult ticket(s) purchased   : {$purchase->adult}\n";
+        $mb .= "Child ticket(s) purchased   : {$purchase->child}\n";
+        if ($purchase->infant) {
+            $mb .= "Infants in party (no seats) : {$purchase->infant}\n";
+        }
+        $mb .= "Price paid                  : {$purchase->payment}\n";
 
         // create message
         $message = \Swift_Message::newInstance('Santa Steam Trains Confirmation - ' . $purchase->bkgref)
             ->setFrom(array('office@srps.org.uk' => 'SRPS Santa Trains'))
-            ->setTo(array($purchase->email))
+            ->setTo(array($purchase->email, $CFG->backup_email))
             ->setBody($mb);
         $result = $mailer->send($message);
     }
@@ -418,7 +431,11 @@ class bookingController extends coreController {
 
         // Send confirmation email
         if ($purchase->status == 'OK') {
-            $this->confirmationEmail($purchase);
+            $this->confirmationEmail(
+                    $purchase,
+                    $bm->getReadableDate($br->getDateid()),
+                    $bm->getReadableTime($br->getTimeid())
+            );
         }
 
         $this->View('header');

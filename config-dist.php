@@ -30,3 +30,4 @@ $CFG->sage_prefix = 'TS'; // prefix for booking codes (MUST be unique for instal
 
 // Email stuff
 $CFG->smtpd_host = 'mail-relay.gla.ac.uk';
+$CFG->backup_email = 'howard@e-learndesign.co.uk';
