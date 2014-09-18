@@ -395,13 +395,13 @@ class bookingController extends coreController {
         $mb .= "We look forward to seeing you soon,\n";
         $mb .= "your Santa Steam Trains Team!\n\n\n";
         $mb .= "Your booking details...\n\n";
-        $mb .= "Santa train booking         : $date at $time\n";
-        $mb .= "Adult ticket(s) purchased   : {$purchase->adult}\n";
-        $mb .= "Child ticket(s) purchased   : {$purchase->child}\n";
+        $mb .= "Santa train booking : $date at $time\n";
+        $mb .= "Adult ticket(s) purchased : {$purchase->adult}\n";
+        $mb .= "Child ticket(s) purchased : {$purchase->child}\n";
         if ($purchase->infant) {
             $mb .= "Infants in party (no seats) : {$purchase->infant}\n";
         }
-        $mb .= "Price paid                  : {$purchase->payment}\n";
+        $mb .= "Price paid : " . number_format($purchase->payment, 2) . "\n";
 
         // create message
         $message = \Swift_Message::newInstance('Santa Steam Trains Confirmation - ' . $purchase->bkgref)
