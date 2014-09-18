@@ -401,7 +401,7 @@ class bookingController extends coreController {
         if ($purchase->infant) {
             $mb .= "Infants in party (no seats) : {$purchase->infant}\n";
         }
-        $mb .= "Price paid : " . number_format($purchase->payment, 2) . "\n";
+        $mb .= "Price paid : £" . number_format($purchase->payment/100, 2) . "\n";
 
         // create message
         $message = \Swift_Message::newInstance('Santa Steam Trains Confirmation - ' . $purchase->bkgref)
