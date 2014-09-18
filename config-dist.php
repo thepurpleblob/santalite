@@ -5,7 +5,7 @@ $CFG = new stdClass;
 
 // Database stuff
 $CFG->dsn = "mysql:host=localhost;dbname=santa";
-$CFG->dbuser = 'root';
+$CFG->dbuser = '';
 $CFG->dbpass = '';
 
 // paths
@@ -21,13 +21,13 @@ $CFG->default_party = 8;
 $CFG->select_limit = 8;
 
 // Sagepay stuff
-$CFG->sage_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
-$CFG->sage_vendor = 'srpsrailtours';
-$CFG->sage_encrypt = 'Qpu7H4zy5L5Wbwpb';
-$CFG->sage_email = 'howardsmiller@gmail.com'; // multiple separate with colons
+$CFG->sage_url = '';
+$CFG->sage_vendor = '';
+$CFG->sage_encrypt = '';
+$CFG->sage_email = ''; // multiple separate with colons
 $CFG->sage_message = ''; // message inserted into sage email (up to 700 chars)
 $CFG->sage_prefix = 'TS'; // prefix for booking codes (MUST be unique for installation)
 
 // Email stuff
-$CFG->smtpd_host = 'mail-relay.gla.ac.uk';
-$CFG->backup_email = 'howard@e-learndesign.co.uk';
+$CFG->smtpd_host = '';
+$CFG->backup_email = '';
