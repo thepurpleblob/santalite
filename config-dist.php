@@ -4,8 +4,8 @@ unset($CFG);
 $CFG = new stdClass;
 
 // Database stuff
-$CFG->dsn = "";
-$CFG->dbuser = '';
+$CFG->dsn = "mysql:host=localhost;dbname=santa";
+$CFG->dbuser = 'root';
 $CFG->dbpass = '';
 
 // paths

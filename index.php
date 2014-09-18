@@ -9,7 +9,18 @@ $CFG->basepath = dirname(__FILE__);
 error_reporting(E_ALL);
 ini_set('display_errors', 'stdout');
 
-$info = $_SERVER['PATH_INFO'];
+// If no path is given, just start a booking
+if (isset($_SERVER['PATH_INFO'])) {
+    $info = $_SERVER['PATH_INFO'];
+} else {
+    $info = '/booking/start';
+}
+
+// If path is just /admin...
+if ($info=='/admin') {
+    $info = '/admin/index';
+}
+
 if ($info) {
     $paths = explode('/', $info);
 } else {
