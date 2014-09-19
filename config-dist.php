@@ -31,3 +31,6 @@ $CFG->sage_prefix = 'TS'; // prefix for booking codes (MUST be unique for instal
 // Email stuff
 $CFG->smtpd_host = '';
 $CFG->backup_email = '';
+
+// Contact number
+$CFG->help_number = '01506 825855';
