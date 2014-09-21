@@ -180,13 +180,7 @@ class bookingController extends coreController {
     		}
 
     		// get/set limit
-    		$limit = \ORM::for_table('trainlimit')->where(array(
-    		    'dateid' => $dateid,
-    		    'timeid' => $timeid,
-    		))->find_one();
-    		if (!$limit) {
-    		    throw new Exception('Could not find limit in db');
-    		}
+    		$limit = $bm->getTrainlimit($dateid, $timeid);
     		$br->setTrainlimitid($limit->id());
 
     		$br->setTimeid($timeid);

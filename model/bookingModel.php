@@ -23,6 +23,20 @@ class bookingModel {
 
         return $months;
     }
+    
+    /**
+     * Get trainlimit
+     */
+    public function getTrainlimit($dateid, $timeid) {
+        $limit = \ORM::for_table('trainlimit')->where(array(
+                'dateid' => $dateid,
+                'timeid' => $timeid,
+        ))->find_one();
+        if (!$limit) {
+            throw new \Exception("No limit record found in DB for timeid=".$time->id()." dateid=".$date->id());
+        }
+        return $limit;       
+    }
 
     /**
      * Get (2d) array of passenger remaining counts
@@ -36,13 +50,7 @@ class bookingModel {
             $pcounts[$date->id()] = array();
             $daymax[$date->id()] = 0;
             foreach ($times as $time) {
-                $limit = \ORM::for_table('trainlimit')->where(array(
-                    'dateid' => $date->id(),
-                    'timeid' => $time->id(),
-                ))->find_one();
-                if (!$limit) {
-                    throw new \Exception("No limit record found in DB for timeid=".$time->id()." dateid=".$date->id());
-                }
+                $limit = $this->getTrainlimit($date->id(), $time->id());
                 $sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->sum('adult');
                 $sumchild = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->sum('child');
                 $total = $limit->maxlimit - ($sumadult + $sumchild);
@@ -229,7 +237,7 @@ class bookingModel {
 
         // update all the data (can't update reference until sure we have an ID)
         $purchase->type = 'O';
-        $purchase->trainlimitid = 0;
+        $purchase->trainlimitid = $br->getTrainlimitid();
         $purchase->day = $this->getNth('traindate', 'date', $br->getDateid());
         $purchase->train = $this->getNth('traintime', 'time', $br->getTimeid());
         $purchase->surname = $br->getLastname();

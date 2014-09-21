@@ -232,6 +232,7 @@ class bookingRecord {
 
 	public function __construct() {
 	    
+	    $this->get('trainlimitid');
 	    $this->get('reference');
 		$this->get('dateid');
 		$this->get('timeid');
@@ -259,6 +260,7 @@ class bookingRecord {
 		// save update time
 		$_SESSION['santa_updated'] = time();
 
+		$this->put('trainlimitid');
 		$this->put('reference');
 		$this->put('dateid');
 		$this->put('timeid');
