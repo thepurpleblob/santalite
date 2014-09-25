@@ -239,7 +239,6 @@ class bookingModel {
 
         // update all the data (can't update reference until sure we have an ID)
         $purchase->type = 'O';
-        $purchase->bkgref = $CFG->sage_prefix . $br->getReference();
         $purchase->trainlimitid = $br->getTrainlimitid();
         $purchase->day = $this->getNth('traindate', 'date', $br->getDateid());
         $purchase->train = $this->getNth('traintime', 'time', $br->getTimeid());
@@ -268,6 +267,8 @@ class bookingModel {
 
         $purchase->save();
         $br->setReference($purchase->id());
+        $purchase->bkgref = $CFG->sage_prefix . $br->getReference();
+        $purchase->save();
         $br->save();
 
         return $br->getReference();
@@ -296,8 +297,8 @@ class bookingModel {
         $purchase->bkgref = $data['VendorTxCode'];
         $purchase->status = $data['Status'];
         $purchase->statusdetail = $data['StatusDetail'];
-        $purchase->txauthno = $data['TxAuthNo'];
-        $purchase->last4digits = $data['Last4Digits'];
+        $purchase->txauthno = isset($data['TxAuthNo']) ? $data['TxAuthNo'] : '-';
+        $purchase->last4digits = isset($data['Last4Digits']) ? $data['Last4Digits'] : '-';
         $purchase->save();
 
         return $purchase;
