@@ -133,7 +133,8 @@ class bookingModel {
 
         // sort some basic stuff
         $description = "Bo'ness & Kinneil Railway Santa Steam Train booking on " .
-            $this->getReadableDate($br->getDateid()) . ' departing ' . $this->getReadableTime($br->getTimeid());
+            $this->getReadableDate($br->getDateid()) . ' departing ' . $this->getReadableTime($br->getTimeid()) .
+            ' reference ' . $CFG->sage_prefix . $br->getReference();
 
         // build transaction data into string
         $cryptfields = array(
@@ -220,6 +221,7 @@ class bookingModel {
      * @param unknown $br
      */
     public function updatePurchase($br) {
+        global $CFG;
 
         // if br has a reference number this should match the database record
         if ($br->getReference()) {
@@ -237,6 +239,7 @@ class bookingModel {
 
         // update all the data (can't update reference until sure we have an ID)
         $purchase->type = 'O';
+        $purchase->bkgref = $CFG->sage_prefix . $br->getReference();
         $purchase->trainlimitid = $br->getTrainlimitid();
         $purchase->day = $this->getNth('traindate', 'date', $br->getDateid());
         $purchase->train = $this->getNth('traintime', 'time', $br->getTimeid());
