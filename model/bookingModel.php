@@ -293,6 +293,11 @@ class bookingModel {
         if (!$purchase) {
             throw new \Exception('Cannot find record in DB for purchase id='.$br->getReference());
         }
+        
+        // if the purchase already has a status then something is wrong
+        if ($purchase->status == 'OK') {
+            throw new \Exception('This sale has already been successfully recorded.');
+        }
 
         $purchase->bkgref = $data['VendorTxCode'];
         $purchase->status = $data['Status'];
