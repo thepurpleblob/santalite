@@ -1,7 +1,13 @@
-<h2>Limits</h2>
+<h2>Service detail</h2>
 
 <table class="table">
     <tbody>
+        <tr>
+            <th>Service date</th><td><?php echo date('d/M/Y', $details->date->date); ?></td>
+        </tr>
+        <tr>
+            <th>Service time</th><td><?php echo date('H:i', $details->time->time); ?></td>
+        </tr>
         <tr>
             <th>Number of bookings</th><td><?php echo $details->count; ?></td>
         </tr>
