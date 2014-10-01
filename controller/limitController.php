@@ -58,4 +58,21 @@ class limitController extends coreController {
         $this->View('footer');
     }
 
+    /**
+     * Show details
+     */
+    public function detailAction($dateid, $timeid) {
+        $this->require_login('organiser', $this->Url('limit/index'));
+        $lm =  new limitModel();
+
+        // add up the info for this train
+        $details = $lm->getDetails($dateid, $timeid);
+        
+        // display details
+        $this->View('header');
+        $this->View('details', array(
+                'details' => $details,
+        ));
+        $this->View('footer');
+    }
 }

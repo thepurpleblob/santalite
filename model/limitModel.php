@@ -5,8 +5,12 @@ namespace model;
 class limitModel {
     
     public function getPassengerCount($limitid) {
-        $sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limitid)->sum('adult');
-        $sumchild = \ORM::for_table('purchase')->where('trainlimitid', $limitid)->sum('child');
+        $filter = array(
+                'trainlimitid' => $limitid,
+                'status' => 'OK',
+        );
+        $sumadult = \ORM::for_table('purchase')->where($filter)->sum('adult');
+        $sumchild = \ORM::for_table('purchase')->where($filter)->sum('child');
         return $sumadult + $sumchild;
     }
     
@@ -57,6 +61,51 @@ class limitModel {
                 $limit->save();
             }
         }
+    }
+    
+    /**
+     * Get trainlimit
+     */
+    private function getTrainlimit($dateid, $timeid) {
+        $limit = \ORM::for_table('trainlimit')->where(array(
+                'dateid' => $dateid,
+                'timeid' => $timeid,
+        ))->find_one();
+        if (!$limit) {
+            throw new \Exception("No limit record found in DB for timeid=".$time->id()." dateid=".$date->id());
+        }
+        return $limit;
+    }
+    
+    public function getDetails($dateid, $timeid) {
+        $date = \ORM::for_table('traindate')->find_one($dateid);
+        if (!$date) {
+            throw new \Exception('Date not found for dateid='.$dateid);
+        }
+        $time = \ORM::for_table('traintime')->find_one($timeid);
+        if (!$time) {
+            throw new \Exception('Time not found for timeid='.$timeid);
+        }
+        
+        // start with date and time
+        $details = new \stdClass();
+        $details->date = $date;
+        $details->time = $time;
+        
+        // create a filter and do some sums
+        $limit = $this->getTrainlimit($dateid, $timeid);
+        $filter = array(
+                'trainlimitid' => $limit->id(),
+                'status' => 'OK',
+        );
+        $details->sumadult = \ORM::for_table('purchase')->where($filter)->sum('adult');
+        $details->sumchild = \ORM::for_table('purchase')->where($filter)->sum('child');
+        $details->count = \ORM::for_table('purchase')->where($filter)->count();
+        $details->limit = $limit->maxlimit;
+        $details->total = $limit->maxlimit - ($details->sumadult + $details->sumchild);
+        $details->remaining = $details->limit - $details->total;
+        
+        return $details;
     }
    
 }

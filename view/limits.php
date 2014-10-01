@@ -24,6 +24,9 @@
                         <?php echo $limits[$date->id][$time->id]->maxlimit - $limits[$date->id][$time->id]->count; ?>
                     </span>
                 </td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="<?php echo $this->Url("limit/detail/{$date->id}/{$time->id}"); ?>">Detail</a>
+                </td>
             </tr>
         <?php } ?>
         </table>
