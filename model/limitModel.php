@@ -102,7 +102,7 @@ class limitModel {
         $details->sumchild = \ORM::for_table('purchase')->where($filter)->sum('child');
         $details->count = \ORM::for_table('purchase')->where($filter)->count();
         $details->limit = $limit->maxlimit;
-        $details->total = $limit->maxlimit - ($details->sumadult + $details->sumchild);
+        $details->total = $details->sumadult + $details->sumchild;
         $details->remaining = $details->limit - $details->total;
         
         return $details;
