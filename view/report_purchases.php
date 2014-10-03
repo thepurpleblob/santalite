@@ -19,7 +19,7 @@
         </thead>
         <tbody>
         <?php foreach ($purchases as $purchase) {
-            if (empty($purchase->status) or ($purchase->status == '-')) {
+            if (empty($purchase->status) || ($purchase->status == '-')) {
                 $class = 'santa-reconcile';
             } else if ($purchase->status == 'OK') {
                 $class = '';

@@ -117,6 +117,7 @@ class reportController extends coreController {
             'Address 2' => $purchase->address2,
             'Address 3' => $purchase->address3,
             'Address 4' => $purchase->address4,
+            'Postcode' => $purchase->postcode,
             'Phone' => $purchase->phone,
             'Email' => $purchase->email,
             'Adults' => $purchase->adult,
