@@ -146,11 +146,17 @@ class reportController extends coreController {
 
     public function reconcileAction($id, $status) {
         $this->require_login('organiser', $this->url('report/purchase/'.$id));
+        
         $purchase = \ORM::for_table('purchase')->find_one($id);
         if (!$purchase) {
             error_log('could not find purchase record for id='.$id);
         }
-        $purchase->status = $status;
+        if ($purchase->status == 'OK') {
+            error_log('Purchase already status OK for id='.$id);
+        }
+        if (($status=='OK') || ($status=='UNPAID')) {
+            $purchase->status = $status;
+        }
         $purchase->save();
         die;
     }
