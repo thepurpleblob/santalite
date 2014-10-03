@@ -67,22 +67,22 @@ class reportController extends coreController {
             $this->printCsvLine($line);
         }
     }
-    
+
     public function purchasesAction() {
-        
+
         $this->require_login('organiser', $this->Url('report/purchases'));
-        
+
         // get completed purchases
         $purchases = \ORM::for_table('purchase')->order_by_desc('id')->find_many();
-        
+
         $this->View('header');
         $this->View('report_purchases', array(
             'purchases' => $purchases,
         ));
         $this->View('footer');
-        
+
     }
-    
+
     private function row($label, $value) {
         if (!$value) {
             $value = '-';
@@ -91,20 +91,20 @@ class reportController extends coreController {
         $html .= '<th>' . $label . '</th>';
         $html .= '<td>' . $value . '</td>';
         $html .= '</tr>';
-        
+
         return $html;
     }
-    
+
     public function purchaseAction($id) {
-        
+
         $this->require_login('organiser', $this->url('report/purchase/'.$id));
-        
+
         // find the purchase
         $purchase = \ORM::for_table('purchase')->find_one($id);
         if (!$purchase) {
             throw new \Exception('could not find purchase record for id='.$id);
         }
-        
+
         // create table 'filling'
         $rows = array(
             'Booking reference' => $purchase->bkgref,
@@ -133,9 +133,10 @@ class reportController extends coreController {
         foreach ($rows as $label => $value) {
             $body .= $this->row($label, $value);
         }
-        
+
         $this->View("header");
         $this->View('report_purchase', array(
+            'purchase' => $purchase,
             'statusok' => $purchase->status == 'OK',
             'body' => $body,
         ));

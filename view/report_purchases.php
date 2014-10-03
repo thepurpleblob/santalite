@@ -3,6 +3,9 @@
         There are no recorded purchases
     </div>
 <?php } else { ?>
+    <div class="alert alert-success">
+        Purchases this colour need to be reconciled with SagePay.
+    </div>
     <table class="table table-condensed">
         <thead>
             <th>Reference</th>
