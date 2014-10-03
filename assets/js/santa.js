@@ -18,3 +18,7 @@ $(".reconcile").confirm({
 	confirmButton: "Yes",
 	cancelButton: "No"
 });
+
+$(".auto-submit").change(function() {
+	this.submit();
+})

@@ -6,6 +6,13 @@
     <div class="alert alert-success">
         Purchases this colour need to be reconciled with SagePay.
     </div>
+    <div id="santa-filter" class="row">
+        <form role="form" class="form-horizontal auto-submit" method="post" action="<?php echo $this->Url('report/purchases'); ?>">
+            <div class="col-md-3">
+                <?php $form->select('status', 'Status', $status, $statusoptions); ?>
+            </div>
+        </form> 
+    </div>
     <table class="table table-condensed">
         <thead>
             <th>Reference</th>

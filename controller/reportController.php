@@ -71,13 +71,42 @@ class reportController extends coreController {
     public function purchasesAction() {
 
         $this->require_login('organiser', $this->Url('report/purchases'));
+        
+        // get form filter inputs
+        $status = 'all';
+        $statusoptions = array(
+            'all' => 'All',
+            'ok'=> 'OK',
+            'reconcile' => 'Reconcile',
+            'fail' => 'Failures'
+        );
+        if ($request = $this->getRequest()) {
+            $status = $request['status'];
+        }
 
         // get completed purchases
         $purchases = \ORM::for_table('purchase')->order_by_desc('id')->find_many();
+        
+        // filter by reduction
+        $filtered = array();
+        foreach ($purchases as $purchase) {
+            if ($status=='reconcile' && !empty($purchase->status)) {
+                continue;
+            }
+            if ($status=='ok' && $purchase->status !== 'OK') {
+                continue;
+            }
+            if ($status=='fail' && (empty($purchase->status) || ($purchase->status=='OK'))) {
+                continue;
+            }
+            $filtered[] = $purchase;
+        }
 
         $this->View('header');
         $this->View('report_purchases', array(
-            'purchases' => $purchases,
+            'purchases' => $filtered,
+            'status' => $status,
+            'statusoptions' => $statusoptions,
         ));
         $this->View('footer');
 
