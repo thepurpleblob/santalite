@@ -94,6 +94,10 @@ td.available {
 .santa-fail td {
 	background-color: #f2dede;
 }
+
+.santa-reconcile {
+	background-color: #91ff99;
+}
  
 .santa-child {
 	padding-top: 14px !important;

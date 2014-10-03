@@ -15,8 +15,14 @@
             <th>&nbsp;</th>
         </thead>
         <tbody>
-        <?php foreach ($purchases as $purchase) { 
-            $class = $purchase->status == 'OK' ? '' : 'santa-fail';
+        <?php foreach ($purchases as $purchase) {
+            if (empty($purchase->status) or ($purchase->status == '-')) {
+                $class = 'santa-reconcile';
+            } else if ($purchase->status == 'OK') {
+                $class = '';
+            } else {
+                $class = 'santa-fail';
+            }
             ?>
             <tr class="<?php echo $class; ?>">
                 <td><?php echo $purchase->bkgref; ?></td>
