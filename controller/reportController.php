@@ -144,5 +144,15 @@ class reportController extends coreController {
         $this->View('footer');
     }
 
+    public function reconcileAction($id, $status) {
+        $purchase = \ORM::for_table('purchase')->find_one($id);
+        if (!$purchase) {
+            error_log('could not find purchase record for id='.$id);
+        }
+        $purchase->status = $status;
+        $purchase->save();
+        die;
+    }
+
 
 }

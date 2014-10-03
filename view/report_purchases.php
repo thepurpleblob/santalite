@@ -21,17 +21,22 @@
         <?php foreach ($purchases as $purchase) {
             if (empty($purchase->status) || ($purchase->status == '-')) {
                 $class = 'santa-reconcile';
+                $value = $this->Url('report/reconcile/'.$purchase->id());
+                $status = '<button type="button" class="btn btn-success btn-sm reconcile" value="'.$value.'">Reconcile</button>';
             } else if ($purchase->status == 'OK') {
                 $class = '';
+                $status = 'OK';
             } else {
                 $class = 'santa-fail';
+                $status = $purchase->status;
             }
             ?>
             <tr class="<?php echo $class; ?>">
                 <td><?php echo $purchase->bkgref; ?></td>
                 <td><?php echo $purchase->bkgdate; ?>
-                <td><?php echo $purchase->status ? $purchase->status : '-'; ?>
-                <td><?php echo $purchase->firstname . ' ' . $purchase->surname; ?>
+                <td><?php echo $status; ?></td>
+                <td><?php echo $purchase->firstname . ' ' . $purchase->surname; ?></td>
+                <td><?php echo $purchase->name; ?>
                 <td><?php echo $purchase->day; ?></td>
                 <td><?php echo $purchase->train; ?></td>
                 <td><?php echo '&pound; ' . number_format($purchase->payment / 100, 2); ?></td>
