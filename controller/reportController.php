@@ -7,7 +7,13 @@ use core\coreController;
 class reportController extends coreController {
 
     private function printCsvLine($items) {
-        foreach($items as $index => $item) {
+        foreach($items as $index => $rtype) {
+            if (is_array($rtype)) {
+                list($item, $length) = $rtype;
+            } else {
+                $item = $rtype;
+                $length = null;
+            }
             if ($item==null) {
                 $item = ' ';
             }
@@ -16,6 +22,9 @@ class reportController extends coreController {
             $item = str_replace("\t", ' ', $item);
             if (!$item) {
             	$item = ' ';
+            }
+            if ($length) {
+                $item = substr($item, 0, $length);
             }
             $items[$index] = $item;
         }
@@ -40,23 +49,23 @@ class reportController extends coreController {
             	$purchase->bkgref,
                 $purchase->day,
                 $purchase->train,
-                $purchase->surname,
-                $purchase->title,
-                $purchase->firstname,
-                $purchase->address1,
-                $purchase->address2,
-                $purchase->address3,
-                $purchase->address4,
-                $purchase->postcode,
-                $purchase->phone,
-                $purchase->email,
+                array($purchase->surname, 20),
+                array($purchase->title, 12),
+                array($purchase->firstname, 20),
+                array($purchase->address1, 25),
+                array($purchase->address2, 25),
+                array($purchase->address3, 25),
+                array($purchase->address4, 25),
+                array($purchase->postcode, 8),
+                array($purchase->phone, 15),
+                array($purchase->email, 50),
                 $purchase->adult,
                 $purchase->child,
                 $purchase->infant,
                 $purchase->oap,
                 $purchase->childagesboy,
                 $purchase->childagesgirl,
-                $purchase->comment,
+                array($purchase->comment, 39),
                 $purchase->payment,
                 $purchase->bkgdate,
                 $purchase->card,
@@ -71,7 +80,7 @@ class reportController extends coreController {
     public function purchasesAction() {
 
         $this->require_login('organiser', $this->Url('report/purchases'));
-        
+
         // get form filter inputs
         $status = 'all';
         $statusoptions = array(
@@ -86,7 +95,7 @@ class reportController extends coreController {
 
         // get completed purchases
         $purchases = \ORM::for_table('purchase')->order_by_desc('id')->find_many();
-        
+
         // filter by reduction
         $filtered = array();
         foreach ($purchases as $purchase) {
@@ -175,7 +184,7 @@ class reportController extends coreController {
 
     public function reconcileAction($id, $status) {
         $this->require_login('organiser', $this->url('report/purchase/'.$id));
-        
+
         $purchase = \ORM::for_table('purchase')->find_one($id);
         if (!$purchase) {
             error_log('could not find purchase record for id='.$id);
