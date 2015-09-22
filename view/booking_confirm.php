@@ -37,7 +37,7 @@
 </p>
 
 <form action="<?php echo $CFG->sage_url; ?>" method="post">
-    <input type="hidden" name="VPSProtocol" value="2.23" />
+    <input type="hidden" name="VPSProtocol" value="3.00" />
     <input type="hidden" name="TxType" value="PAYMENT" />
     <input type="hidden" name="Vendor" value="<?php echo $CFG->sage_vendor; ?>" />
     <input type="hidden" name="Crypt" value="<?php echo $crypt; ?>" />
