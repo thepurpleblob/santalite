@@ -379,9 +379,9 @@ class bookingController extends coreController {
         // message text;
         $mb = "Dear {$purchase->firstname} {$purchase->surname}, \n\n";
         $mb .= "Thank you for booking the Santa Steam Special at the Bo'ness & Kinneil Railway,\n";
-        $mb .= "West Lothian. Please allow 28 days for your tickets to arrive\n";
+        $mb .= "West Lothian. Tickets will be sent approximately 4 weeks before your journey.\n";
         $mb .= "If there are any important details we need to know regarding your booking,\n";
-        $mb .= "or if your ticket does not arrive within 28 days, please contact us by email\n";
+        $mb .= "or if your ticket has not arrived within 7 days of travel, please contact us by email\n";
         $mb .= "at office@srps.org.uk or phone the Santa Line on {$CFG->help_number} (10.30am to 12 noon /\n";
         $mb .= "1pm to 2:30pm weekdays). Note that changes to your booking once your ticket has\n";
         $mb .= "been sent out may incur a £5 administration charge.\n\n";

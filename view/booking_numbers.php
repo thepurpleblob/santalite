@@ -12,13 +12,13 @@
             8);
     ?>
     <?php $form->select('children',
-    		'Number of children - £'.number_format($fares->child/100, 2).' each <small class="santa-subtext">(18 months to 15 years)</small>',
+    		'Number of children - £'.number_format($fares->child/100, 2).' each <small class="santa-subtext">(2 years to 15 years)</small>',
     		$br->getChildren(),
     		$childrenchoices,
             '',
             8)?>
     <?php $form->select('infants',
-    		'Number of infants, <small class="santa-subtext">(up to 17 months on day of travel)</small>',
+    		'Number of infants, <small class="santa-subtext">(younger than 2 years on day of travel)</small>',
     		$br->getInfants(),
     		$infantchoices,
             '',
