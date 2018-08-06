@@ -1,8 +1,19 @@
 <?php
+/**
+ * SRPS Santa Booking
+ * 
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Main index/entry point
+ */
 
+if (!file_exists(dirname(__FILE__) . '/config.php')) {
+    die("Not configured. Copy config-dist.php to config.php and edit to create configuration");
+}
+
+require_once(dirname(__FILE__) . '/vendor/autoload.php');
 require(dirname(__FILE__) . '/config.php');
 require(dirname(__FILE__) . '/core/setup.php');
-require_once(dirname(__FILE__) . '/lib/sagelib.php');
 
 $CFG->basepath = dirname(__FILE__);
 
@@ -34,7 +45,7 @@ if (!$action_name = $paths[2]) {
 }
 
 // try to load controller
-$controller_name = '\\controller\\' . $controller_name . 'Controller';
+$controller_name = '\\thepurpleblob\\santa\\controller\\' . $controller_name . 'Controller';
 $controller = new $controller_name;
 
 // execute specified action

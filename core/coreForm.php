@@ -1,6 +1,13 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Form generating class
+ */
 
-namespace core;
+namespace thepurpleblob\core;
 
 class coreForm {
     

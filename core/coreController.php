@@ -1,11 +1,13 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Core Controller
+ */
 
-namespace core;
-
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
-use Assetic\Asset\HttpAsset;
-use Assetic\Asset\GlobAsset;
+namespace thepurpleblob\core;
 
 class coreController {
 
@@ -77,7 +79,6 @@ class coreController {
         // if exception handler, don't bother with this stuff
         if (!$exception) {
             $this->form = new coreForm();
-            require_once(dirname(__FILE__) . '/GUMP/gump.class.php');
             $this->extendGump();
             $this->gump = new \GUMP();
         }
@@ -103,19 +104,73 @@ class coreController {
 
     /**
      * render a view
+     * @param string $viewname name of view (minus extension)
+     * @param array $variables array of variables to be passed
+     * @return string
      */
-    public function View($viewname, $variables=null) {
+    public function renderView($viewname, $variables=array()) {
         global $CFG;
 
-        // extract here limits scope
-        if ($variables) {
-            extract($variables);
+        // No spaces
+        $viewname = trim($viewname);
+
+        // Check cache exists
+        $cachedir = $CFG->dirroot . '/cache';
+        if (!is_writable($cachedir)) {
+            throw new \Exception('Cache dir is not writeable ' . $cachedir);
         }
 
-        // also need the form class in scope
-        $form = $this->form;
+        // get/setup Mustache.
+        $mustache = new \Mustache_Engine(array(
+            'loader' => new \Mustache_Loader_FilesystemLoader($CFG->dirroot . '/src/view'),
+            'helpers' => array(
+                'yesno' => function($bool) {
+                    return $bool ? 'Yes' : 'No';
+                },
+                'path' => function($path) {
+                    global $CFG;
+                    return $CFG->www . '/index.php/' . $path;
+                }
+            ),
+            'cache' => $cachedir,
+        ));
 
-        require($CFG->basepath . '/view/' . $viewname . '.php');
+        // Add some extra variables to array
+        $user = $this->getUser();
+        $system = new \stdClass();
+        if ($user) {
+            $system->userrole = $user->role;
+            $system->admin = $user->role == 'ROLE_ADMIN';
+            $system->organiser = $user->role == 'ROLE_ORGANISER';
+            $system->adminpages = $system->admin || $system->organiser;
+            $system->fullname = $user->firstname . ' ' . $user->lastname;
+            $system->loggedin = true;
+        } else {
+            $system->userrole = '';
+            $system->admin = false;
+            $system->fullname = '';
+            $system->loggedin = false;
+        }
+        $system->sessionid = session_id();
+        $variables['system'] = $system;
+        $variables['config'] = $CFG;
+        $variables['showlogin'] = (($viewname != 'user/login') && (strpos($viewname, 'booking') !== 0));
+        $variables['haserrors'] = !empty($variables['errors']);
+
+
+        // Get template
+        $template = $mustache->loadTemplate($viewname . '.mustache');
+
+        // and render.
+        return $template->render($variables);
+    }
+
+    /**
+     * render a view
+     */
+    public function View($viewname, $variables=null) {
+        echo $this->renderView($viewname, $variables);
+        die;
     }
 
     /**

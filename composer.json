@@ -1,0 +1,25 @@
+{
+  "name": "thepurpleblob/santa",
+  "description": "SRPS Santas V2",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Howard Miller",
+      "email": "howardsmiller@gmail.com"
+    }
+  ],
+    "require": {
+        "j4mie/idiorm": "^1.5",
+        "wixel/gump": "^1.5",
+    "swiftmailer/swiftmailer": "^6.1",
+    "mustache/mustache": "^2.12"
+    },
+  "autoload": {
+    "psr-4": {
+      "thepurpleblob\\core\\": "core",
+      "thepurpleblob\\santa\\": "src"
+    }
+  }
+}
