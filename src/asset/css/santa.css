@@ -1,0 +1,21 @@
+body {
+    font-family: "open sans", sans-serif;  
+}
+
+div#bannerimg {
+    background-image: linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+      ), 
+      url(http://santa.srps.org.uk/assets/Santa-at-Birkhill.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 550px; 
+}
+
+#bkr {
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    padding-top: 35px 
+}

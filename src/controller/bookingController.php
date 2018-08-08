@@ -44,9 +44,7 @@ class bookingController extends coreController {
     	$br = new bookingRecord();
     	$br->save();
 
-        $this->View('header');
         $this->View('booking_start');
-        $this->View('footer');
     }
     
     public function numbersAction() {

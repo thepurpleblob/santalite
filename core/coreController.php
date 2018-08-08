@@ -130,6 +130,10 @@ class coreController {
                 'path' => function($path) {
                     global $CFG;
                     return $CFG->www . '/index.php/' . $path;
+                },
+                'asset' => function($path) {
+                    global $CFG;
+                    return $CFG->www . '/src/asset/' . $path;
                 }
             ),
             'cache' => $cachedir,
@@ -154,6 +158,7 @@ class coreController {
         $system->sessionid = session_id();
         $variables['system'] = $system;
         $variables['config'] = $CFG;
+        $variables['www'] = $CFG->www;
         $variables['showlogin'] = (($viewname != 'user/login') && (strpos($viewname, 'booking') !== 0));
         $variables['haserrors'] = !empty($variables['errors']);
 

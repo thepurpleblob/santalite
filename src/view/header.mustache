@@ -2,38 +2,46 @@
 
 <html lang="en">
 <head>
+    <link rel="apple-touch-icon" sizes="57x57" href="{{{ www }}}/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{{ www }}}/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{{ www }}}/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{{ www }}}/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{{ www }}}/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{{ www }}}/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{{ www }}}/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{{ www }}}/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{{ www }}}/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{{{ www }}}/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{{ www }}}/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{{ www }}}/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{{ www }}}/favicon/favicon-16x16.png">
+    <link rel="manifest" href="{{{ www }}}/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{{ www }}}/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
     <meta charset="utf-8">
 
-    <title>SRPS Santa Trains Online Booking</title>
-    <style>
-        <?php include($this->Url('admin/css')); ?>
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+        integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="{{# asset }}css/santa.css{{/ asset }}">
+
+    <title>Bo'ness & Kinneil Railway Santa Trains Online Booking</title>
 </head>
 <body>
-    <div class="container">
-    <div class="row">
-        <div class="col-md-2">&nbsp</div>
-        <div class="col-md-8" id="santa-content">
-            <div class="row">
-                <div class="col-md-3">
-                    <img src="<?php echo $CFG->www ?>/assets/images/santa2.png" />
-                </div>
-                <div class="col-md-6 santa-title">
-                    <h4 class="santa-minor-title">The Scottish Railway Preservation Society</h5>
-                    <h2 class="santa-main-title">SANTA STEAM TRAINS</h1>
-                    <h5 class="santa-minor-title">on the</h5>
-                    <h4 class="santa-minor-title">Bo'ness & Kinneil Railway</h5>
-                </div>
-                <div class="col-md-3"></div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <?php
-                    $user = $this->getUser();
-                    if ($user) {
-                        echo "<p>You are logged in as {$user->fullname}</p>";
-                    }
-                    ?>
-                </div>
-            </div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div id="bannerimg" class="col-12">
+      <div class="row pt-3">
+        <div class="col-lg-2 col-sm-12 text-sm-center text-lg-right">
+           <img src="{{# asset }}image/logo.png{{/ asset }}" /> 
+        </div>
+        <div class="col-lg-10 col-sm-12 text-sm-center text-lg-left">
+          <h2 id="bkr">Bo'ness & Kinneil Railway<br />Santa Trains Booking</h2>
+        </div>
+      </div>
+    </div>
+  </div>
 
