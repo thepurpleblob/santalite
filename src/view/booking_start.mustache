@@ -1,12 +1,12 @@
 {{> header }}
 
-<h2>Start your booking...</h2>
+<h2 class="page-title"><i class="fas fa-exclamation-triangle"></i> Before you start...</h2>
 
 <div class="alert alert-info">
-    <h4>Please read the following carefully...</h4>
+    <h4 class="mb-4">Please read the following carefully...</h4>
     
-    <p>Welcome to the SRPS Santa Steam Trains online booking.</p>
-    <p>Please do NOT use this online service if you have any special requirements. Specifically,</p>
+    <p>Welcome to the B&amp;KR Santa Steam Trains Online Booking service.</p>
+    <p>Please do <strong>NOT</strong> use this online service if you have any special requirements. For example,</p>
     <ul>
         <li>one of your party uses a wheelchair,</li>
         <li>you have a party of more than 16 persons.</li>
@@ -15,7 +15,7 @@
 </div>
 
 <div class="santa-buttons">
-    <a href="<?php echo $this->Url('booking/numbers') ?>" class="btn btn-info">Start your booking...</a>
+    <a href="{{# path }}booking/numbers{{/ path }}" class="btn btn-info"><i class="fas fa-play"></i> Start your booking...</a>
 </div>
 
 {{> footer }}
