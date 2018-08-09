@@ -1,8 +1,17 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Booking controller
+ */
 
-namespace controller;
+namespace thepurpleblob\santa\controller;
 
-use core\coreController;
+use thepurpleblob\core\coreController;
+use thepurpleblob\santa\model\bookingModel;
+use thepurpleblob\santa\model\bookingRecord;
 
 class adminController extends coreController {
 

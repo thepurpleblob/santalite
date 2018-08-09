@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9e2af3e92f4de66810a7696a6b90b03",
+    "content-hash": "d7ed6d1054e9102b89825292680b5a39",
     "packages": [
         {
             "name": "doctrine/lexer",
@@ -224,6 +224,51 @@
                 "templating"
             ],
             "time": "2017-07-11T12:54:05+00:00"
+        },
+        {
+            "name": "samshal/scripd",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Samshal/Scripd.git",
+                "reference": "d4d40813eccbc911492b8e54c4a08c4db2572ab4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Samshal/Scripd/zipball/d4d40813eccbc911492b8e54c4a08c4db2572ab4",
+                "reference": "d4d40813eccbc911492b8e54c4a08c4db2572ab4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3 || ^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Samshal\\Scripd\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Samuel Adeshina",
+                    "email": "samueladeshina73@gmail.com",
+                    "homepage": "http://samshal.github.io"
+                }
+            ],
+            "description": "Easily transfer database structures as json documents, or via rest apis",
+            "keywords": [
+                "database",
+                "generator",
+                "json",
+                "jsyn",
+                "parser",
+                "schema"
+            ],
+            "time": "2016-04-30T17:59:47+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

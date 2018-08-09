@@ -1,17 +1,22 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Booking controller
+ */
 
-namespace controller;
+namespace thepurpleblob\santa\controller;
 
-use core\coreController;
+use thepurpleblob\core\coreController;
 
 class userController extends coreController {
     
     public function indexAction() {
         $this->require_login('admin', $this->Url('user/index'));
         $users = \ORM::for_table('user')->find_many();
-        $this->View('header');
         $this->View('user_index', array('users'=>$users));
-        $this->View('footer');
     }
     
     /**
@@ -61,13 +66,11 @@ class userController extends coreController {
         }
  
         // display form
-        $this->View('header');
         $this->View('user_edit', array(
             'user'=>$user,
             'roles'=>$roles,
             'errors'=>$errors,
         ));
-        $this->View('footer');       
     }
     
     /**
@@ -75,12 +78,10 @@ class userController extends coreController {
      */
     public function deleteAction($userid) {
         $this->require_login('admin', $this->Url('user/index'));
-        $this->View('header');
         $this->View('user_delete', array(
             'confirmurl' => $this->Url('user/confirm/'.$userid),
             'cancelurl' => $this->Url('user/index'),
         ));
-        $this->View('footer');
     }
     
     /**
@@ -110,27 +111,39 @@ class userController extends coreController {
             
             $gump->validation_rules(array(
                 'username' => 'required',  
-                'password' => 'required|password',
+                'password' => 'required',
             ));
             if ($validated_data = $gump->run($request)) {
                 $username = $request['username'];
-                $user = \ORM::for_table('user')->where(array('username'=>$username))->find_one();
-                $_SESSION['user'] = $user;
-                if (!empty($_SESSION['wantsurl'])) {
-                    $url = $_SESSION['wantsurl'];
-                } else{
-                    $url = $this->Url('admin/index');
+                $password = $request['password'];
+                if ($user = \ORM::for_table('user')->where(array('username'=>$username))->find_one()) {
+                    if (password_verify($password, $user->password)) { 
+                        if (password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
+                            $user->password = password_hash($password, PASSWORD_DEFAULT);
+                            $user->save();
+                        }
+                        $_SESSION['user'] = $user;
+                        if (!empty($_SESSION['wantsurl'])) {
+                            $url = $_SESSION['wantsurl'];
+                        } else{
+                            $url = $this->Url('admin/index');
+                        }
+                        $this->redirect($url);
+                    }
                 }
-                $this->redirect($url);
             }
-            $errors = $gump->get_readable_errors();
+            $errors = ['Invalid login'];
         }
+
+        // Create login form
+        $form = new \stdClass;
+        $form->username = $this->form->text('username', 'Username', '');
+        $form->password = $this->form->password('password', 'Password');
         
-        $this->View('header');
         $this->View('login', array(
             'errors' => $errors,
+            'form' => $form,
         ));
-        $this->View('footer');
     }
     
     /**
@@ -147,8 +160,6 @@ class userController extends coreController {
      * Handle role error
      */
     public function roleerrorAction() {
-        $this->View('header');
         $this->View('role_error');
-        $this->View('footer');
     }
 }
