@@ -1,0 +1,18 @@
+{{> header }}
+
+{{^ newdate }}
+    <h2 class="page-title"><i class="fas fa-calendar-alt"></i> Edit service date</h2> 
+{{/ newdate }}
+{{# newdate }}
+    <h2 class="page-title"><i class="fas fa-calendar-alt"></i> New service date</h2>
+{{/ newdate }}
+
+{{> formerrors }}
+
+<form class="form-horizontal" role="form" method="post" action="{{# path }}date/edit{{/ path }}/{{ date.id }}">
+    {{{ form.date }}}
+    {{{ form.buttons }}}
+</form>
+
+{{> footer }}
+

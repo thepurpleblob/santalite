@@ -38,6 +38,9 @@
 <div class="container-fluid">
     <div id="mainheading" class="row">
         <div id="bannerimg" class="col-12">
+            {{# system.loggedin }}
+                {{> menu }}
+            {{/ system.loggedin }}
             <div class="row pt-3">
                 <div class="col-lg-2 col-sm-12 text-sm-center text-lg-right">
                     <img src="{{# asset }}image/logo.png{{/ asset }}" /> 

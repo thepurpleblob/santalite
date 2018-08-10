@@ -15,6 +15,8 @@ class coreController {
 
     protected $form;
 
+    protected $lib;
+
     public function getHeaderAssets() {
         global $CFG;
 
@@ -82,6 +84,9 @@ class coreController {
             $this->extendGump();
             $this->gump = new \GUMP();
         }
+
+        // Get the model/lib
+        $this->lib = new \thepurpleblob\santa\lib\santalib($this);
     }
 
     /**

@@ -1,0 +1,39 @@
+{{> header }}
+
+<h2 class="page-title"><i class="fas fa-calendar-alt"></i> Service dates</h2>
+
+{{^ isdates }}
+<div class="alert alert-warning">No service dates specified</div>
+{{/ isdates }}
+
+{{# isdates }}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Service date</th>
+                <th>&nbsp;</th>
+            </tr>    
+        </thead> 
+        <tbody>
+            {{# dates }}
+                <tr>
+                    <td class="lead"><b>{{ count }}</b></td>
+                    <td class="lead">{{ formatteddate }}</td>
+                    <td>
+                       <a href="{{# path }}date/edit{{/ path }}/{{ id }}" class="btn btn-info">
+                            <i class="fas fa-cog"></i> Edit</a>
+                        <a href="{{# path }}date/delete{{/ path }}/{{ id }}" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Delete</a>
+                    </td>
+                </tr>
+            {{/ dates }}
+        </tbody>    
+    </table>
+{{/ isdates }}
+
+<div class="santa-buttons">
+    <a href="{{# path }}date/edit{{/ path }}/0" class="btn btn-info"><i class="fas fa-plus-square"></i> New service date </a>
+</div>
+
+{{> footer }}

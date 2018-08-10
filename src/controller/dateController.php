@@ -1,17 +1,25 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Booking controller
+ */
 
-namespace controller;
+namespace thepurpleblob\santa\controller;
 
-use core\coreController;
+use thepurpleblob\core\coreController;
 
 class dateController extends coreController {
 
     public function indexAction() {
         $this->require_login('admin', $this->Url('date/index'));
         $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
-        $this->View('header');
-        $this->View('date_index', array('dates'=>$dates));
-        $this->View('footer');
+        $this->View('date_index', array(
+            'dates' => $this->lib->format_dates($dates),
+            'isdates' => !empty($dates),
+        ));
     }
     
     /**
@@ -26,7 +34,7 @@ class dateController extends coreController {
         if (!$dateid) {
             $date = \ORM::for_table('traindate')->create();
             $date->id = 0;
-            $date->date = time();
+            $date->date = $this->lib->get_default_date();
         } else {
             $date = \ORM::for_table('traindate')->find_one($dateid);
         }
@@ -38,7 +46,7 @@ class dateController extends coreController {
             }
             
             // date validation is weird
-            $request['date'] = str_replace('/', '-', $request['date']);
+            //$request['date'] = str_replace('/', '-', $request['date']);
             
             $gump->validation_rules(array(
                 'date' => 'required|time',                
@@ -51,14 +59,19 @@ class dateController extends coreController {
             }
             $errors = $gump->get_readable_errors();
         }
+
+        // Create form.
+        $form = new \stdClass;
+        $form->date = $this->form->date('date', 'Date', $date->date, true);
+        $form->buttons = $this->form->buttons();
  
         // display form
-        $this->View('header');
         $this->View('date_edit', array(
-            'date'=>$date,
-            'errors'=>$errors,
+            'date' => $date,
+            'newdate' => $date->id == 0,
+            'form' => $form,
+            'errors' => $errors,
         ));
-        $this->View('footer');       
     }
     
     /**
@@ -66,12 +79,10 @@ class dateController extends coreController {
      */
     public function deleteAction($dateid) {
         $this->require_login('admin', $this->Url('date/index'));
-        $this->View('header');
         $this->View('datetime_delete', array(
             'confirmurl' => $this->Url('date/confirm/'.$dateid),
             'cancelurl' => $this->Url('date/index'),
         ));
-        $this->View('footer');
     }
     
     /**

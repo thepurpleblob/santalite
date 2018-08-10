@@ -67,13 +67,12 @@ class coreForm {
     /**
      * @param $name
      * @param $label
-     * @param $date Probably in MySQL yyyy-mm-dd format
+     * @param $date Unix timestamp
      * @param bool|false $required
      * @param null $attrs
      */
     public function date($name, $label, $date, $required=false, $attrs=null) {
-        $timestamp = strtotime($date);
-        $localdate = date('d/m/Y', $timestamp);
+        $localdate = date('Y-m-d', $date);
         $id = $name . 'Date';
         $reqstr = $required ? 'required' : '';;
         $html = '<div class="form-group">';
@@ -81,7 +80,7 @@ class coreForm {
             $html .= '    <label for="' . $id . '" class="col-sm-4 control-label">' . $label . '</label>';
         }
         $html .= '    <div class="col-sm-8">';
-        $html .= '    <input type="text" class="form-control input-sm datepicker" name="'.$name.'" id="'.$id.'" value="'.$localdate.'" '.
+        $html .= '    <input type="date" class="form-control input-sm datepicker" name="'.$name.'" id="'.$id.'" value="'.$localdate.'" '.
             $this->attributes($attrs) . ' ' . $reqstr . '/>';
 
         $html .= '</div></div>';

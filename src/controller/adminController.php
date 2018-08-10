@@ -10,19 +10,15 @@
 namespace thepurpleblob\santa\controller;
 
 use thepurpleblob\core\coreController;
-use thepurpleblob\santa\model\bookingModel;
-use thepurpleblob\santa\model\bookingRecord;
 
 class adminController extends coreController {
 
     public function indexAction() {
         $this->require_login('organiser', $this->Url('admin/index'));
         $user = $this->getUser();
-        $this->View('header');
         $this->View('admin_index', array(
             'user' => $user,
         ));
-        $this->View('footer');
     }
 
     public function cssAction() {
