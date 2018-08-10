@@ -1,0 +1,14 @@
+{{> header }}
+
+<h2 class="page-title"><i class="fas fa-money-bill-wave"></i> Update fares</h2>
+
+{{> form_errors }}
+
+<form class="form-horizontal" role="form" method="post" action="{{# path }}fares/index{{/ path }}">
+    {{{ form.adult }}}
+    {{{ form.child }}}
+    {{{ form.buttons }}}
+</form>
+
+{{> footer }}
+

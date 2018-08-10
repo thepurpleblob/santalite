@@ -49,6 +49,15 @@ if (!ORM::forTable('user')->where(['username' => 'admin'])->findOne()) {
     $admin->save();
 }
 
+// Check if there is a fares record
+if (!ORM::forTable('fares')->findOne(1)) {
+    $fares = ORM::forTable('fares')->create();
+    $fares->id = 1;
+    $fares->adult = 0;
+    $fares->child = 0;
+    $fares->save();
+}
+
 // set exception handler
 //set_exception_handler('exception_handler');
 

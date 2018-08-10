@@ -1,8 +1,15 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Fares admin controller
+ */
 
-namespace controller;
+namespace thepurpleblob\santa\controller;
 
-use core\coreController;
+use thepurpleblob\core\coreController;
 
 class faresController extends coreController {
     
@@ -22,7 +29,7 @@ class faresController extends coreController {
         // process data
         if ($request = $this->getRequest()) {
             if (!empty($request['cancel'])) {
-                $this->redirect($this->Url('admin/index'));
+                $this->redirect($this->Url('fares/index'));
             }
             
             $gump->validation_rules(array(
@@ -33,40 +40,23 @@ class faresController extends coreController {
                 $fares->adult = round($request['adult'] * 100, 0);
                 $fares->child = round($request['child'] * 100, 0);
                 $fares->save();
-                $this->redirect($this->Url('admin/index'));
+                $this->redirect($this->Url('fares/index'));
             }
             $errors = $gump->get_readable_errors();
         }
+
+        // Create form
+        $form = new \stdClass;
+        $form->adult = $this->form->text('adult', 'Adult fare (&pound;)', number_format($fares->adult / 100, 2), true, null, 'number');
+        $form->child = $this->form->text('child', 'Child fare (&pound;)', number_format($fares->child / 100, 2), true, null, 'number');
+        $form->buttons = $this->form->buttons();
  
         // display form
-        $this->View('header');
         $this->View('fares_edit', array(
-            'fares'=>$fares,
-            'errors'=>$errors,
+            'fares'=> $fares,
+            'form' => $form,
+            'errors'=> $errors,
         ));
-        $this->View('footer');       
     }
     
-    /**
-     * Show delete warning
-     */
-    public function deleteAction($dateid) {
-        $this->require_login('admin', $this->Url('fares/index'));
-        $this->View('header');
-        $this->View('datetime_delete', array(
-            'confirmurl' => $this->Url('date/confirm/'.$dateid),
-            'cancelurl' => $this->Url('date/index'),
-        ));
-        $this->View('footer');
-    }
-    
-    /**
-     * Confirm delete warning
-     */
-    public function confirmAction($dateid) {
-        $this->require_login('organiser', $this->Url('fares/index'));
-        $tm = new dateModel();
-        $tm->deleteDate($dateid);
-        $this->redirect($this->Url('date/index'));
-    }
 }
