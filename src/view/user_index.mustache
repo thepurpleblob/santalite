@@ -1,0 +1,38 @@
+{{> header }}
+
+<h2 class="page-title"><i class="fas fa-users-cog"></i> Users</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Full name</th>
+            <th>Role</th>
+            <th>&nbsp;</th>
+        </tr>    
+    </thead> 
+    <tbody>
+        {{# users }}
+            <tr>
+                <td><b>{{ username }}</b></td>
+                <td>{{ fullname }}</td>
+                <td>{{ role }}</td>
+                <td>
+                    <a href="{{# path }}user/edit{{/ path }}/{{ id }}" class="btn btn-info">
+                        <i class="fas fa-cogs"></i> Edit</a>
+                    {{^ isadmin }}
+                        <a href="{{# path }}user/delete{{/ path }}/{{ id }})" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Delete</a>
+                    {{/ isadmin }}
+                </td>
+            </tr>
+        {{/ users }}
+    </tbody>
+    
+</table>
+
+<div class="santa-buttons">
+    <a href="{{# path }}user/edit{{/ path }}/0" class="btn btn-info">New user</a>
+</div>
+
+{{> footer }}

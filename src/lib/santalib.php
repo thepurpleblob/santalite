@@ -57,4 +57,24 @@ class santalib {
         return $maxdate;
     }
 
+    /**
+     * Format users for display
+     * @param array $users
+     * @return array
+     */
+    public function format_users($users) {
+        $fusers = [];
+        foreach ($users as $user) {
+            $fuser = new \stdClass;
+            $fuser->id = $user->id;
+            $fuser->username = $user->username;
+            $fuser->fullname = $user->fullname;
+            $fuser->role = $user->role;
+            $fuser->isadmin = $user->role == 'admin';
+            $fusers[] = $fuser;
+        }
+
+        return $fusers;
+    }
+
 }

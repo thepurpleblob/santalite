@@ -1,0 +1,21 @@
+{{> header }}
+
+{{^ newuser }}
+    <h2 class="page-title"><i class="fas fa-user-edit"></i> Edit user</h2>
+{{/ newuser }}
+{{# newuser }}
+    <h2 class="page-title"><i class="fas fa-user-check"></i> New user</h2>
+{{/ newuser }}
+
+{{> formerrors }}
+
+<form class="form-horizontal" role="form" method="post" action="{{# path }}user/edit{{/ path }}/{{ user.id }}">
+    {{{ form.username }}}
+    {{{ form.fullname }}}
+    {{{ form.password }}}
+    {{{ form.role }}}
+    {{{ form.buttons }}}
+</form>
+
+{{> footer }}
+

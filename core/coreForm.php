@@ -46,11 +46,13 @@ class coreForm {
      * @param bool $required
      * @param null $attrs
      * @param string $type option HTML5 type
+     * @param bool disabled
      * @return string
      */
-    public function text($name, $label, $value, $required=false, $attrs=null, $type='text') {
+    public function text($name, $label, $value, $required=false, $attrs=null, $type='text', $disabled = false) {
         $id = $name . 'Text';
         $reqstr = $required ? 'required="true"' : '';
+        $disabledstr = $disabled ? 'disabled' : '';
         $validation = $required && !$value ? '&nbsp;<small class="rt-required">(required)</small>' : '';
         $html = '<div class="form-group">';
         if ($label) {
@@ -58,7 +60,7 @@ class coreForm {
         }
         $html .= '    <div class="col-sm-8">';
         $html .= '    <input type="' . $type . '" class="form-control input-sm" name="'.$name.'" id="'.$id.'" value="'.$value.'" '.
-            $this->attributes($attrs) . ' ' . $reqstr . '/>';  
+            $this->attributes($attrs) . ' ' . $reqstr . ' ' . $disabledstr . '/>';  
         $html .= '</div></div>';
 
         return $html;

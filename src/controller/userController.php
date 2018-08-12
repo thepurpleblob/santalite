@@ -16,7 +16,10 @@ class userController extends coreController {
     public function indexAction() {
         $this->require_login('admin', $this->Url('user/index'));
         $users = \ORM::for_table('user')->find_many();
-        $this->View('user_index', array('users'=>$users));
+        $formattedusers = $this->lib->format_users($users);
+        $this->View('user_index', array(
+            'users'=>$formattedusers
+        ));
     }
     
     /**
@@ -40,6 +43,9 @@ class userController extends coreController {
         } else {
             $user = \ORM::for_table('user')->find_one($userid);
         }
+
+        // Can't edit admin username
+        $isadmin = $user->username == 'admin';
         
         // process data
         if ($request = $this->getRequest()) {
@@ -53,9 +59,11 @@ class userController extends coreController {
                 'role' => 'required|role'
             ));
             if ($validated_data = $gump->run($request)) {
-                $user->username = $request['username'];
+                if (!$isadmin) {
+                    $user->username = $request['username'];
+                }
                 if ($request['password']) {
-                    $user->password = md5($request['password']);
+                    $user->password = password_hash($request['password'], PASSWORD_DEFAULT);
                 }    
                 $user->fullname = $request['fullname'];
                 $user->role = $request['role'];
@@ -64,12 +72,21 @@ class userController extends coreController {
             }
             $errors = $gump->get_readable_errors();
         }
+
+        // Create form
+        $form = new \stdClass;
+        $form->username = $this->form->text('username', 'Username', $user->username, true, null, 'text', $isadmin);
+        $form->fullname = $this->form->text('fullname', 'Full name', $user->fullname, true);
+        $form->password = $this->form->password('password', 'Password');
+        $form->role = $this->form->select('role', 'User role', $user->role, $roles);
+        $form->buttons = $this->form->buttons();
  
         // display form
         $this->View('user_edit', array(
-            'user'=>$user,
-            'roles'=>$roles,
-            'errors'=>$errors,
+            'newuser' => $userid == 0,
+            'user' => $user,
+            'form' => $form,
+            'errors' => $errors,
         ));
     }
     
@@ -78,7 +95,15 @@ class userController extends coreController {
      */
     public function deleteAction($userid) {
         $this->require_login('admin', $this->Url('user/index'));
+        
+        // User cannot be admin (and must exist)
+        $user = \ORM::for_table('user')->find_one($userid);
+        if (!$user || ($user->username == 'admin')) {
+            $this->redirect($this->Url('user/index'));
+        }
+
         $this->View('user_delete', array(
+            'user' => $user,
             'confirmurl' => $this->Url('user/confirm/'.$userid),
             'cancelurl' => $this->Url('user/index'),
         ));
@@ -89,7 +114,13 @@ class userController extends coreController {
      */
     public function confirmAction($userid) {
         $this->require_login('admin', $this->Url('user/index'));
+
+        // User cannot be admin (and must exist)
         $user = \ORM::for_table('user')->find_one($userid);
+        if (!$user || ($user->username == 'admin')) {
+            $this->redirect($this->Url('user/index'));
+        }
+
         $user->delete();
         $this->redirect($this->Url('user/index'));
     }

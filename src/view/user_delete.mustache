@@ -1,0 +1,16 @@
+{{> header }}
+
+<h2 class="page-title"><i class="fas fa-question-square"></i> Confirm user delete</h2>
+
+<div class="alert alert-danger">
+    <b>You are about to delete {{ user.fullname }} completely. Are 
+        you sure you wish to continue?</b>
+</div>
+
+<div class="santa-buttons">
+    <a href="{{{ confirmurl }}}" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete </a>
+    <a href="{{{ cancelurl }}}" class="btn btn-warning"><i class="fas fa-ban"></i> Cancel </a>
+</div>
+
+{{> footer }}
+

@@ -10,7 +10,7 @@ div#bannerimg {
       url(../image/header1.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-    min-height: 550px; 
+    min-height: 350px; 
 }
 
 div#footerimg {

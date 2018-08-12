@@ -15,7 +15,8 @@
         "wixel/gump": "^1.5",
     "swiftmailer/swiftmailer": "^6.1",
     "mustache/mustache": "^2.12",
-    "samshal/scripd": "^1.0"
+    "samshal/scripd": "^1.0",
+    "true/punycode": "^2.1"
     },
   "autoload": {
     "psr-4": {
