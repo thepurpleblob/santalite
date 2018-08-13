@@ -4,7 +4,7 @@
  *
  * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
  *
- * Booking controller
+ * User controller
  */
 
 namespace thepurpleblob\santa\controller;

@@ -1,17 +1,25 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Time controller
+ */
 
-namespace controller;
+namespace thepurpleblob\santa\controller;
 
-use core\coreController;
+use thepurpleblob\core\coreController;
 
 class timeController extends coreController {
 
     public function indexAction() {
         $this->require_login('admin', $this->Url('time/index'));
         $times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
-        $this->View('header');
-        $this->View('time_index', array('times'=>$times));
-        $this->View('footer');
+        $this->View('time_index', array(
+            'times' => $times,
+            'istimes' => !empty($times),
+        ));
     }
     
     /**
@@ -48,14 +56,19 @@ class timeController extends coreController {
             }
             $errors = $gump->get_readable_errors();
         }
+
+        // Form
+        $form = new \stdClass;
+        $form->time = $this->form->time('time', 'Service time', $time->time);
+        $form->buttons = $this->form->buttons();
  
         // display form
-        $this->View('header');
         $this->View('time_edit', array(
-            'time'=>$time,
-            'errors'=>$errors,
+            'newtime' => $timeid == 0,
+            'time' => $time,
+            'form' => $form,
+            'errors' => $errors,
         ));
-        $this->View('footer');       
     }
     
     
@@ -64,12 +77,10 @@ class timeController extends coreController {
      */
     public function deleteAction($timeid) {
         $this->require_login('admin', $this->Url('time/index'));
-        $this->View('header');
         $this->View('datetime_delete', array(
             'confirmurl' => $this->Url('time/confirm/'.$timeid),
             'cancelurl' => $this->Url('time/index'),
         ));
-        $this->View('footer');
     }
     
     /**

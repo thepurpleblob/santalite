@@ -17,30 +17,6 @@ class coreController {
 
     protected $lib;
 
-    public function getHeaderAssets() {
-        global $CFG;
-
-        $css = new AssetCollection(array(
-            new HttpAsset('//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css'),
-            //new HttpAsset('//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css'),
-            new GlobAsset($CFG->dirroot . '/assets/css/*'),
-        ));
-
-        return $css->dump();
-    }
-
-    public function getFooterAssets() {
-        global $CFG;
-
-        $js = new AssetCollection(array(
-            new HttpAsset('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'),
-            new HttpAsset('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'),
-            new GlobAsset($CFG->dirroot . '/assets/js/*'),
-        ));
-
-        return $js->dump();
-    }
-
     private function extendGump() {
 
         // valid time
@@ -144,13 +120,13 @@ class coreController {
             'cache' => $cachedir,
         ));
 
-        // Add some extra variables to array
+        // Add some extra variables to context
         $user = $this->getUser();
         $system = new \stdClass();
         if ($user) {
             $system->userrole = $user->role;
-            $system->admin = $user->role == 'ROLE_ADMIN';
-            $system->organiser = $user->role == 'ROLE_ORGANISER';
+            $system->admin = $user->role == 'admin';
+            $system->organiser = $user->role == 'organiser';
             $system->adminpages = $system->admin || $system->organiser;
             $system->fullname = $user->firstname . ' ' . $user->lastname;
             $system->loggedin = true;
@@ -176,10 +152,13 @@ class coreController {
     }
 
     /**
-     * render a view
+     * Echo a view
      */
     public function View($viewname, $variables=null) {
         echo $this->renderView($viewname, $variables);
+
+        // This should always be the last thing we do, but 
+        // just in case!
         die;
     }
 

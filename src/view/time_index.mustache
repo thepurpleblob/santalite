@@ -1,8 +1,12 @@
-<h2>Service times</h2>
+{{> header }}
 
-<?php if (!$times) { ?>
+<h2 class="page-title"><i class="fas fa-clock"></i> Service times</h2>
+
+{{^ istimes }}
 <div class="alert alert-warning">No service times specified</div>
-<?php } else { ?>
+{{/ istimes }}
+
+{{# istimes }}
 <table class="table">
     <thead>
         <tr>
@@ -27,9 +31,10 @@
     </tbody>
     
 </table>
-<?php } ?>
+{{/ istimes }}
 
 <div class="santa-buttons">
-    <a href="<?php echo $this->Url('time/edit/0') ?>" class="btn btn-info">New service time</a>
-    <a href="<?php echo $this->Url('admin/index') ?>" class="btn btn-warning">Cancel </a>
+    <a href="{{# path }}time/edit{{/ path }}/0" class="btn btn-info">New service time</a>
 </div>
+
+{{> footer }}

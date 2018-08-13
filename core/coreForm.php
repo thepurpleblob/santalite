@@ -4,7 +4,7 @@
  *
  * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
  *
- * Main index/entry point
+ * Form library
  */
 
 namespace thepurpleblob\core;
@@ -89,6 +89,18 @@ class coreForm {
 
         return $html;
     }
+
+    /**
+     * @param $name
+     * @param $label
+     * @param $date Unix timestamp
+     * @param bool|false $required
+     * @param null $attrs
+     */
+    public function time($name, $label, $time, $required=false, $attrs=null) {
+        return $this->text($name, $label, $time, $required, $attrs, 'time');
+    }    
+
 
     /**
      * @param $name

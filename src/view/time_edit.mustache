@@ -1,0 +1,18 @@
+{{> header }}
+
+{{^ newtime }}
+    <h2 class="page-title"><i class="fas fa-clock"></i> Edit service time</h2> 
+{{/ newtime }}
+{{# newtime }}
+    <h2 class="page-title"><i class="fas fa-clock"></i> New service time</h2>
+{{/ newtime }}
+
+{{> formerrors }}
+
+<form class="form-horizontal" role="form" method="post" action="{{# path }}time/edit{{/ path }}/{{ time.id }}">
+    {{{ form.time }}}
+    {{{ form.buttons }}}
+</form>
+
+{{> footer }}
+

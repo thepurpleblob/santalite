@@ -1,8 +1,15 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Limits library
+ */
 
-namespace model;
+namespace thepurpleblob\santa\lib;
 
-class limitModel {
+class limitlib {
     
     public function getPassengerCount($limitid) {
         $filter = array(
