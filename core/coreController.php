@@ -87,9 +87,10 @@ class coreController {
      * render a view
      * @param string $viewname name of view (minus extension)
      * @param array $variables array of variables to be passed
+     * @param string $menuname indicates 'selected' menu item
      * @return string
      */
-    public function renderView($viewname, $variables=array()) {
+    public function renderView($viewname, $variables=array(), $menuname = '') {
         global $CFG;
 
         // No spaces
@@ -99,6 +100,12 @@ class coreController {
         $cachedir = $CFG->dirroot . '/cache';
         if (!is_writable($cachedir)) {
             throw new \Exception('Cache dir is not writeable ' . $cachedir);
+        }
+
+        // get controller name for menu
+        if (!$menuname) {
+            $reflect = new \ReflectionClass($this);
+            $menuname = str_replace('Controller', '', $reflect->getShortName());
         }
 
         // get/setup Mustache.
@@ -115,7 +122,10 @@ class coreController {
                 'asset' => function($path) {
                     global $CFG;
                     return $CFG->www . '/src/asset/' . $path;
-                }
+                },
+                'active' => function($menuitem) use ($menuname) {
+                    return $menuitem == $menuname ? 'active' : '';
+                },
             ),
             'cache' => $cachedir,
         ));

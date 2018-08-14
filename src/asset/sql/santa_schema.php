@@ -93,7 +93,7 @@ CREATE TABLE `trainlimit` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `traintime` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `time` int(11) DEFAULT NULL,
+  `time` text COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;",
@@ -112,5 +112,13 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;",
+
+"CREATE TABLE `session` (
+  `id` varchar(32) NOT NULL,
+  `access` int(10) unsigned DEFAULT NULL,
+  `data` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ip` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
 );
 

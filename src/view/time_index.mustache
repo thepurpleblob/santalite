@@ -16,18 +16,16 @@
         </tr>    
     </thead> 
     <tbody>
-        <?php
-        $count = 1;
-        foreach($times as $time) { ?>
-        <tr>
-            <td class="lead"><b><?php echo $count++; ?></b></td>
-            <td class="lead"><?php echo date('H:i', $time->time) ?></td>
-            <td>
-                <a href="<?php echo $this->Url('time/edit/'.$time->id); ?>" class="btn btn-info">Edit</a>
-                <a href="<?php echo $this->Url('time/delete/'.$time->id); ?>" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-        <?php } ?>
+        {{# times }}
+            <tr>
+                <td class="lead"><b>{{ count }}</b></td>
+                <td class="lead">{{ time }}</td>
+                <td>
+                    <a href="{{# path }}time/edit{{/ path }}/{{ id }}" class="btn btn-info"><i class="fas fa-cog"></i> Edit</a>
+                    <a href="{{# path }}time/delete{{/ path }}/{{ id }}" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                </td>
+            </tr>
+        {{/ times }}
     </tbody>
     
 </table>

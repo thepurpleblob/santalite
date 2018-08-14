@@ -38,6 +38,25 @@ class santalib {
     }
 
     /**
+     * Format times
+     * @param array $times
+     * @return array
+     */
+    public function format_times($times) {
+        $ftimes = [];
+        $count = 0;
+        foreach ($times as $time) {
+            $ftime = new \stdClass;
+            $ftime->id = $time->id;
+            $ftime->time = $time->time;
+            $ftime->count = ++$count;
+            $ftimes[] = $ftime;
+        }
+
+        return $ftimes;
+    }
+
+    /**
      * Get suitable default date
      * Next Saturday or Sunday from current highest
      * @return int default date (unix time stamp)

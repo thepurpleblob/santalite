@@ -17,7 +17,7 @@ class timeController extends coreController {
         $this->require_login('admin', $this->Url('time/index'));
         $times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
         $this->View('time_index', array(
-            'times' => $times,
+            'times' => $this->lib->format_times($times),
             'istimes' => !empty($times),
         ));
     }
@@ -49,8 +49,7 @@ class timeController extends coreController {
                 'time' => 'required|time',                
             ));
             if ($validated_data = $gump->run($request)) {
-                $unixtime = strtotime($request['time']); 
-                $time->time = $unixtime;
+                $time->time = $request['time'];
                 $time->save();
                 $this->redirect($this->Url('time/index'));
             }

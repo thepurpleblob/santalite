@@ -8,6 +8,7 @@
  */
 
 use thepurpleblob\core\coreController;
+use thepurpleblob\core\coreSession;
 
 /**
  * Custom exception handler
@@ -58,12 +59,19 @@ if (!ORM::forTable('fares')->findOne(1)) {
     $fares->save();
 }
 
+// Check if there are any times
+if (!ORM::forTable('traintime')->count()) {
+    $defaulttimes = ['10:30', '12:00', '13:30', '15:00'];
+    foreach ($defaulttimes as $defaulttime) {
+        $traintime = ORM::forTable('traintime')->create();
+        $traintime->time = $defaulttime;
+        $traintime->save();
+    }
+}
+
 // set exception handler
 //set_exception_handler('exception_handler');
 
 // start the session
-ini_set('session.gc_maxlifetime', 7200);
-session_set_cookie_params(7200);
-session_name('SRPS_Santas');
-session_start();
+$coresession = new coreSession;
 
