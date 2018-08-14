@@ -6,14 +6,14 @@
 
 <form role="form" method="post" action="{{# path }}limit/index{{/ path }}">
     {{# dates }}
-        <h3><?php echo date('l d/m/Y', $date->date); ?></h3>
+        <h3>{{ formatteddate }}</h3>
         <table class="table">
-        <?php foreach ($times as $time) { 
+        {{# times }} 
             $formid = "{$date->id}_{$time->id}";
             ?>
             <tr>
                 <td class="lead">
-                    <?php echo date('H:i', $time->time); ?>
+                    {{ time }}
                 </td>
                 <td>
                     <?php $form->text('limit'.$formid, 'Limit', $limits[$date->id][$time->id]->maxlimit); ?>
@@ -31,7 +31,7 @@
                     <a class="btn btn-primary btn-sm" href="<?php echo $this->Url("limit/detail/{$date->id}/{$time->id}"); ?>">Detail</a>
                 </td>
             </tr>
-        <?php } ?>
+        {{/ times }}
         </table>
     {{/ dates }}
     <?php $form->buttons(); ?>

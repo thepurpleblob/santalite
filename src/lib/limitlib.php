@@ -42,6 +42,7 @@ class limitlib {
                     $limit->save();
                 }
                 $limit->count = $this->getPassengerCount($limit->id());
+                $limit->formid = $date->id . '_' . $time->id;
                 $limits[$date->id][$time->id] = $limit;
             }
         }

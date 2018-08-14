@@ -17,6 +17,7 @@ class limitController extends coreController {
     protected $limitlib;
 
     public function __construct() {
+        parent::__construct();
         $this->limitlib = new limitlib();
     }
 
@@ -61,10 +62,10 @@ class limitController extends coreController {
 
         // display form
         $this->View('limits', array(
-            'dates'=>$dates,
-        	'times'=>$times,
-            'limits'=>$limits,
-            'errors'=>$errors,
+            'dates' => $this->lib->format_dates($dates),
+            'times' => $this->lib->format_times($times),
+            'limits' => $limits,
+            'errors' => $errors,
         ));
     }
 
