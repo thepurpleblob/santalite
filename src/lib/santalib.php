@@ -29,6 +29,7 @@ class santalib {
         foreach ($dates as $date) {
              $fdate = new \stdClass;
              $fdate->id = $date->id;
+             $fdate->dateid = $date->id;
              $fdate->formatteddate = date('l d/m/Y', $date->date);
              $fdate->count = ++$count;
              $fdates[] = $fdate;
@@ -48,6 +49,7 @@ class santalib {
         foreach ($times as $time) {
             $ftime = new \stdClass;
             $ftime->id = $time->id;
+            $ftime->timeid = $time->id;
             $ftime->time = $time->time;
             $ftime->count = ++$count;
             $ftimes[] = $ftime;

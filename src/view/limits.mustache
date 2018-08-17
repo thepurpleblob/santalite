@@ -5,36 +5,40 @@
 {{> formerrors }}
 
 <form role="form" method="post" action="{{# path }}limit/index{{/ path }}">
-    {{# dates }}
+    {{# formdates }}
         <h3>{{ formatteddate }}</h3>
         <table class="table">
+            <thead>
+                <th>Time</th>
+                <th>Limit</th>
+                <th>Max party size</th>
+                <th>Remaining</th>
+                <th>&nbsp;</th>
+            </thead>
         {{# times }} 
-            $formid = "{$date->id}_{$time->id}";
-            ?>
             <tr>
                 <td class="lead">
                     {{ time }}
                 </td>
                 <td>
-                    <?php $form->text('limit'.$formid, 'Limit', $limits[$date->id][$time->id]->maxlimit); ?>
+                    {{{ formlimit }}}
                 </td>
                 <td>
-                    <?php $form->text('party'.$formid, 'Party size', $limits[$date->id][$time->id]->partysize); ?>
+                    {{{ partysize }}}
                 </td>
                 <td nowrap>
-                    <b>Remaining:</b>&nbsp;
                     <span class="lead">
-                        <?php echo $limits[$date->id][$time->id]->maxlimit - $limits[$date->id][$time->id]->count; ?>
+                        {{ remaining }}
                     </span>
                 </td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="<?php echo $this->Url("limit/detail/{$date->id}/{$time->id}"); ?>">Detail</a>
+                    <a class="btn btn-primary btn-sm" href="{{# path }}limit/detail{{/ path }}/{{ detail }}">Detail</a>
                 </td>
             </tr>
         {{/ times }}
         </table>
-    {{/ dates }}
-    <?php $form->buttons(); ?>
+        {{{ buttons }}}
+    {{/ formdates }}
 </form>
 
 {{> footer }}

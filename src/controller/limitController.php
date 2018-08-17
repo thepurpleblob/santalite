@@ -60,12 +60,26 @@ class limitController extends coreController {
             $errors = $gump->get_readable_errors();
         }
 
+        // Create complicated form
+        $formdates = $this->lib->format_dates($dates);
+        $formtimes = $this->lib->format_times($times);
+        foreach ($formdates as $date) {
+             $date->times = $formtimes;
+             foreach ($date->times as $time) {
+                 $formid = "{$date->id}_{$time->id}";
+                 $time->formlimit = $this->form->text('limit'.$formid, '', $limits[$date->id][$time->id]->maxlimit, true, null, 'number'); 
+                 $time->partysize = $this->form->text('party'.$formid, '', $limits[$date->id][$time->id]->partysize, true, null, 'number');
+                 $time->remaining = $limits[$date->id][$time->id]->maxlimit - $limits[$date->id][$time->id]->count;
+                 $time->detail = $date->id . '/' . $time->id;
+             }
+        }
+
         // display form
         $this->View('limits', array(
-            'dates' => $this->lib->format_dates($dates),
-            'times' => $this->lib->format_times($times),
+            'formdates' => $formdates,
             'limits' => $limits,
             'errors' => $errors,
+            'buttons' => $this->form->buttons(),
         ));
     }
 
