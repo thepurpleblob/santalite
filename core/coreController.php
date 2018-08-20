@@ -138,12 +138,10 @@ class coreController {
             $system->admin = $user->role == 'admin';
             $system->organiser = $user->role == 'organiser';
             $system->adminpages = $system->admin || $system->organiser;
-            $system->fullname = $user->firstname . ' ' . $user->lastname;
             $system->loggedin = true;
         } else {
             $system->userrole = '';
             $system->admin = false;
-            $system->fullname = '';
             $system->loggedin = false;
         }
         $system->sessionid = session_id();
@@ -153,6 +151,12 @@ class coreController {
         $variables['showlogin'] = (($viewname != 'user/login') && (strpos($viewname, 'booking') !== 0));
         $variables['haserrors'] = !empty($variables['errors']);
 
+        // Log in link
+        if ($system->loggedin) {
+            $system->loginlink = "Logged in as ". $user->fullname . ' <a href="' . $this->Url('user/logout') . '">(Log out)</a>';
+        } else {
+            $system->loginlink = '<a href="' . $this->Url('user/login') . '">Staff login</a>';
+        }
 
         // Get template
         $template = $mustache->loadTemplate($viewname . '.mustache');

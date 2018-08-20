@@ -1,8 +1,15 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Limits library
+ */
 
-namespace lib;
+namespace thepurpleblob\santa\lib;
 
-class calendar {
+class calendarlib {
 
     private function isoDays() {
         return array(

@@ -1,0 +1,21 @@
+{{> header }}
+
+<h2 class="page-title">Who is travelling?</h2>
+
+<p class="alert alert-info">
+    <i class="fas fa-question-circle"></i> Please tell us how many adults, children and infants are in your party.
+</p>
+
+<form role="form" class="form-horizontal" method="post" action="{{# path }}booking/numbers{{/ path }}">
+    {{{ form.adults }}}
+    {{{ form.children }}}
+    {{{ form.infants }}}
+
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle"></i> Infants travel free but are not allocated a seat.
+    </div>
+
+    {{{ form.buttons }}}
+</form>
+
+{{> footer }}

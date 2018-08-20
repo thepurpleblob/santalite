@@ -10,8 +10,9 @@
 namespace thepurpleblob\santa\controller;
 
 use thepurpleblob\core\coreController;
-use thepurpleblob\santa\model\bookingModel;
+use thepurpleblob\santa\lib\bookinglib;
 use thepurpleblob\santa\model\bookingRecord;
+use thepurpleblob\santa\lib\calendarlib;
 
 class bookingController extends coreController {
 
@@ -27,7 +28,7 @@ class bookingController extends coreController {
 
     public function __construct() {
         parent::__construct();
-        $this->bm = new bookingModel;
+        $this->bm = new bookinglib;
     }
 
     public function expiredAction() {
@@ -47,10 +48,12 @@ class bookingController extends coreController {
         $this->View('booking_start');
     }
     
+    /**
+     * Display number travelling page
+     */
     public function numbersAction() {
         global $CFG;
 
-        $bm = new bookingModel();
         $br = new bookingRecord();
         $gump = $this->getGump();
 
@@ -88,22 +91,46 @@ class bookingController extends coreController {
                 $this->redirect($this->Url('booking/date'));
             }
         }
+     
+        // Form
+        $form = new \stdClass;
+        $form->adults = $this->form->select('adults',
+            'Number of adults - £'.number_format($fares->adult/100, 2).' each',
+            $br->getAdults(),
+            $adultchoices,
+            '',
+            8);
+        $form->children = $this->form->select('children',
+            'Number of children - £'.number_format($fares->child/100, 2).' each <small class="santa-subtext">(2 years to 15 years)</small>',
+            $br->getChildren(),
+            $childrenchoices,
+            '',
+            8);
+        $form->infants = $this->form->select('infants',
+            'Number of infants <small class="santa-subtext">(younger than 2 years on day of travel)</small>',
+            $br->getInfants(),
+            $infantchoices,
+            '',
+            8);
+        $form->buttons = $this->form->buttons('Next', 'Back', true);
 
-        $this->View('header');
         $this->View('booking_numbers', array(
                 'br' => $br,
+                'form' => $form,
                 'adultchoices' => $adultchoices,
                 'childrenchoices' => $childrenchoices,
                 'infantchoices' => $infantchoices,
                 'fares' => $fares,
                 'errors' => $gump->errors(),
         ));
-        $this->View('footer');
     }
 
+    /**
+     * Display date picker page
+     * @param int $dateid
+     */
     public function dateAction($dateid=0) {
-        $cal = $this->getLib('calendar');
-        $bm = new bookingModel();
+        $cal = new calendarlib;
         $br = new bookingRecord();
 
         // check the session is still around
@@ -112,7 +139,7 @@ class bookingController extends coreController {
         }
 
         // get the remaining seats counts
-        list($pcounts, $dmax) = $bm->getRemaining();
+        list($pcounts, $dmax) = $this->bm->getRemaining();
         $seatsneeded = $br->getAdults() + $br->getChildren();
 
         // process data
@@ -127,9 +154,9 @@ class bookingController extends coreController {
             $this->redirect($this->Url('booking/time'));
         }
 
-        // get dates
-        $dates = \ORM::for_table('traindate')->order_by_asc('date')->find_many();
-        $months = $bm->getMonthsDays($dates, $dmax, $seatsneeded);
+        // Build select
+        $operatingdays = $this->bm->getDays();
+echo "<pre>"; var_dump($operatingdays); die;
 
         // build calendars
         $calendar = '';
@@ -138,11 +165,9 @@ class bookingController extends coreController {
             $calendar .= $cal->showMonth($month_number, $year, $days, $this->Url('booking/date/'));
         }
 
-        $this->View('header');
         $this->View('booking_date', array(
             'calendar' => $calendar,
         ));
-        $this->View('footer');
     }
 
     public function timeAction($timeid=0) {
