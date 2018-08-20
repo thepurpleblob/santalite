@@ -1,8 +1,15 @@
 <?php
+/**
+ * SRPS Santa Booking
+ *
+ * Copyright 2018, Howard Miller (howardsmiller@gmail.com)
+ *
+ * Limits controller
+ */
 
-namespace controller;
+namespace thepurpleblob\santa\controller;
 
-use core\coreController;
+use thepurpleblob\core\coreController;
 
 class reportController extends coreController {
 
@@ -99,6 +106,19 @@ class reportController extends coreController {
         // filter by reduction
         $filtered = array();
         foreach ($purchases as $purchase) {
+            if (empty($purchase->status) || ($purchase->status == '-')) {
+                $class = 'santa-reconcile';
+                $value = $this->Url('report/reconcile/'.$purchase->id());
+                $displaystatus = '<button type="button" class="btn btn-success btn-sm reconcile" value="'.$value.'">Reconcile</button>';
+            } else if ($purchase->status == 'OK') {
+                $class = '';
+                $displaystatus = 'OK';
+            } else {
+                $class = 'santa-fail';
+                $displaystatus = $purchase->status;
+            }
+            $purchase->class = $class;
+            $purchase->displaystatus = $displaystatus;
             if ($status=='reconcile' && !empty($purchase->status)) {
                 continue;
             }
@@ -111,13 +131,16 @@ class reportController extends coreController {
             $filtered[] = $purchase;
         }
 
-        $this->View('header');
+        // Select form
+        $form = new \stdClass;
+        $form->select = $this->form->select('status', 'Status', $status, $statusoptions);
+
         $this->View('report_purchases', array(
+            'ispurchases' => !empty($filtered),
             'purchases' => $filtered,
             'status' => $status,
-            'statusoptions' => $statusoptions,
+            'form' => $form,
         ));
-        $this->View('footer');
 
     }
 

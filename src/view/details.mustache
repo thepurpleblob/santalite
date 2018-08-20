@@ -1,0 +1,38 @@
+{{> header }}
+
+<h2 class="page-title">Service detail</h2>
+
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Service date</th><td>{{ details.date }}</td>
+        </tr>
+        <tr>
+            <th>Service time</th><td>{{ details.time.time }}</td>
+        </tr>
+        <tr>
+            <th>Number of bookings</th><td>{{ details.count }}</td>
+        </tr>
+        <tr>
+            <th>Number of adults</th><td>{{ details.sumadult }}</td>
+        </tr>
+        <tr>
+            <th>Number of children</th><td>{{ details.sumchild }}</td>
+        </tr>
+        <tr>
+            <th>Total seats booked</th><td>{{ details.total }}</td>
+        </tr>
+        <tr>
+            <th>Booking limit</th><td>{{ details.limit }}</td>
+        </tr>
+        <tr>
+            <th>Seats remaining</th><td>{{ details.remaining }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="santa-buttons">
+    <a href="{{# path }}limit/index{{/ path}}" class="btn btn-info">Back</a>
+</div>
+
+{{> footer }}

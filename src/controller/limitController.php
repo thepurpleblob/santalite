@@ -39,7 +39,7 @@ class limitController extends coreController {
         // process data
         if ($request = $this->getRequest()) {
             if (!empty($request['cancel'])) {
-                $this->redirect($this->Url('admin/index'));
+                $this->redirect($this->Url('limit/index'));
             }
 
             // Loop through possibilities to validate
@@ -64,13 +64,16 @@ class limitController extends coreController {
         $formdates = $this->lib->format_dates($dates);
         $formtimes = $this->lib->format_times($times);
         foreach ($formdates as $date) {
-             $date->times = $formtimes;
-             foreach ($date->times as $time) {
+             $date->times = [];
+             foreach ($formtimes as $time) {
+                 $formtime = new \stdClass;
                  $formid = "{$date->id}_{$time->id}";
-                 $time->formlimit = $this->form->text('limit'.$formid, '', $limits[$date->id][$time->id]->maxlimit, true, null, 'number'); 
-                 $time->partysize = $this->form->text('party'.$formid, '', $limits[$date->id][$time->id]->partysize, true, null, 'number');
-                 $time->remaining = $limits[$date->id][$time->id]->maxlimit - $limits[$date->id][$time->id]->count;
-                 $time->detail = $date->id . '/' . $time->id;
+                 $formtime->time = $time->time;
+                 $formtime->formlimit = $this->form->text('limit'.$formid, '', $limits[$date->id][$time->id]->maxlimit, true, null, 'number'); 
+                 $formtime->partysize = $this->form->text('party'.$formid, '', $limits[$date->id][$time->id]->partysize, true, null, 'number');
+                 $formtime->remaining = $limits[$date->id][$time->id]->maxlimit - $limits[$date->id][$time->id]->count;
+                 $formtime->detail = $date->id . '/' . $time->id;
+                 $date->times[] = $formtime;
              }
         }
 

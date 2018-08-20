@@ -97,7 +97,7 @@ class limitlib {
         
         // start with date and time
         $details = new \stdClass();
-        $details->date = $date;
+        $details->date = date('l d/m/Y', $date->date);
         $details->time = $time;
         
         // create a filter and do some sums
@@ -107,7 +107,13 @@ class limitlib {
                 'status' => 'OK',
         );
         $details->sumadult = \ORM::for_table('purchase')->where($filter)->sum('adult');
+        if (!$details->sumadult) {
+            $details->sumadult = 0;
+        }
         $details->sumchild = \ORM::for_table('purchase')->where($filter)->sum('child');
+        if (!$details->sumchild) {
+            $details->sumchild = 0;
+        }
         $details->count = \ORM::for_table('purchase')->where($filter)->count();
         $details->limit = $limit->maxlimit;
         $details->total = $details->sumadult + $details->sumchild;

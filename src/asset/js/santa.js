@@ -18,3 +18,10 @@ $(function() {
     var url = www + '/src/asset/image/header' + random + '.jpg';
     $('#bannerimg').css('background-image', css + 'url("' + url + '")');
 });
+
+/**
+ * CSS trickery
+ */
+$(function() {
+    $('.limitbuttons button').addClass('btn-sm');
+});

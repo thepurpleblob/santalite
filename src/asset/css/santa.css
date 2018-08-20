@@ -37,3 +37,11 @@ div#footerimg {
     font-size: 2rem;
     margin-bottom: 1rem;
 }
+
+#limittable {
+    margin-bottom: 0;
+}
+
+.limitbuttons {
+    margin-bottom: 2rem;
+}

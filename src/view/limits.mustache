@@ -7,7 +7,7 @@
 <form role="form" method="post" action="{{# path }}limit/index{{/ path }}">
     {{# formdates }}
         <h3>{{ formatteddate }}</h3>
-        <table class="table">
+        <table id="limittable" class="table table-sm">
             <thead>
                 <th>Time</th>
                 <th>Limit</th>
@@ -15,29 +15,33 @@
                 <th>Remaining</th>
                 <th>&nbsp;</th>
             </thead>
-        {{# times }} 
-            <tr>
-                <td class="lead">
-                    {{ time }}
-                </td>
-                <td>
-                    {{{ formlimit }}}
-                </td>
-                <td>
-                    {{{ partysize }}}
-                </td>
-                <td nowrap>
-                    <span class="lead">
-                        {{ remaining }}
-                    </span>
-                </td>
-                <td>
-                    <a class="btn btn-primary btn-sm" href="{{# path }}limit/detail{{/ path }}/{{ detail }}">Detail</a>
-                </td>
-            </tr>
-        {{/ times }}
+            <tbody>
+                {{# times }} 
+                    <tr>
+                        <td class="lead">
+                            {{ time }}
+                        </td>
+                        <td>
+                            {{{ formlimit }}}
+                        </td>
+                        <td>
+                            {{{ partysize }}}
+                        </td>
+                        <td nowrap>
+                            <span class="lead">
+                                {{ remaining }}
+                            </span>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" href="{{# path }}limit/detail{{/ path }}/{{ detail }}">Detail</a>
+                        </td>
+                    </tr>
+                {{/ times }}
+            </tbody>
         </table>
-        {{{ buttons }}}
+        <div class="limitbuttons">
+            {{{ buttons }}}
+        </div>
     {{/ formdates }}
 </form>
 

@@ -1,0 +1,47 @@
+{{> header }}
+
+{{^ ispurchases }}
+    <div class="alert alert-warning">
+        There are no recorded purchases
+    </div>
+{{/ ispurchases }}
+{{# ispurchases }}
+        Purchases this colour need to be reconciled with SagePay.
+    </div>
+    <div id="santa-filter" class="row">
+        <form role="form" class="form-horizontal auto-submit" method="post" action="{{# path }}report/purchases{{/ path }}">
+            <div class="col-md-3">
+                {{{ form.status }}}
+            </div>
+        </form> 
+    </div>
+    <table class="table table-condensed">
+        <thead>
+            <th>Reference</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Name</th>
+            <th>Day #</th>
+            <th>Train #</th>
+            <th>Amount</th>
+            <th>&nbsp;</th>
+        </thead>
+        <tbody>
+        {{# purchases }}
+            <tr class="{{ class }}">
+                <td>{{ bkgref }}</td>
+                <td>{{ bkgdate }}</td>
+                <td>{{ displaystatus }}</td>
+                <td>{{ firstname }} {{ surname }}</td>
+                <td>{{ name }}</td>
+                <td>{{ day }}</td>
+                <td>{{ train }}</td>
+                <td>&pound; {{ payment }}</td>
+                <td><a href="{{# path }}report/purchase{{/ path }}/{{ id }}" class="btn btn-primary btn-sm">View</a></td>
+            </tr>
+        {{/ purchases }}
+        </tbody>
+    </table>
+{{/ ispurchases }}
+
+{{> footer }}
