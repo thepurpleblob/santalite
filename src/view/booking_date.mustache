@@ -4,13 +4,23 @@
 
 <p class="alert alert-info"><i class="fas fa-info-circle"></i> The trains run on the following days and times. Click the one you would like to travel on.</p>
 
-<div class="row">
-    {{# operatingdays }}
-        <div class="col">
-            <h4>{{ . }}</h4>
-        </div>
-    {{/ operatingdays }}
-</div>
+{{# structure }}
+    <div class="row">
+        {{# days }}
+            <div class="col">
+            	<div class="card">
+                    <h4 class="card-title">{{ date }}</h4>
+                    <div class="btn-group-vertical">
+                        {{# times }}
+                            <button class="btn btn-primary">{{ time }}</button>
+                        {{/ times }}
+                    </div>
+                </div>
+            </div>
+        {{/ days }}
+    </div>	
+{{/ structure }}
+
 <div class="clearfix"></div>
 
 <div class="santa-buttons">

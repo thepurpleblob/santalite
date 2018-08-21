@@ -152,12 +152,17 @@ class bookingController extends coreController {
             $this->redirect($this->Url('booking/time'));
         }
 
+        // Operating days
+        $days = $this->bm->getDays();
+
         // Build select
-        $operatingdays = $this->bm->getDays();
+        $structure = $this->bm->getDateTimeSelect();
+//echo "<pre>"; var_dump($structure); die;
 
         // build calendars
         $this->View('booking_date', array(
-            'operatingdays' => array_values($operatingdays),
+            'days' => $days,
+            'structure' => $structure,
         ));
     }
 

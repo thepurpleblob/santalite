@@ -43,8 +43,60 @@ class bookinglib {
             $days[$daynumber] = $day;
         }
 
-        return $days;
+        return array_values($days);
     }
+
+    /**
+     * Get times structure for getDateTimeSelect
+     * @param int $dateid
+     * @return array
+    */
+    protected function getTimes($dateid) {
+        $times = [];
+        foreach ($this->times as $time) {
+            $slot = new \stdClass();
+            $slot->time = $time->time;
+            $times[] = $slot;
+        }
+
+        return $times;
+    }
+
+    /**
+     * Get array of date/time selections for display
+     * By...
+     * 1. Week number
+     *   2. Day number
+     *      (Date)
+     *     3. Time
+     *        (Availability)
+     * @return array
+     */
+     public function getDateTimeSelect() {
+
+        // Start with array of active days (e.g. Saturday/Sunday)
+        $days = $this->getDays();
+
+        $weeks = [];
+        foreach ($this->dates as $date) {
+            $day = new \stdClass;
+            $weeknumber = date('W', $date->date); 
+            if (empty($weeks[$weeknumber])) {
+                $weeks[$weeknumber] = new \stdClass;
+                $weeks[$weeknumber]->days = [];
+            }
+            $daynumber = date('N', $date->date);
+            $day->weeknumber = $weeknumber;
+            $day->daynumber = $daynumber;
+            $day->id = $date->id;
+            $day->date = date('l d/m/Y', $date->date);
+            $day->times = $this->getTimes($date->id);
+            $weeks[$weeknumber]->days[] = $day;
+        }
+
+        //echo "<pre>"; var_dump($weeks); die;
+        return array_values($weeks);
+     }    
 
     /**
      * get operating months and days therein(numbers)
