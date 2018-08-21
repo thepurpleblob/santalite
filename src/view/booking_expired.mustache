@@ -1,4 +1,6 @@
-<h2>Start your booking...</h2>
+{{> header }}
+
+<h2 class="page-title"><i class="fas fa-hourglass"></i> Timed out...</h2>
 
 <div class="alert alert-danger">
     Sorry - you have taken too long to respond and your booking has been cancelled. Please
@@ -6,6 +8,8 @@
 </div>
 
 <div class="santa-buttons">
-    <a href="<?php echo $this->Url('booking/start') ?>" class="btn btn-info">Continue</a>
+    <a href="{{# path }}booking/start{{/ path }}" class="btn btn-info">Continue</a>
 </div>
+
+{{> footer }}
 

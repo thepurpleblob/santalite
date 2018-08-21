@@ -1,11 +1,15 @@
 {{> header }}
 
-<h2 class="page-title">Choose the day...</h2>
+<h2 class="page-title"><i class="fas fa-calendar-alt"></i> Choose the day...</h2>
 
-<p class="alert alert-info">The trains run on the highlighted days. Click the one you would like to travel on.</p>
+<p class="alert alert-info"><i class="fas fa-info-circle"></i> The trains run on the following days and times. Click the one you would like to travel on.</p>
 
-<div class="santa-cal-container">
-    {{{ calendar }}}
+<div class="row">
+    {{# operatingdays }}
+        <div class="col">
+            <h4>{{ . }}</h4>
+        </div>
+    {{/ operatingdays }}
 </div>
 <div class="clearfix"></div>
 

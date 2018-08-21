@@ -153,9 +153,9 @@ class coreController {
 
         // Log in link
         if ($system->loggedin) {
-            $system->loginlink = "Logged in as ". $user->fullname . ' <a href="' . $this->Url('user/logout') . '">(Log out)</a>';
+            $system->loginlink = "Logged in as ". $user->fullname . '<br /> <a href="' . $this->Url('user/logout') . '"> <i class="fas fa-sign-out-alt"></i> Log out</a>';
         } else {
-            $system->loginlink = '<a href="' . $this->Url('user/login') . '">Staff login</a>';
+            $system->loginlink = '<a href="' . $this->Url('user/login') . '"><i class="fas fa-sign-in-alt"></i> Staff login</a>';
         }
 
         // Get template

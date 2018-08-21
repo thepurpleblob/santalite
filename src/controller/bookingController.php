@@ -32,9 +32,7 @@ class bookingController extends coreController {
     }
 
     public function expiredAction() {
-    	$this->View('header');
     	$this->View('booking_expired');
-    	$this->View('footer');
     }
 
     public function startAction() {
@@ -156,17 +154,10 @@ class bookingController extends coreController {
 
         // Build select
         $operatingdays = $this->bm->getDays();
-echo "<pre>"; var_dump($operatingdays); die;
 
         // build calendars
-        $calendar = '';
-        foreach ($months as $month => $days) {
-            list($month_number, $year) = explode('/', $month);
-            $calendar .= $cal->showMonth($month_number, $year, $days, $this->Url('booking/date/'));
-        }
-
         $this->View('booking_date', array(
-            'calendar' => $calendar,
+            'operatingdays' => array_values($operatingdays),
         ));
     }
 
