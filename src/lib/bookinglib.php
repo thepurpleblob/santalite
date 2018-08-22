@@ -89,7 +89,7 @@ class bookinglib {
             $day->weeknumber = $weeknumber;
             $day->daynumber = $daynumber;
             $day->id = $date->id;
-            $day->date = date('l d/m/Y', $date->date);
+            $day->date = date('l jS F', $date->date);
             $day->times = $this->getTimes($date->id);
             $weeks[$weeknumber]->days[] = $day;
         }

@@ -45,3 +45,39 @@ div#footerimg {
 .limitbuttons {
     margin-bottom: 2rem;
 }
+
+.island {
+    background-color: #fff;
+    border: 4px solid #e2e5e7;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.island-header {
+    padding: 5px 10px;
+    border-bottom: 4px solid #e2e5e7;
+}
+
+.island-body {
+    padding: 10px;
+}
+
+.island-header h3 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.island-footer {
+    padding: 5px 10px;
+    border-top: 1px solid #e2e5e7;
+}
+
+.ridetime {
+    display: block;
+    font-size: 1.3em;
+}
+
+.availability {
+    display: block;
+    font-size: 0.9em;
+}

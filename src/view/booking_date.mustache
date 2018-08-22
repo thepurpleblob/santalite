@@ -8,11 +8,16 @@
     <div class="row">
         {{# days }}
             <div class="col">
-            	<div class="card">
-                    <h4 class="card-title">{{ date }}</h4>
-                    <div class="btn-group-vertical">
+            	<div class="island">
+                    <div class="island-header">
+                        <center><h3>{{ date }}</h4></center>
+                    </div>
+                    <div class="island-body">
                         {{# times }}
-                            <button class="btn btn-primary">{{ time }}</button>
+                            <a class="btn btn-block btn-success">
+                                <span class="ridetime">{{ time }}</span>
+                                <span class="availability">Seats available</span>
+                            </a>
                         {{/ times }}
                     </div>
                 </div>
