@@ -59,7 +59,8 @@ class bookingController extends coreController {
         if ($br->expired()) {
             $this->redirect($this->url('booking/expired'));
         }
-            // get fares
+            
+        // get fares
         $fares = \ORM::for_table('fares')->find_one(1);
 
         // choices
@@ -125,109 +126,68 @@ class bookingController extends coreController {
 
     /**
      * Display date picker page
-     * @param int $dateid
      */
-    public function dateAction($dateid=0) {
+    public function dateAction() {
         $cal = new calendarlib;
         $br = new bookingRecord();
+        $gump = $this->getGump();
 
         // check the session is still around
         if ($br->expired()) {
         	$this->redirect($this->url('booking/expired'));
         }
 
-        // get the remaining seats counts
-        list($pcounts, $dmax) = $this->bm->getRemaining();
+        // get the needed seats and remaining counts
         $seatsneeded = $br->getAdults() + $br->getChildren();
+        list($pcounts, $daymax) = $this->bm->getRemaining();
 
         // process data
-        if ($dateid) {
-            $date = \ORM::for_table('traindate')->find_one($dateid);
-            if (!$date) {
-            	throw new Exception("Date id $dateid not found in database");
-            }
+        $errors = [];
+        if ($request = $this->getRequest()) {
 
-            $br->setDateid($dateid);
-            $br->save();
-            $this->redirect($this->Url('booking/time'));
+            // Validate
+            $gump->validation_rules(array(
+                    'dateid' => "required|numeric|min_numeric,1",
+                    'timeid' => "required|numeric|min_numeric,1",
+            ));
+
+            if ($data = $gump->run($request)) {
+                $dateid = $data['dateid'];
+                $timeid = $data['timeid'];
+
+                // Recheck limit
+                if (!isset($pcounts[$dateid][$timeid])) {
+                    throw new \Exception('Invalid date or time somehow selected!');
+                }
+                if ($pcounts[$dateid][$timeid] < $seatsneeded) {
+                    $errors[] = 'Unfortunately, there are no longer seats available on your selected service';
+                } else {
+                    $br->setDateid($dateid);
+                    $br->setTimeid($timeid);
+                    $br->save();
+                    $this->redirect($this->Url('booking/ages'));
+                }
+            }
         }
 
         // Operating days
         $days = $this->bm->getDays();
 
         // Build select
-        $structure = $this->bm->getDateTimeSelect();
-//echo "<pre>"; var_dump($structure); die;
+        $structure = $this->bm->getDateTimeSelect($seatsneeded, $pcounts);
 
         // build calendars
         $this->View('booking_date', array(
             'days' => $days,
             'structure' => $structure,
+            'errors' => $errors,
         ));
     }
 
-    public function timeAction($timeid=0) {
-    	$bm = new bookingModel();
-    	$br = new bookingRecord();
-
-    	// check the session is still around
-    	if ($br->expired()) {
-    		$this->redirect($this->url('booking/expired'));
-    	}
-
-    	// get the remaining seats counts
-    	list($pcounts, $dmax) = $bm->getRemaining();
-    	$seatsavailable = $pcounts[$br->getDateid()];
-    	$seatsneeded = $br->getAdults() + $br->getChildren();
-
-    	// need dateid from session
-    	$dateid = $br->getDateid();
-    	$date = \ORM::for_table('traindate')->find_one($dateid);
-    	if (!$date) {
-    		throw new \Exception('Traindate not found in database for id='.$dateid);
-    	}
-
-    	// get available times
-    	$times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
-
-    	// check if any are actually available
-    	$available = false;
-    	foreach($times as $time) {
-    	    if ($seatsavailable[$time->id()] > $seatsneeded) {
-    	        $available = true;
-    	    }
-    	}
-
-    	// check for submission
-    	if ($timeid && $available) {
-    		$time = \ORM::for_table('traintime')->find_one($timeid);
-    		if (!$time) {
-    			throw new \Exception('Time not found in database id='.$timeid);
-    		}
-
-    		// get/set limit
-    		$limit = $bm->getTrainlimit($dateid, $timeid);
-    		$br->setTrainlimitid($limit->id());
-
-    		$br->setTimeid($timeid);
-    		$br->save();
-    		$this->redirect($this->Url('booking/ages'));
-    	}
-
-        $this->View('header');
-        $this->View('booking_time', array(
-            'date' => $date,
-            'times' => $times,
-            'available' => $available,
-            'seatsavailable' => $seatsavailable,
-        	'seatsneeded' => $seatsneeded,
-        ));
-        $this->View('footer');
-    }
-
-
+    /**
+     * Get children's ages
+     */
     public function agesAction() {
-    	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
 
@@ -243,15 +203,18 @@ class bookingController extends coreController {
     	}
 
     	// form submitted?
+        $errors = [];
     	if ($request = $this->getRequest()) {
     		if (!empty($request['cancel'])) {
-    			$this->redirect($this->Url('booking/time'));
+    			$this->redirect($this->Url('booking/date'));
     		}
 
     		$rules = array();
     		for ($i=1; $i<=$children; $i++) {
     			$rules['sex'.$i] = "required|alpha";
     			$rules['age'.$i] = "required|numeric|min_numeric,1|max_numeric,15";
+                \GUMP::set_field_name('sex'.$i, "Girl/Boy number $i");
+                \GUMP::set_field_name('age'.$i, "Age number $i");
     		}
     		$gump->validation_rules($rules);
     		if ($data = $gump->run($request)) {
@@ -266,17 +229,32 @@ class bookingController extends coreController {
     			$br->save();
     			$this->redirect($this->Url('booking/contact'));
     		}
+            $errors = $gump->get_readable_errors();
     	}
 
-    	$this->View('header');
-    	$this->View('booking_ages', array(
-    		'children' => $children,
-    		'chooseages' => $bm->getAges(),
-    	    'ages' => $br->getAges(),
-    	    'sexes' => $br->getSexes(),
-    	));
-    	$this->View('footer');
+        // Options
+        $ages = $br->getAges();
+        $sexes = $br->getSexes();
 
+        // Create form (array of child data)
+        $forms = [];
+        for ($i = 1; $i <= $children; $i++) {
+            $child = new \stdClass;
+            $child->number = $i;
+            $child->boychecked = isset($sexes[$i]) && ($sexes[$i] == 'boy');
+            $child->girlchecked = isset($sexes[$i]) && ($sexes[$i] == 'girl');
+            $selected = empty($ages[$i]) ? 0 : $ages[$i];
+            $child->chooseages = $this->bm->getAges($selected);
+            $forms[] = $child;
+        }
+        $buttons = $this->form->buttons('Next', 'Back', true);
+
+
+    	$this->View('booking_ages', array(
+    		'forms' => $forms,
+            'errors' => $errors,
+            'buttons' => $buttons,
+    	));
     }
 
     private function set_record($br, $data) {

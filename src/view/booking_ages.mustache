@@ -1,0 +1,45 @@
+{{> header }}
+
+<h2 class="page-title"><i class="fas fa-child"></i> Children's ages...</h2>
+
+<p class="alert alert-info">
+    <i class="fas fa-info-circle"></i> Please tell us the sex and ages of the children.
+    <br /><i>This information is used to help us choose appropriate gifts</i>
+</p>
+
+{{> formerrors }}
+
+<form role="form" class="form-horizontal" method="post" action="{{# path }}booking/ages{{/ path }}">
+    {{# forms }}
+         <div class="row">
+             <div class="col">
+                 <b>Child {{ number }}</b>
+             </div>
+             <div class="col">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" name="sex{{ number }}" type="radio" id="inLineRadioGirl" value="girl" {{# girlchecked }}checked{{/ girlchecked }} required>
+                    <label class="form-check-label" for="inLineRadioGirl">Girl</label>
+                </div>  
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" name="sex{{ number }}" type="radio" id="inLineRadioBoy" value="boy" {{# boychecked }}checked{{/ boychecked }} required>
+                    <label class="form-check-label" for="inLineRadioBoy">Boy</label>
+                </div>  
+             </div>
+             <div class="col">
+                <div class="form-group">
+                    <select class="form-control" name="age{{ number }}" required>
+                        <option disabled selected>Age...</option>
+                        {{# chooseages }}<option value="{{ key }}" {{# selected }}selected{{/ selected }}>{{ value }}</option>{{/ chooseages }}
+                    </select>    
+                </div>    
+             </div>
+         </div>
+    {{/ forms }}
+    {{{ buttons }}}
+</form>
+
+{{> footer }}
+
+
+
+

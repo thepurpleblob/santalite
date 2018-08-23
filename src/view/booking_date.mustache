@@ -1,23 +1,37 @@
 {{> header }}
 
-<h2 class="page-title"><i class="fas fa-calendar-alt"></i> Choose the day...</h2>
+<h2 class="page-title"><i class="fas fa-calendar-alt"></i> Choose your train...</h2>
 
-<p class="alert alert-info"><i class="fas fa-info-circle"></i> The trains run on the following days and times. Click the one you would like to travel on.</p>
+<p class="alert alert-info"><i class="fas fa-info-circle"></i> Click an available time on the day you want to travel.</p>
+
+{{> formerrors }}
 
 {{# structure }}
     <div class="row">
         {{# days }}
             <div class="col">
-            	<div class="island">
+            	<div class="island bg-warning">
                     <div class="island-header">
-                        <center><h3>{{ date }}</h4></center>
+                        <center><h3>{{ date }}</h3></center>
                     </div>
                     <div class="island-body">
                         {{# times }}
-                            <a class="btn btn-block btn-success">
-                                <span class="ridetime">{{ time }}</span>
-                                <span class="availability">Seats available</span>
-                            </a>
+                            {{# available }}
+	                            <form method="post" action="{{# path }}booking/date{{/ path }}">
+	                                <input type="hidden" name="dateid" value="{{ dateid }}">
+	                                <input type="hidden" name="timeid" value="{{ timeid }}">
+		                            <button class="btn btn-block btn-info">
+		                                <span class="ridetime"><i class="far fa-clock"></i> {{ time }}</span>
+		                                <span class="availability">{{ message }}</span>
+		                            </button>
+	                            </form>
+                            {{/ available }}
+                            {{^ available }}
+	                            <button class="btn btn-block btn-secondary" disabled>
+	                                <span class="ridetime"><i class="far fa-clock"></i> {{ time }}</span>
+	                                <span class="availability">Sold out!</span>
+	                            </button>
+                            {{/ available }}
                         {{/ times }}
                     </div>
                 </div>
