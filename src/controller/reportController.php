@@ -128,6 +128,7 @@ class reportController extends coreController {
             if ($status=='fail' && (empty($purchase->status) || ($purchase->status=='OK'))) {
                 continue;
             }
+            $purchase->formattedpayment = number_format($purchase->payment/100, 2);
             $filtered[] = $purchase;
         }
 
