@@ -1,0 +1,30 @@
+
+{{> header }}
+
+<h2 class="page-title"><i class="fas fa-user"></i> Your details...</h2>
+
+<p class="alert alert-info">
+    <i class="fas fa-info-circle"></i> Please tell us your address for ticket delivery (and if we need to contact you).
+</p>
+
+{{> formerrors }}
+
+<form role="form" class="form-horizontal" method="post" action="{{# path }}booking/contact{{/ path }}">
+    {{{ form.title }}}
+    {{{ form.firstname }}}
+    {{{ form.lastname }}}
+    {{{ form.email }}}
+    {{{ form.address1 }}}
+    {{{ form.address2 }}}
+    {{{ form.city }}}
+    {{{ form.county }}}
+    {{{ form.postcode }}}
+    {{{ form.phone }}}
+    {{{ form.buttons }}}
+</form>
+
+{{> footer }}
+
+
+
+

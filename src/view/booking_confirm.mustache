@@ -1,0 +1,60 @@
+{{> header }}
+
+<p class="alert alert-info">
+    <i class="fas fa-info-circle"></i> We now have all the details we need. Please check your booking details
+    carefully before proceeding to payment.
+</p>
+
+<div class="santa-confirm">
+    <dl class="row">
+        <dt class="col-sm-3">Name</dt>
+        <dd class="col-sm-9">{{ br.getTitle }} {{ br.getFirstname }} {{ br.getLastname }}</dd>
+        <dt class="col-sm-3">Address</dt>
+        <dd class="col-sm-9">
+            <address class="santa-address">
+            {{ br.getAddress1 }}<br />
+            {{ br.getAddress2 }}{{# br.getAddress2 }}<br />{{/ br.getAddress2 }}
+            {{ br.getCity }}<br />
+            {{ br.getCounty }}{{# br.getCounty }}<br />{{/ br.getCounty }}
+            {{ br.getPostcode }}<br />
+            </address>
+        </dd>
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">{{ br.getEmail }}</dd> 
+        <dt class="col-sm-3">Phone</dt>
+        <dd class="col-sm-9">{{ br.getPhone }}</dd>
+        <dt class="col-sm-3">Santa train booking</dt>
+        <dd class="col-sm-9">{{ date }} at {{ time }}</dd>
+        <dt class="col-sm-3">Number of adults</dt>
+        <dd class="col-sm-9">{{ br.getAdults }} at &pound;{{ fare_adult }} each</dd>
+        <dt class="col-sm-3">Number of children</dt>
+        <dd class="col-sm-9">{{ br.getChildren }} at &pound;{{ fare_child }} each</dd>
+        <dt class="col-sm-3">Number of infants</dt>
+        <dd class="col-sm-9">{{ br.getInfants }}
+        <dt class="col-sm-3">&nbsp;</dt>
+        <dd class="col-sm-9"></dd>
+        <dt class="col-sm-3">&nbsp;</dt>
+        <dd class="col-sm-9"><b>Total price to pay &pound{{ price_total }}</b></dd>
+    </dl>
+</div>
+
+<div class="alert alert-info">
+    <i class="fas fa-info-circle"></i> By placing this booking you agree that you have read, understood and agree
+    to our <a href="{{# path }}booking/terms{{/ path }}" target="_blank">
+    Terms and Conditions</a>
+</div>
+
+<form id="review-form" class="form-horizontal" action="{{# path }}booking/payment{{/ path }}" method="post">
+    <div>
+        <input type="submit" name="next" value="Go to our secure payment site" class="btn btn-primary" />
+        <input type="submit" name="back" value="Back" class="btn btn-warning" formnovalidate />
+    </div>
+</form>
+
+{{> footer }}
+
+
+
+
+
+

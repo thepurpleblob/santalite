@@ -220,7 +220,7 @@ class bookinglib {
         if (!$date) {
             throw new \Exception('Date not found in DB for id='.$dateid);
         }
-        return date('d/M/Y', $date->date);
+        return date('dS F Y', $date->date);
     }
 
     /**
@@ -232,7 +232,7 @@ class bookinglib {
         if (!$time) {
             throw new \Exception('Time not found in DB for id='.$timeid);
         }
-        return date('H:i', $time->time);
+        return $time->time;
     }
 
     /**
@@ -367,10 +367,6 @@ class bookinglib {
         } else {
             $purchase = \ORM::for_table('purchase')->create();
         }
-
-        // country
-        $countries = $this->getCountries();
-        $country = $countries[$br->getCountry()];
 
         // update all the data (can't update reference until sure we have an ID)
         $purchase->type = 'O';

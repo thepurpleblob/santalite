@@ -13,6 +13,7 @@ use thepurpleblob\core\coreController;
 use thepurpleblob\santa\lib\bookinglib;
 use thepurpleblob\santa\model\bookingRecord;
 use thepurpleblob\santa\lib\calendarlib;
+use thepurpleblob\santa\lib\sagepayserverlib;
 
 class bookingController extends coreController {
 
@@ -257,6 +258,11 @@ class bookingController extends coreController {
     	));
     }
 
+    /**
+     * Set contact data in booking record
+     * @param object $br
+     * @param array $data
+     */
     private function set_record($br, $data) {
         $br->setTitle($data['title']);
         $br->setFirstname($data['firstname']);
@@ -271,8 +277,10 @@ class bookingController extends coreController {
         $br->setPhone($data['phone']);
     }
 
+    /**
+     * Get contact information
+     */
     public function contactAction() {
-    	$bm = new bookingModel();
     	$br = new bookingRecord();
     	$gump = $this->getGump();
     	$errors = array();
@@ -281,9 +289,6 @@ class bookingController extends coreController {
     	if ($br->expired()) {
     		$this->redirect($this->url('booking/expired'));
     	}
-
-    	// list of countries (for select)
-    	$countries = $bm->getCountries();
 
     	// form submitted?
     	if ($request = $this->getRequest()) {
@@ -311,18 +316,29 @@ class bookingController extends coreController {
     		$errors = $gump->get_readable_errors();
     	}
 
-    	$this->View('header');
+        // Create form
+        $form = new \stdClass;
+        $form->title = $this->form->text('title', 'Title', $br->getTitle());
+        $form->firstname = $this->form->text('firstname', 'First name(s)', $br->getFirstname(), true);
+        $form->lastname = $this->form->text('lastname', 'Last name', $br->getLastname(), true);
+        $form->email = $this->form->text('email', 'Email', $br->getEmail(), true);
+        $form->address1 = $this->form->text('address1', 'Address line 1', $br->getAddress1(), true);
+        $form->address2 = $this->form->text('address2', 'Address line 2', $br->getAddress2());
+        $form->city = $this->form->text('city', 'Town/city', $br->getCity(), true);
+        $form->county = $this->form->text('county', 'County', $br->getCounty());
+        $form->postcode = $this->form->text('postcode', 'Postcode', $br->getPostcode(), true);
+        $form->phone = $this->form->text('phone', 'Phone', $br->getPhone());
+        $form->buttons = $this->form->buttons('Next', 'Back', true);
+
     	$this->View('booking_contact', array(
     		'br' => $br,
-    		'countries' => $countries,
+            'form' => $form,
     	    'errors' => $errors,
     	));
-    	$this->View('footer');
     }
 
 
     public function confirmAction() {
-        $bm = new bookingModel();
         $br = new bookingRecord();
 
         // check the session is still around
@@ -333,41 +349,104 @@ class bookingController extends coreController {
         // resave session just to bump its time
         $br->save();
 
-        // list of countries (for select)
-        $countries = $bm->getCountries();
-        $country = $countries[$br->getCountry()];
-
         // get fares
         $fares = \ORM::for_table('fares')->find_one(1);
+        $fare_adult = number_format($fares->adult/100, 2);
+        $fare_child = number_format($fares->child/100, 2);
 
         // sums
         $price_adults = $br->getAdults() * $fares->adult / 100;
         $price_children = $br->getChildren() * $fares->child / 100;
         $price_total = $price_adults + $price_children;
         $br->setAmount($price_total);
+
+        // date/time
+        $date = $this->bm->getReadableDate($br->getDateid());
+        $time = $this->bm->getReadableTime($br->getTimeid());
         
-        // get the time and date
-
         // we need to come up with a booking code about now
-        $purchaseid = $bm->updatePurchase($br);
+        $purchaseid = $this->bm->updatePurchase($br);
 
-        // get encrypted data to send to SagePay
-        $crypt = $bm->crypt($br);
-
-        $this->View('header');
         $this->View('booking_confirm', array(
                 'br' => $br,
-                'country' => $country,
-                'fares' => $fares,
-                'date' => $bm->getReadableDate($br->getDateid()),
-                'time' => $bm->getReadableTime($br->getTimeid()),
+                'fare_adult' => $fare_adult,
+                'fare_child' => $fare_child,
+                'date' => $date,
+                'time' => $time,
                 'price_adults' => $price_adults,
                 'price_children' => $price_children,
                 'price_total' => $price_total,
-                'crypt' => $crypt,
         ));
-        $this->View('footer');
     }
+
+    /**
+     * This is a bit different - we get here from the
+     * review page, only if the form is submitted.
+     * This action sends the payment registration to SagePay
+     */
+    public function paymentAction() {
+
+        $br = new bookingRecord();
+
+        // check the session is still around
+        if ($br->expired()) {
+            $this->redirect($this->url('booking/expired'));
+        }
+
+        // resave session just to bump its time
+        $br->save();
+
+        // work out final fare
+        $fare = $br->getAmount();
+
+        // Line up Sagepay class
+        $sagepay = new sagepayserverlib();
+        //$sagepay->setService($service);
+        $sagepay->setPurchase($br);
+        $sagepay->setFare($fare);
+
+        // anything submitted?
+        if ($data = $this->getRequest()) {
+
+            // Anything other than 'next' jumps back
+            if (empty($data['next'])) {
+                $this->redirect('booking/personal', true);
+            }
+
+            // If we get here we can process SagePay stuff
+            // Register payment with Sagepay
+            $sr = $sagepay->register();
+
+            // If false is returned then it went wrong
+            if ($sr === false) {
+                $this->View('booking/fail', array(
+                    'status' => 'N/A',
+                    'diagnostic' => $sagepay->error,
+                ));
+            }
+
+            // check status of registration from SagePay
+            $status = $sr['Status'];
+            if (($status != 'OK') && ($status != 'OK REPEATED')) {
+                $this->View('booking/fail', array(
+                    'status' => $status,
+                    'diagnostic' => $sr['StatusDetail'],
+                ));
+            }
+
+            // update purchase
+            $purchase->securitykey = $sr['SecurityKey'];
+            $purchase->regstatus = $status;
+            $purchase->VPSTxId = $sr['VPSTxId'];
+            $purchase->save();
+
+            // redirect to Sage
+            $url = $sr['NextURL'];
+            header("Location: $url");
+            die;
+        }
+    }
+
 
     private function confirmationEmail($purchase, $date, $time) {
         global $CFG;
