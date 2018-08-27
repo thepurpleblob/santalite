@@ -19,9 +19,20 @@ $(function() {
     $('#bannerimg').css('background-image', css + 'url("' + url + '")');
 });
 
-/**
- * CSS trickery
- */
 $(function() {
+
+    /**
+     * CSS trickery
+     */
     $('.limitbuttons button').addClass('btn-sm');
+
+
+    /**
+     * stop validation when cancel is pressed
+     */
+    $('.cancelbutton').on("click", function() {
+    console.log('cancel clicked');
+        $('form').attr("novalidate", "novalidate");
+    });
 });
+

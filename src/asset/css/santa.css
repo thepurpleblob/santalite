@@ -91,3 +91,22 @@ div#footerimg {
 input[type=text] {
     text-transform: capitalize;
 }
+
+.agerow {
+    border: 4px solid #e2e5e7;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+}
+
+.agerow .form-group {
+    margin-bottom: 0;
+}
+
+.submitbuttons {
+    margin-top: 1.5rem;
+}
+
+div.santa-confirm dt {
+    font-weight: bold;
+}

@@ -206,14 +206,13 @@ class bookingController extends coreController {
     	// form submitted?
         $errors = [];
     	if ($request = $this->getRequest()) {
-    		if (!empty($request['cancel'])) {
-    			$this->redirect($this->Url('booking/date'));
-    		}
+                $cancel = !empty($request['cancel']);
 
     		$rules = array();
+                $required = $cancel ? '' : 'required|';
     		for ($i=1; $i<=$children; $i++) {
-    			$rules['sex'.$i] = "required|alpha";
-    			$rules['age'.$i] = "required|numeric|min_numeric,1|max_numeric,15";
+    			$rules['sex'.$i] = "{$required}alpha";
+    			$rules['age'.$i] = "{$required}numeric|min_numeric,1|max_numeric,15";
                 \GUMP::set_field_name('sex'.$i, "Girl/Boy number $i");
                 \GUMP::set_field_name('age'.$i, "Age number $i");
     		}
@@ -222,13 +221,17 @@ class bookingController extends coreController {
     			$ages = array();
     			$sexes = array();
     			for ($i=1; $i<=$children; $i++) {
-    				$ages[$i] = (int)$data['age'.$i];
-    				$sexes[$i] = $data['sex'.$i];
-    			}
-                $br->setAges($ages);
-                $br->setSexes($sexes);
+    				$ages[$i] = isset($data['age'.$i]) ? (int)$data['age'.$i] : 0;
+    				$sexes[$i] = isset($data['sex'.$i]) ? $data['sex'.$i] : '';
+    			} 
+                        $br->setAges($ages);
+                        $br->setSexes($sexes);
     			$br->save();
-    			$this->redirect($this->Url('booking/contact'));
+                        if ($cancel) {
+    			    $this->redirect($this->Url('booking/date'));
+                        } else {
+    			    $this->redirect($this->Url('booking/contact'));
+                        }
     		}
             $errors = $gump->get_readable_errors();
     	}
@@ -292,26 +295,30 @@ class bookingController extends coreController {
 
     	// form submitted?
     	if ($request = $this->getRequest()) {
-    		if (!empty($request['cancel'])) {
-    			$this->redirect($this->Url('booking/ages'));
-    		}
+                $cancel = !empty($request['cancel']);
 
-    		$gump->validation_rules(array(
-    			//'title' => '',
-    			'firstname' => 'required|valid_name',
-    		    'lastname' => 'required|valid_name',
-    		    'email' => 'required|valid_email',
-    		    'address1' => 'required',
-    		    //'address2' => '',
-    		    'city' => 'required',
-    		    'postcode' => 'required',
-    		    //'phone' => '',
-    		));
+                $required = $cancel ? '' : 'required|';
+    		$rules = array(
+                    'firstname' => $required . 'valid_name',
+                    'lastname' => $required . 'valid_name',
+                    'email' => $required . 'valid_email',
+    		);
+                if ($required) {
+    		    $rules['address1'] = 'required';
+                    $rules['city'] = 'required';
+                    $rules['postcode'] = 'required';
+                }
+    		$gump->validation_rules($rules);
+
     		$this->set_record($br, $request);
     		if ($data = $gump->run($request)) {
     		    $this->set_record($br, $data);
     		    $br->save();
-    		    $this->redirect($this->Url('booking/confirm'));
+                    if ($cancel) {
+    			$this->redirect($this->Url('booking/ages'));
+                    } else {
+    		        $this->redirect($this->Url('booking/confirm'));
+                    }
     		}
     		$errors = $gump->get_readable_errors();
     	}
@@ -321,7 +328,7 @@ class bookingController extends coreController {
         $form->title = $this->form->text('title', 'Title', $br->getTitle());
         $form->firstname = $this->form->text('firstname', 'First name(s)', $br->getFirstname(), true);
         $form->lastname = $this->form->text('lastname', 'Last name', $br->getLastname(), true);
-        $form->email = $this->form->text('email', 'Email', $br->getEmail(), true);
+        $form->email = $this->form->text('email', 'Email', $br->getEmail(), true, null, 'email');
         $form->address1 = $this->form->text('address1', 'Address line 1', $br->getAddress1(), true);
         $form->address2 = $this->form->text('address2', 'Address line 2', $br->getAddress2());
         $form->city = $this->form->text('city', 'Town/city', $br->getCity(), true);
@@ -396,13 +403,16 @@ class bookingController extends coreController {
         // resave session just to bump its time
         $br->save();
 
+        // Get the purchase record
+        $purchase = $this->bm->getPurchase($br);
+
         // work out final fare
-        $fare = $br->getAmount();
+        $fares = \ORM::forTable('fares')->findOne(1);
 
         // Line up Sagepay class
         $sagepay = new sagepayserverlib();
-        //$sagepay->setService($service);
-        $sagepay->setPurchase($br);
+        $sagepay->setController($this);
+        $sagepay->setPurchase($purchase);
         $sagepay->setFare($fare);
 
         // anything submitted?
@@ -410,7 +420,7 @@ class bookingController extends coreController {
 
             // Anything other than 'next' jumps back
             if (empty($data['next'])) {
-                $this->redirect('booking/personal', true);
+                $this->redirect($this->Url('booking/contact'));
             }
 
             // If we get here we can process SagePay stuff

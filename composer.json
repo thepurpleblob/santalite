@@ -16,7 +16,8 @@
     "swiftmailer/swiftmailer": "^6.1",
     "mustache/mustache": "^2.12",
     "samshal/scripd": "^1.0",
-    "true/punycode": "^2.1"
+    "true/punycode": "^2.1",
+    "servo/fluidxml": "^1.21"
     },
   "autoload": {
     "psr-4": {

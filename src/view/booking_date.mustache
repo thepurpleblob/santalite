@@ -42,8 +42,10 @@
 
 <div class="clearfix"></div>
 
-<div class="santa-buttons">
-    <a href="<?php echo $this->Url('booking/numbers') ?>" class="btn btn-warning">Go back</a>
-</div>
+<form action="{{# path }}booking/numbers{{/ path }}">
+    <div class="submitbuttons">
+        <button name="cancel" value="cancel" class="cancelbutton btn btn-warning btn-lg"><i class="fas fa-redo"></i> Go back</button>
+    </div>
+</form>
 
 {{> footer }}

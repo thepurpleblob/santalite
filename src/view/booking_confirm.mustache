@@ -21,16 +21,20 @@
         </dd>
         <dt class="col-sm-3">Email</dt>
         <dd class="col-sm-9">{{ br.getEmail }}</dd> 
-        <dt class="col-sm-3">Phone</dt>
-        <dd class="col-sm-9">{{ br.getPhone }}</dd>
+        {{# br.getPhone }}
+            <dt class="col-sm-3">Phone</dt>
+            <dd class="col-sm-9">{{ br.getPhone }}</dd>
+        {{/ br.getPhone }}
         <dt class="col-sm-3">Santa train booking</dt>
         <dd class="col-sm-9">{{ date }} at {{ time }}</dd>
         <dt class="col-sm-3">Number of adults</dt>
         <dd class="col-sm-9">{{ br.getAdults }} at &pound;{{ fare_adult }} each</dd>
         <dt class="col-sm-3">Number of children</dt>
         <dd class="col-sm-9">{{ br.getChildren }} at &pound;{{ fare_child }} each</dd>
-        <dt class="col-sm-3">Number of infants</dt>
-        <dd class="col-sm-9">{{ br.getInfants }}
+        {{# br.getInfants }}
+            <dt class="col-sm-3">Number of infants</dt>
+            <dd class="col-sm-9">{{ br.getInfants }}
+        {{/ br.getInfants }}
         <dt class="col-sm-3">&nbsp;</dt>
         <dd class="col-sm-9"></dd>
         <dt class="col-sm-3">&nbsp;</dt>

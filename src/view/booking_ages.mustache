@@ -11,7 +11,7 @@
 
 <form role="form" class="form-horizontal" method="post" action="{{# path }}booking/ages{{/ path }}">
     {{# forms }}
-         <div class="row">
+         <div class="agerow row">
              <div class="col">
                  <b>Child {{ number }}</b>
              </div>
@@ -35,7 +35,7 @@
              </div>
          </div>
     {{/ forms }}
-    {{{ buttons }}}
+    {{> buttons }}
 </form>
 
 {{> footer }}

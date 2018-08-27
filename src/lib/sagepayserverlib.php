@@ -15,13 +15,13 @@ class sagepayserverlib {
 
     protected $purchase;
 
-    protected $service;
-
     protected $basket;
 
     protected $fare;
 
     protected $error;
+
+    protected $controller;
 
     /**
      * Booking constructor.
@@ -35,12 +35,12 @@ class sagepayserverlib {
         $this->purchase = $purchase;
     }
 
-    public function setService($service) {
-        $this->service = $service;
-    }
-
     public function setFare($fare) {
         $this->fare = $fare;
+    }
+
+    public function setController($controller) {
+        $this->controller = $controller;
     }
 
     /**
@@ -70,56 +70,24 @@ class sagepayserverlib {
     private function buildBasket() {
         $basket = new FluidXml('basket', ['encoding' => 'UTF-8']);
 
-        // booked class
-        $class = $this->purchase->class=='F' ? 'First' : 'Standard';
-
         // Adult purchases
-        $aname = $this->purchase->adults==1 ? 'Adult' : 'Adults';
         $basket->add('item', true)
-            ->add('description', htmlentities("Railtour '" . $this->service->name . "' $aname in $class Class"))
+            ->add('description', htmlentities("B&KR Santa Train adult tickets"))
             ->add('quantity', $this->purchase->adults)
-            ->add('unitNetAmount', number_format($this->fare->adultunit, 2))
+            ->add('unitNetAmount', number_format($this->fare->adul, 2))
             ->add('unitTaxAmount', '0.00')
-            ->add('unitGrossAmount', number_format($this->fare->adultunit, 2))
+            ->add('unitGrossAmount', number_format($this->fare->adult, 2))
             ->add('totalGrossAmount', number_format($this->fare->adultfare, 2));
 
         // Child purchases
         if ($this->purchase->children) {
-            $aname = $this->purchase->children==1 ? 'Child' : 'Children';
             $basket->add('item', true)
-                ->add('description', htmlentities("Railtour '" . $this->service->name . "' $aname in $class Class"))
+                ->add('description', htmlentities("B&KR Santa Train child tickets"))
                 ->add('quantity', $this->purchase->children)
                 ->add('unitNetAmount', number_format($this->fare->childunit, 2))
                 ->add('unitTaxAmount', '0.00')
                 ->add('unitGrossAmount', number_format($this->fare->childunit, 2))
                 ->add('totalGrossAmount', number_format($this->fare->childfare, 2));
-        }
-
-        // Meals
-        foreach (['a', 'b', 'c', 'd'] as $c) {
-            $name = 'meal' . $c;
-            if ($this->service->{$name . 'visible'} && $this->purchase->$name) {
-                $total = $this->purchase->$name * $this->service->{$name . 'price'};
-                $basket->add('item', true)
-                    ->add('description', htmlentities($this->service->{$name . 'name'}))
-                    ->add('quantity', $this->purchase->$name)
-                    ->add('unitNetAmount', $this->service->{$name . 'price'})
-                    ->add('unitTaxAmount', '0.00')
-                    ->add('unitGrossAmount', $this->service->{$name . 'price'})
-                    ->add('totalGrossAmount', number_format($total, 2));
-            }
-        }
-
-        // Seat supplement
-        if ($this->fare->seatsupplement) {
-            $passengers = $this->purchase->adults + $this->purchase->children;
-            $basket->add('item', true)
-                ->add('description', 'Window seat supplement')
-                ->add('quantity', $passengers)
-                ->add('unitNetAmount', $this->service->singlesupplement)
-                ->add('unitTaxAmount', 0)
-                ->add('unitGrossAmount', $this->service->singlesupplement)
-                ->add('totalGrossAmount', number_format($this->fare->seatsupplement, 2));
         }
 
         $dom = $basket->dom();
@@ -139,10 +107,10 @@ class sagepayserverlib {
             'VPSProtocol' => '3.00',
             'TxType' => 'PAYMENT',
             'Vendor' => $CFG->sage_vendor,
-            'VendorTxCode' => $this->purchase->bookingref,
+            'VendorTxCode' => $this->purchase->bkgref,
             'Amount' => number_format($this->purchase->payment,2),
             'Currency' => 'GBP',
-            'Description' => $this->clean("SRPS Railtour Booking - " . $this->service->name, 100),
+            'Description' => $this->clean("B&KR Santa Train Booking", 100),
             'NotificationURL' => $this->controller->Url('booking/notification'),
             'BillingSurname' => $this->clean($this->purchase->surname, 20),
             'BillingFirstnames' => $this->clean($this->purchase->firstname, 20),

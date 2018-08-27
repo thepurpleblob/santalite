@@ -220,7 +220,7 @@ class bookinglib {
         if (!$date) {
             throw new \Exception('Date not found in DB for id='.$dateid);
         }
-        return date('dS F Y', $date->date);
+        return date('jS F Y', $date->date);
     }
 
     /**
@@ -349,6 +349,19 @@ class bookinglib {
             }
         }
         return array($boys, $girls);
+    }
+
+    /**
+     * Get purchase record
+     * @param object $br
+     */
+    public function getPurchase($br) {
+        $purchase = \ORM::for_table('purchase')->find_one($br->getReference());
+        if (!$purchase) {
+            throw new \Exception('Cannot find record in DB for purchase id='.$br->getReference());
+        }
+
+        return $purchase;
     }
 
     /**
