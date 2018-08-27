@@ -87,3 +87,7 @@ div#footerimg {
     display: block;
     font-size: 0.9em;
 }
+
+input[type=text] {
+    text-transform: capitalize;
+}

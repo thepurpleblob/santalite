@@ -60,7 +60,7 @@ class coreForm {
         }
         $html .= '    <div class="col-sm-8">';
         $html .= '    <input type="' . $type . '" class="form-control input-sm" name="'.$name.'" id="'.$id.'" value="'.$value.'" '.
-            $this->attributes($attrs) . ' ' . $reqstr . ' ' . $disabledstr . '/>';  
+            $this->attributes($attrs) . ' ' . $reqstr . ' ' . $disabledstr . ' autocapitalize="word"/>';  
         $html .= '</div></div>';
 
         return $html;
