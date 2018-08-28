@@ -4,7 +4,7 @@
 
 {{> formerrors }}
 
-<form class="form-horizontal" role="form" method="post" action="{{# path }}user/login{{/ path }}">
+<form id="loginform" class="form-horizontal" role="form" method="post" action="{{# path }}user/login{{/ path }}">
     {{{ form.username }}}
     {{{ form.password }}}
     <button type="submit" id="loginbtn" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>

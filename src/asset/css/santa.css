@@ -92,6 +92,10 @@ input[type=text] {
     text-transform: capitalize;
 }
 
+#loginform input[type=text] {
+    text-transform: none !important;
+}
+
 .agerow {
     border: 4px solid #e2e5e7;
     border-radius: 5px;

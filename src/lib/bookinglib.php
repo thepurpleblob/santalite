@@ -352,6 +352,32 @@ class bookinglib {
     }
 
     /**
+     * Calculate fares
+     * @param object $br booking record
+     * @return object
+     */
+    public function calculateFares($br) {
+
+        $disp = new \stdClass;
+
+        // get fares
+        $fares = \ORM::for_table('fares')->find_one(1);
+        $disp->fare_adult = number_format($fares->adult/100, 2);
+        $disp->fare_child = number_format($fares->child/100, 2);
+
+        // sums
+        $price_adults = $br->getAdults() * $fares->adult / 100;
+        $disp->price_adults = number_format($price_adults, 2);
+        $price_children = $br->getChildren() * $fares->child / 100;
+        $disp->price_children = number_format($price_children, 2);
+        $price_total = $price_adults + $price_children;
+        $disp->price_total = number_format($price_total, 2);
+        $br->setAmount($price_total);
+
+        return $disp;
+    }
+
+    /**
      * Get purchase record
      * @param object $br
      */

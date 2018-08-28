@@ -357,15 +357,7 @@ class bookingController extends coreController {
         $br->save();
 
         // get fares
-        $fares = \ORM::for_table('fares')->find_one(1);
-        $fare_adult = number_format($fares->adult/100, 2);
-        $fare_child = number_format($fares->child/100, 2);
-
-        // sums
-        $price_adults = $br->getAdults() * $fares->adult / 100;
-        $price_children = $br->getChildren() * $fares->child / 100;
-        $price_total = $price_adults + $price_children;
-        $br->setAmount($price_total);
+        $fares = $this->bm->calculateFares($br);
 
         // date/time
         $date = $this->bm->getReadableDate($br->getDateid());
@@ -376,13 +368,13 @@ class bookingController extends coreController {
 
         $this->View('booking_confirm', array(
                 'br' => $br,
-                'fare_adult' => $fare_adult,
-                'fare_child' => $fare_child,
+                'fare_adult' => $fares->fare_adult,
+                'fare_child' => $fares->fare_child,
                 'date' => $date,
                 'time' => $time,
-                'price_adults' => $price_adults,
-                'price_children' => $price_children,
-                'price_total' => $price_total,
+                'price_adults' => $fares->price_adults,
+                'price_children' => $fares->price_children,
+                'price_total' => $fares->price_total,
         ));
     }
 
@@ -413,7 +405,7 @@ class bookingController extends coreController {
         $sagepay = new sagepayserverlib();
         $sagepay->setController($this);
         $sagepay->setPurchase($purchase);
-        $sagepay->setFare($fare);
+        $sagepay->setFare($this->bm->calculateFares($br));
 
         // anything submitted?
         if ($data = $this->getRequest()) {
@@ -429,16 +421,16 @@ class bookingController extends coreController {
 
             // If false is returned then it went wrong
             if ($sr === false) {
-                $this->View('booking/fail', array(
+                $this->View('booking_fail', array(
                     'status' => 'N/A',
-                    'diagnostic' => $sagepay->error,
+                    'diagnostic' => $sagepay->getError(),
                 ));
             }
 
             // check status of registration from SagePay
             $status = $sr['Status'];
             if (($status != 'OK') && ($status != 'OK REPEATED')) {
-                $this->View('booking/fail', array(
+                $this->View('booking_fail', array(
                     'status' => $status,
                     'diagnostic' => $sr['StatusDetail'],
                 ));

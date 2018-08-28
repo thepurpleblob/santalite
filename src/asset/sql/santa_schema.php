@@ -58,6 +58,13 @@ CREATE TABLE `purchase` (
   `statusdetail` text COLLATE utf8_unicode_ci DEFAULT NULL,
   `txauthno` text COLLATE utf8_unicode_ci DEFAULT NULL,
   `last4digits` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `bankauthcode` int(11) NOT NULL,
+  `declinecode` int(11) NOT NULL,
+  `emailsent` tinyint(1) NOT NULL,
+  `securitykey` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `regstatus` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `VPSTxId` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `bookedby` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;",

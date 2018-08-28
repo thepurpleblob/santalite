@@ -43,6 +43,10 @@ class sagepayserverlib {
         $this->controller = $controller;
     }
 
+    public function getError() {
+        return $this->error;
+    }
+
     /**
      * The data sent to sage, some basic checks
      * @param string $data
@@ -73,22 +77,20 @@ class sagepayserverlib {
         // Adult purchases
         $basket->add('item', true)
             ->add('description', htmlentities("B&KR Santa Train adult tickets"))
-            ->add('quantity', $this->purchase->adults)
-            ->add('unitNetAmount', number_format($this->fare->adul, 2))
+            ->add('quantity', $this->purchase->adult)
+            ->add('unitNetAmount', $this->fare->fare_adult)
             ->add('unitTaxAmount', '0.00')
-            ->add('unitGrossAmount', number_format($this->fare->adult, 2))
-            ->add('totalGrossAmount', number_format($this->fare->adultfare, 2));
+            ->add('unitGrossAmount', $this->fare->fare_adult)
+            ->add('totalGrossAmount', $this->fare->price_adults);
 
         // Child purchases
-        if ($this->purchase->children) {
-            $basket->add('item', true)
-                ->add('description', htmlentities("B&KR Santa Train child tickets"))
-                ->add('quantity', $this->purchase->children)
-                ->add('unitNetAmount', number_format($this->fare->childunit, 2))
-                ->add('unitTaxAmount', '0.00')
-                ->add('unitGrossAmount', number_format($this->fare->childunit, 2))
-                ->add('totalGrossAmount', number_format($this->fare->childfare, 2));
-        }
+        $basket->add('item', true)
+            ->add('description', htmlentities("B&KR Santa Train child tickets"))
+            ->add('quantity', $this->purchase->child)
+            ->add('unitNetAmount', $this->fare->fare_child)
+            ->add('unitTaxAmount', '0.00')
+            ->add('unitGrossAmount', $this->fare->fare_child)
+            ->add('totalGrossAmount', $this->fare->price_children);
 
         $dom = $basket->dom();
         $dom->formatOutput = false;
@@ -116,14 +118,14 @@ class sagepayserverlib {
             'BillingFirstnames' => $this->clean($this->purchase->firstname, 20),
             'BillingAddress1' => $this->clean($this->purchase->address1, 100),
             'BillingAddress2' => $this->clean($this->purchase->address2, 100),
-            'BillingCity' => $this->clean($this->purchase->city, 40),
+            'BillingCity' => $this->clean($this->purchase->address3, 40),
             'BillingPostCode' => $this->clean($this->purchase->postcode, 10),
             'BillingCountry' => 'GB', // TODO (maybe)
             'DeliverySurname' => $this->clean($this->purchase->surname, 20),
             'DeliveryFirstnames' => $this->clean($this->purchase->firstname, 20),
             'DeliveryAddress1' => $this->clean($this->purchase->address1, 100),
             'DeliveryAddress2' => $this->clean($this->purchase->address2, 100),
-            'DeliveryCity' => $this->clean($this->purchase->city, 40),
+            'DeliveryCity' => $this->clean($this->purchase->address3, 40),
             'DeliveryPostCode' => $this->clean($this->purchase->postcode, 10),
             'DeliveryCountry' => 'GB', // TODO (maybe)
             'CustomerEmail' => $this->clean($this->purchase->email, 255),
