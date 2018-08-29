@@ -1,0 +1,50 @@
+
+Dear {{ purchase.title }} {{ purchase.firstname }} {{ purchase.surname }},
+
+Thank you for booking the Santa Steam Special at the Bo'ness & Kinneil Railway,
+West Lothian. Tickets will be sent approximately 4 weeks before your journey.
+If there are any important details we need to know regarding your booking,
+or if your ticket has not arrived within 7 days of travel, please contact us by email
+at office@srps.org.uk or phone the Santa Line on {$CFG->help_number} (10.30am to 12 noon /
+1pm to 2:30pm weekdays). Note that changes to your booking once your ticket has
+been sent out may incur a £5 administration charge.
+
+Please quote your booking reference, '{{ purchase.bkgref }}' in any correspondence.
+
+We look forward to seeing you soon,
+    your Santa Steam Trains Team!
+
+Your booking details are as follows...
+
+{{# purchase.bookedby }}Telephone {{/ purchase.bookedby }}Booking reference: {{ purchase.bookingref }}
+
+{{ purchase.title }} {{ purchase.firstname }} {{ purchase.surname }}<br />
+{{ purchase.address1 }}<br />
+{{# purchase.address2 }}{{ purchase.address2 }}<br />{{/ purchase.address2 }}
+{{ purchase.city }}<br />
+{{# purchase.county }}{{ purchase.county }}<br />{{/ purchase.county }}
+{{ purchase.postcode }}<br />    
+
+Contact details:
+
+    Telephone: {{ purchase.phone }}
+    Email: {{ purchase.email }}
+
+    Santa train booking details:
+        Date: {{ date  }}
+        Departing Bo'ness: {{ time }}
+
+Seats booked: 
+    Adults: {{ purchase.adult }}
+    Children: {{ purchase.child }}<
+    {{# purchase.infant }}<li>Infants: {{ purchase.infant }} <i>(Infants are not allocated a seat)</li>{{/ purchase.infant }}
+
+
+Thank you for your payment of £{{ total }}.
+
+    Please check the above details carefully and phone us on <b>0131 202 1033</b>
+    if you have any questions about this booking. Please do not reply to this 
+    email as the mailbox is not monitored. 
+    
+We hope you have an enjoyable day.
+

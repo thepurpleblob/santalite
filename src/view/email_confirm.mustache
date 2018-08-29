@@ -1,0 +1,73 @@
+
+<p>
+    Dear {{ purchase.title }} {{ purchase.firstname }} {{ purchase.surname }},
+</p>
+
+<p>
+    Thank you for booking the Santa Steam Special at the Bo'ness & Kinneil Railway,
+    West Lothian. Tickets will be sent approximately 4 weeks before your journey.
+    If there are any important details we need to know regarding your booking,
+    or if your ticket has not arrived within 7 days of travel, please contact us by email
+    at office@srps.org.uk or phone the Santa Line on {$CFG->help_number} (10.30am to 12 noon /
+    1pm to 2:30pm weekdays). Note that changes to your booking once your ticket has
+    been sent out may incur a £5 administration charge.
+</p>
+
+<p>
+    Please quote your booking reference, '{{ purchase.bkgref }}' in any correspondence.
+</p>
+
+<p>
+    We look forward to seeing you soon,
+    your Santa Steam Trains Team!
+</p>
+
+<p>
+    Your booking details are as follows...
+</p>
+
+<p><b>{{# purchase.bookedby }}Telephone {{/ purchase.bookedby }}Booking reference: {{ purchase.bookingref }}</b></p>
+
+<address>
+    {{ purchase.title }} {{ purchase.firstname }} {{ purchase.surname }}<br />
+    {{ purchase.address1 }}<br />
+    {{# purchase.address2 }}{{ purchase.address2 }}<br />{{/ purchase.address2 }}
+    {{ purchase.city }}<br />
+    {{# purchase.county }}{{ purchase.county }}<br />{{/ purchase.county }}
+    {{ purchase.postcode }}<br />    
+</address>
+
+<p>Contact details:
+    <ul>
+        <li>Telephone: {{ purchase.phone }}</li>
+        <li>Email: {{ purchase.email }}</li>
+    </ul>    
+</p>    
+
+<p>
+    Santa train booking details:
+    <ul>
+        <li>Date: {{ date  }}</li>
+        <li>Departing Bo'ness: {{ time }}</li>
+    </ul>
+</p>
+
+<p>Seats booked: 
+    <ul>
+        <li>Adults: {{ purchase.adult }}</li>
+        <li>Children: {{ purchase.child }}</li>
+        {{# purchase.infant }}<li>Infants: {{ purchase.infant }} <i>(Infants are not allocated a seat)</li>{{/ purchase.infant }}
+    </ul>
+</p>   
+
+
+<p>Thank you for your payment of &pound;{{ total }}.</p>
+
+<p>
+    Please check the above details carefully and phone us on <b>0131 202 1033</b>
+    if you have any questions about this booking. Please do not reply to this 
+    email as the mailbox is not monitored. 
+<p>    
+    
+<p>We hope you have an enjoyable day.</p>
+

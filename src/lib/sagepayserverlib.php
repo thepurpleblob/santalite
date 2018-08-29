@@ -110,7 +110,7 @@ class sagepayserverlib {
             'TxType' => 'PAYMENT',
             'Vendor' => $CFG->sage_vendor,
             'VendorTxCode' => $this->purchase->bkgref,
-            'Amount' => number_format($this->purchase->payment,2),
+            'Amount' => number_format($this->purchase->payment / 100,2),
             'Currency' => 'GBP',
             'Description' => $this->clean("B&KR Santa Train Booking", 100),
             'NotificationURL' => $this->controller->Url('booking/notification'),

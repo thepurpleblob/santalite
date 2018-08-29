@@ -14,6 +14,7 @@ use thepurpleblob\santa\lib\bookinglib;
 use thepurpleblob\santa\model\bookingRecord;
 use thepurpleblob\santa\lib\calendarlib;
 use thepurpleblob\santa\lib\sagepayserverlib;
+use thepurpleblob\santa\lib\maillib;
 
 class bookingController extends coreController {
 
@@ -449,80 +450,140 @@ class bookingController extends coreController {
         }
     }
 
-
-    private function confirmationEmail($purchase, $date, $time) {
+    /**
+     * Sagepay sends a POST notification when the payment is complete
+     * NB: We *cannot* assume anything about our payment timeout anymore
+     * Bear in mind that we can't interact with the user either (server-2-server)
+     * @return mixed
+     * @throws \Exception
+     */
+    public function notificationAction() {
         global $CFG;
 
-        require_once($CFG->dirroot . '/lib/swiftmailer/swift_required.php' );
+        // Full strength error logging
+        error_reporting(E_ALL);
+        ini_set('display_errors', 0);
+        ini_set('log_errors', 1);
 
-        // create mail transport
-        $transport = \Swift_SmtpTransport::newInstance($CFG->smtp_host);
+        // Library stuff
+        $sagepay = new sagepayserverlib();
+        $sagepay->setController($this);
 
-        // create mailer
-        $mailer = \Swift_Mailer::newInstance($transport);
+        // POST data from SagePay
+        $data = $sagepay->getNotification();
 
-        // message text;
-        $mb = "Dear {$purchase->firstname} {$purchase->surname}, \n\n";
-        $mb .= "Thank you for booking the Santa Steam Special at the Bo'ness & Kinneil Railway,\n";
-        $mb .= "West Lothian. Tickets will be sent approximately 4 weeks before your journey.\n";
-        $mb .= "If there are any important details we need to know regarding your booking,\n";
-        $mb .= "or if your ticket has not arrived within 7 days of travel, please contact us by email\n";
-        $mb .= "at office@srps.org.uk or phone the Santa Line on {$CFG->help_number} (10.30am to 12 noon /\n";
-        $mb .= "1pm to 2:30pm weekdays). Note that changes to your booking once your ticket has\n";
-        $mb .= "been sent out may incur a £5 administration charge.\n\n";
-        $mb .= "Please quote your booking reference, '{$purchase->bkgref}' in any correspondence.\n\n";
-        $mb .= "We look forward to seeing you soon,\n";
-        $mb .= "your Santa Steam Trains Team!\n\n\n";
-        $mb .= "Your booking details...\n\n";
-        $mb .= "Santa train booking : $date at $time\n";
-        $mb .= "Adult ticket(s) purchased : {$purchase->adult}\n";
-        $mb .= "Child ticket(s) purchased : {$purchase->child}\n";
-        if ($purchase->infant) {
-            $mb .= "Infants in party (no seats) : {$purchase->infant}\n";
+        // Log the notification data to debug file (in case it's interesting)
+        $this->log(var_export($data, true));
+
+        // Get the VendorTxCode and use it to look up the purchase
+        $VendorTxCode = $data['VendorTxCode'];
+        if (!$purchase = $this->bm->getPurchaseFromVendorTxCode($VendorTxCode)) {
+            $url = $this->Url('booking/fail') . '/' . $VendorTxCode . '/' . urlencode('Purchase record not found');
+            $this->log('SagePay notification: Purchase not found - ' . $url);
+            $sagepay->notificationreceipt('INVALID', $url, 'Purchase record not found');
+            die;
         }
-        $mb .= "Price paid : £" . number_format($purchase->payment/100, 2) . "\n";
 
-        // create message
-        $message = \Swift_Message::newInstance('Santa Steam Trains Confirmation - ' . $purchase->bkgref)
-            ->setFrom(array('office@srps.org.uk' => 'SRPS Santa Trains'))
-            ->setTo(array($purchase->email, $CFG->backup_email))
-            ->setBody($mb);
-        $result = $mailer->send($message);
+        // Now that we have the purchase object, we can save whatever we got back in it
+        $purchase = $this->bm->updateSagepayPurchase($purchase, $data);
+
+        // Mailer
+        $mail = new maillib();
+        $mailpurchase = clone $purchase;
+        $mail->initialise($this, $mailpurchase, $this->bm);
+        $mail->setExtrarecipients($CFG->backup_email);
+
+        // Check VPSSignature for validity
+        if (!$sagepay->checkVPSSignature($purchase, $data)) {
+            $purchase->status = 'VPSFAIL';
+            $purchase->save();
+            $url = $this->Url('booking/fail') . '/' . $VendorTxCode . '/' . urlencode('VPSSignature not matched');
+            $this->log('SagePay notification: VPS sig no match - ' . $url);
+            $sagepay->notificationreceipt('INVALID', $url, 'VPSSignature not matched');
+            die;
+        }
+
+        // Check Status.
+        // Work out what next action should be
+        $status = $purchase->status;
+        if ($status == 'OK') {
+
+            // Send confirmation email
+            $url = $this->Url('booking_complete') . '/' . $VendorTxCode;
+            $mail->confirm();
+            $this->log('SagePay notification: Confirm sent - ' . $url);
+            $sagepay->notificationreceipt('OK', $url, '');
+        } else if ($status == 'ERROR') {
+            $url = $this->Url('booking/fail') . '/' . $VendorTxCode . '/' . urlencode($purchase->statusdetail);
+            $this->log('SagePay notification: Booking fail - ' . $url);
+            $mail->decline();
+            $sagepay->notificationreceipt('OK', $url, $purchase->statusdetail);
+        } else {
+            $url = $this->Url('booking/decline') . '/' . $VendorTxCode;
+            $this->log('SagePay notification: Booking decline - ' . $url);
+            $mail->decline();
+            $sagepay->notificationreceipt('OK', $url, $purchase->statusdetail);
+        }
+
+        die;
     }
 
-    public function returnAction($result) {
-        $bm = new bookingModel();
-        $br = new bookingRecord();
-
-        // check the session is still around
-        if ($br->expired()) {
-            $this->redirect($this->url('booking/expired'));
+    /**
+     * Fail action - we get here if we return error to SagePay
+     * SagePay then redirects here
+     * @param string $VendorTxCode
+     * @param string $message
+     */
+    public function failAction($VendorTxCode, $message) {
+        $message = urldecode($message);
+        if (!$purchase = $this->bm->getPurchaseFromVendorTxCode($VendorTxCode)) {
+            $this->View('booking_fail', array(
+                'status' => 'N/A',
+                'diagnostic' => 'Purchase record could not be found for ' . $VendorTxCode . ' Plus ' . $message,
+            ));
+        } else {
+            $this->View('booking/fail', array(
+                'status' => 'N/A',
+                'diagnostic' => $message,
+            ));
         }
+    }
 
-        if ($request = $_GET) {
-            if (!isset($request['crypt'])) {
-                throw new \Exception("No crypt field on return from SagePay");
-            }
-            $crypt = $request['crypt'];
-            $purchase = $bm->decrypt($br, $crypt);
-
-        }
-
-        // Send confirmation email
-        if ($purchase->status == 'OK') {
-            $this->confirmationEmail(
-                    $purchase,
-                    $bm->getReadableDate($br->getDateid()),
-                    $bm->getReadableTime($br->getTimeid())
-            );
-        }
-
-        $this->View('header');
-        $this->View('booking_result', array(
-                'br' => $br,
+    /**
+     * Complete action - SagePay returns here when all successful
+     * SagePay then redirects here
+     * @param string $VendorTxCode
+     */
+    public function completeAction($VendorTxCode) {
+        if (!$purchase = $this->bm->getPurchaseFromVendorTxCode($VendorTxCode)) {
+            $this->View('booking_fail', array(
+                'status' => 'N/A',
+                'diagnostic' => 'Purchase record could not be found for ' . $VendorTxCode,
+            ));
+        } else {
+            $path = $purchase->bookedby ? 'booking_telephonecomplete' : 'booking_complete';
+            $this->View($path, array(
                 'purchase' => $purchase,
-                'result' => $result,
-        ));
-        $this->View('footer');
+            ));
+        }
     }
+
+    /**
+     * Decline action - SagePay returns here when payment declined
+     * SagePay then redirects here
+     * @param string $VendorTxCode
+     */
+    public function declineAction($VendorTxCode) {
+        if (!$purchase = $this->bm->getPurchaseFromVendorTxCode($VendorTxCode)) {
+            $this->View('booking_fail', array(
+                'status' => 'N/A',
+                'diagnostic' => 'Purchase record could not be found for ' . $VendorTxCode,
+            ));
+        } else {
+            $this->View('booking_decline', array(
+                'purchase' => $purchase,
+            ));
+        }
+    }
+
 }

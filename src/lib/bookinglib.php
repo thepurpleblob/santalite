@@ -391,6 +391,18 @@ class bookinglib {
     }
 
     /**
+     * Find the purchase from the VendorTxCode
+     * (Same as our bkgref)
+     * @param string $VendorTxCode
+     * @return mixed Purchase record of false if not found
+     */
+    public function getPurchaseFromVendorTxCode($VendorTxCode) {
+        $purchase = \ORM::forTable('purchase')->where('bkgref', $VendorTxCode)->findOne();
+
+        return $purchase;
+    }
+
+    /**
      * Update or create purchase record (checks for id)
      * @param unknown $br
      */
@@ -434,6 +446,10 @@ class bookinglib {
         $purchase->action = 'N';
         $purchase->eticket = 'N';
         $purchase->einfo = 'N';
+        $purchase->bankauthcode = 0;
+        $purchase->declinecode = 0;
+        $purchase->emailsent = 0;
+        $purchase->completed = 0;
 
         $purchase->save();
         $br->setReference($purchase->id());
@@ -442,6 +458,25 @@ class bookinglib {
         $br->save();
 
         return $br->getReference();
+    }
+
+    /**
+     * Update purchase with data returned from SagePay
+     * @param object $purchase
+     * @param array $data
+     * @return purchase
+     */
+    public function updateSagepayPurchase($purchase, $data) {
+        $purchase->status = $data['Status'];
+        $purchase->statusdetail = $data['StatusDetail'];
+        $purchase->cardtype = $data['CardType'];
+        $purchase->last4digits = empty($data['Last4Digits']) ? '0000' : $data['Last4Digits'];
+        $purchase->bankauthcode = $data['BankAuthCode'];
+        $purchase->declinecode = empty($data['DeclineCode']) ? '0000' : $data['DeclineCode'];
+        $purchase->completed = 1;
+        $purchase->save();
+
+        return $purchase;
     }
 
     /**
