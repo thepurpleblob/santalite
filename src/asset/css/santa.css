@@ -92,7 +92,7 @@ input[type=text] {
     text-transform: capitalize;
 }
 
-#loginform input[type=text] {
+#loginform input[type=text], #user_edit input[type=text] {
     text-transform: none !important;
 }
 

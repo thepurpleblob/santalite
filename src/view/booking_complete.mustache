@@ -1,9 +1,9 @@
 {{> header }}
 
-<h2>Booking complete</h2>
+<h2 class="page-title"><i class="fas fa-check"></i> Booking complete</h2>
 
 <div class="alert alert-success">
-    <p><b>Your booking reference is <?php echo $purchase->bkgref; ?></b></p>
+    <p><b>Your booking reference is '{{ purchase.bkgref }}'</b></p>
     <p>Your booking is now complete. Thank you.</p>
     <p>You will receive an email with your booking details shortly.</p>
 </div>

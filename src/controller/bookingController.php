@@ -509,7 +509,7 @@ class bookingController extends coreController {
         if ($status == 'OK') {
 
             // Send confirmation email
-            $url = $this->Url('booking_complete') . '/' . $VendorTxCode;
+            $url = $this->Url('booking/complete') . '/' . $VendorTxCode;
             $mail->confirm();
             $this->log('SagePay notification: Confirm sent - ' . $url);
             $sagepay->notificationreceipt('OK', $url, '');
@@ -542,7 +542,7 @@ class bookingController extends coreController {
                 'diagnostic' => 'Purchase record could not be found for ' . $VendorTxCode . ' Plus ' . $message,
             ));
         } else {
-            $this->View('booking/fail', array(
+            $this->View('booking_fail', array(
                 'status' => 'N/A',
                 'diagnostic' => $message,
             ));

@@ -9,7 +9,7 @@
 
 {{> formerrors }}
 
-<form class="form-horizontal" role="form" method="post" action="{{# path }}user/edit{{/ path }}/{{ user.id }}">
+<form id="user_edit" class="form-horizontal" role="form" method="post" action="{{# path }}user/edit{{/ path }}/{{ user.id }}">
     {{{ form.username }}}
     {{{ form.fullname }}}
     {{{ form.password }}}

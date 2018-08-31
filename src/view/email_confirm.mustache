@@ -8,7 +8,7 @@
     West Lothian. Tickets will be sent approximately 4 weeks before your journey.
     If there are any important details we need to know regarding your booking,
     or if your ticket has not arrived within 7 days of travel, please contact us by email
-    at office@srps.org.uk or phone the Santa Line on {$CFG->help_number} (10.30am to 12 noon /
+    at office@srps.org.uk or phone the Santa Line on 01506 825855 (10.30am to 12 noon /
     1pm to 2:30pm weekdays). Note that changes to your booking once your ticket has
     been sent out may incur a £5 administration charge.
 </p>
@@ -26,13 +26,14 @@
     Your booking details are as follows...
 </p>
 
-<p><b>{{# purchase.bookedby }}Telephone {{/ purchase.bookedby }}Booking reference: {{ purchase.bookingref }}</b></p>
+<p><b>{{# purchase.bookedby }}Telephone {{/ purchase.bookedby }}Booking reference: {{ purchase.bkgref }}</b></p>
 
 <address>
     {{ purchase.title }} {{ purchase.firstname }} {{ purchase.surname }}<br />
     {{ purchase.address1 }}<br />
     {{# purchase.address2 }}{{ purchase.address2 }}<br />{{/ purchase.address2 }}
-    {{ purchase.city }}<br />
+    {{ purchase.address3 }}<br />
+    {{# purchase.address4 }}{{ purchase.address4 }}<br />{{/ purchase.address4 }}
     {{# purchase.county }}{{ purchase.county }}<br />{{/ purchase.county }}
     {{ purchase.postcode }}<br />    
 </address>
@@ -64,7 +65,7 @@
 <p>Thank you for your payment of &pound;{{ total }}.</p>
 
 <p>
-    Please check the above details carefully and phone us on <b>0131 202 1033</b>
+    Please check the above details carefully and phone us on <b>01506 825855</b>
     if you have any questions about this booking. Please do not reply to this 
     email as the mailbox is not monitored. 
 <p>    
