@@ -2,5 +2,5 @@
 config.php
 composer.phar
 vendor
-cache/*
+cache
 log
