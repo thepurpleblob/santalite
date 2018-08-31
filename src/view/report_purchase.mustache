@@ -1,0 +1,26 @@
+{{> header }}
+
+<h2 class="page-title"><i class="fas fa-shopping-cart"></i> Purchase report {{ purchase.bkgref }}</h2>
+
+{{^ statusok }}
+    <div class="alert alert-danger">
+        WARNING: This purchase did not complete. Do not issue tickets.
+    </div>
+{{/ statusok }}
+
+    {{# items }}
+        <div class="row">
+            <div class="col-3">
+                <b>{{ label }}</b>
+            </div>
+            <div class="col-9">
+                {{ value }}
+            </div>
+        </div>
+    {{/ items }}
+
+<div class="submitbuttons">
+    <a href="{{# path }}report/purchases{{/ path }}" class="btn btn-primary"><i class="fa fa-undo"></i> Back </a>
+</div>
+
+{{> footer }}

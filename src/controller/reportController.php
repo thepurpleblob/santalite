@@ -187,23 +187,24 @@ class reportController extends coreController {
             'Infants' => $purchase->infant,
             'Boys ages' => $purchase->childagesboy,
             'Girls ages' => $purchase->childagesgirl,
-            'Payment' => '&pound; ' . number_format($purchase->payment / 100, 2),
+            'Payment' => '£' . number_format($purchase->payment / 100, 2),
             'Sage detail' => $purchase->statusdetail,
             'Sage auth number' => $purchase->txauthno,
             'Sage last 4 digits' => $purchase->last4digits,
         );
-        $body = '';
+        $items = [];
         foreach ($rows as $label => $value) {
-            $body .= $this->row($label, $value);
+            $item = new \stdClass;
+            $item->label = $label;
+            $item->value = $value;
+            $items[] = $item;
         }
 
-        $this->View("header");
         $this->View('report_purchase', array(
             'purchase' => $purchase,
             'statusok' => $purchase->status == 'OK',
-            'body' => $body,
+            'items' => $items,
         ));
-        $this->View('footer');
     }
 
     public function reconcileAction($id, $status) {
