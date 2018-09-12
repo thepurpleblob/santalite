@@ -1,6 +1,6 @@
 <?php if ($available) { ?>
 
-<p class="alert alert-info">Santa trains leave Bo'ness at the following times. Choose the train
+<p class="alert alert-info">Santa Steam Trains leave Bo'ness at the following times. Choose the train
     you would like to travel on.</p>
 
 <p class="lead">Booking date <?php echo date('jS F Y', $date->date); ?></p>

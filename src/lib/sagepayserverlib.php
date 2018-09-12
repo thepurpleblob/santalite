@@ -76,7 +76,7 @@ class sagepayserverlib {
 
         // Adult purchases
         $basket->add('item', true)
-            ->add('description', "Bo'ness and Kinneil Railway Santa Train adult tickets")
+            ->add('description', "Bo'ness and Kinneil Railway Santa Steam Train adult tickets")
             ->add('quantity', $this->purchase->adult)
             ->add('unitNetAmount', $this->fare->fare_adult)
             ->add('unitTaxAmount', '0.00')
@@ -85,7 +85,7 @@ class sagepayserverlib {
 
         // Child purchases
         $basket->add('item', true)
-            ->add('description', "Bo'ness amd Kinneil Railway Santa Train child tickets")
+            ->add('description', "Bo'ness amd Kinneil Railway Santa Steam Train child tickets")
             ->add('quantity', $this->purchase->child)
             ->add('unitNetAmount', $this->fare->fare_child)
             ->add('unitTaxAmount', '0.00')
@@ -112,7 +112,7 @@ class sagepayserverlib {
             'VendorTxCode' => $this->purchase->bkgref,
             'Amount' => number_format($this->purchase->payment / 100,2),
             'Currency' => 'GBP',
-            'Description' => $this->clean("Bo'ness and Kinneil Railway Santa Train Booking", 100),
+            'Description' => $this->clean("Bo'ness and Kinneil Railway Santa Steam Train Booking", 100),
             'NotificationURL' => $this->controller->Url('booking/notification'),
             'BillingSurname' => $this->clean($this->purchase->surname, 20),
             'BillingFirstnames' => $this->clean($this->purchase->firstname, 20),
