@@ -85,7 +85,7 @@ class sagepayserverlib {
 
         // Child purchases
         $basket->add('item', true)
-            ->add('description', "Bo'ness amd Kinneil Railway Santa Steam Train child tickets")
+            ->add('description', "Bo'ness and Kinneil Railway Santa Steam Train child tickets")
             ->add('quantity', $this->purchase->child)
             ->add('unitNetAmount', $this->fare->fare_child)
             ->add('unitTaxAmount', '0.00')

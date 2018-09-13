@@ -12,10 +12,10 @@
         <dt class="col-sm-3">Address</dt>
         <dd class="col-sm-9">
             <address class="santa-address">
-            {{ br.getAddress1 }}<br />
-            {{ br.getAddress2 }}{{# br.getAddress2 }}<br />{{/ br.getAddress2 }}
-            {{ br.getCity }}<br />
-            {{ br.getCounty }}{{# br.getCounty }}<br />{{/ br.getCounty }}
+            {{{ br.getAddress1 }}}<br />
+            {{{ br.getAddress2 }}}{{# br.getAddress2 }}<br />{{/ br.getAddress2 }}
+            {{{ br.getCity }}}<br />
+            {{{ br.getCounty }}}{{# br.getCounty }}<br />{{/ br.getCounty }}
             {{ br.getPostcode }}<br />
             </address>
         </dd>
@@ -49,16 +49,15 @@
 </div>
 
 <form id="review-form" class="form-horizontal" action="{{# path }}booking/payment{{/ path }}" method="post">
-    <div>
-        <input type="submit" name="next" value="Go to our secure payment site" class="btn btn-primary" />
-        <input type="submit" name="back" value="Back" class="btn btn-warning" formnovalidate />
+    <div class="row mt-4">
+        <div class="col text-left">
+            <input type="submit" name="back" value="Back" class="btn btn-secondary" formnovalidate />
+        </div>
+        <div class="col text-right">
+            <input type="submit" name="next" value="Go to our secure payment site" class="btn btn-primary" />
+        </div>
     </div>
 </form>
 
 {{> footer }}
-
-
-
-
-
 

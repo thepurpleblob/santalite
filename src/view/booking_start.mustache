@@ -9,13 +9,15 @@
     <p>Please do <strong>NOT</strong> use this online service if you have any special requirements. For example,</p>
     <ul>
         <li>one of your party uses a wheelchair,</li>
-        <li>you have a party of more than 16 persons.</li>
+        <li>you have a party of more than {{ config.select_limit }} persons.</li>
     </ul>
     <p>You should call our Santa Line on <b>01506 824356</b></p>
 </div>
 
-<div class="santa-buttons">
-    <a href="{{# path }}booking/numbers{{/ path }}" class="btn btn-info btn-lg"><i class="fas fa-play"></i> Start your booking...</a>
+<div class="row santa-buttons">
+    <div class="col text-right">
+        <a href="{{# path }}booking/numbers{{/ path }}" class="btn btn-info btn-lg"><i class="fas fa-play"></i> Start your booking...</a>
+    </div>
 </div>
 
 {{> footer }}

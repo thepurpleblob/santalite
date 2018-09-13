@@ -150,12 +150,21 @@ class bookinglib {
      * Get trainlimit
      */
     public function getTrainlimit($dateid, $timeid) {
+        global $CFG;
+
         $limit = \ORM::for_table('trainlimit')->where(array(
                 'dateid' => $dateid,
                 'timeid' => $timeid,
         ))->find_one();
         if (!$limit) {
-            throw new \Exception("No limit record found in DB for timeid=".$time->id()." dateid=".$date->id());
+            
+            // Possible for limit to be missing. Just create one
+            $limit = \ORM::for_table('trainlimit')->create();
+            $limit->dateid = $dateid;
+            $limit->timeid = $timeid;
+            $limit->maxlimit = $CFG->default_limit;
+            $limit->partysize = $CFG->default_party;
+            $limit->save();
         }
         return $limit;       
     }
