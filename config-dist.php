@@ -18,7 +18,7 @@ $CFG->default_limit = 100;
 $CFG->default_party = 8;
 
 // number of people limit in each select
-$CFG->select_limit = 8;
+$CFG->select_limit = 16;
 
 // Sagepay stuff
 $CFG->sage_url = '';
@@ -33,4 +33,4 @@ $CFG->smtpd_host = '';
 $CFG->backup_email = '';
 
 // Contact number
-$CFG->help_number = '01506 825855';
+$CFG->help_number = '01506 530383';

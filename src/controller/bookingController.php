@@ -73,6 +73,7 @@ class bookingController extends coreController {
         $infantchoices[0] = 'None';
 
         // form submitted?
+        $errors = [];
         if ($request = $this->getRequest()) {
             if (!empty($request['cancel'])) {
                 $this->redirect($this->Url('booking/start'));
@@ -85,11 +86,19 @@ class bookingController extends coreController {
                     'infants' => "required|numeric|min_numeric,0|max_numeric,$lim",
             ));
             if ($data = $gump->run($request)) {
-                $br->setAdults($data['adults']);
-                $br->setChildren($data['children']);
-                $br->setInfants($data['infants']);
-                $br->save();
-                $this->redirect($this->Url('booking/date'));
+                $adults = $data['adults'];
+                $children = $data['children'];
+                $infants = $data['infants'];
+                $partysize = $adults + $children + $infants;
+                if ($partysize > $CFG->select_limit) {
+                    $errors[] = 'The total party size may not be greater than ' . $CFG->select_limit;
+                } else {
+                    $br->setAdults($adults);
+                    $br->setChildren($children);
+                    $br->setInfants($infants);
+                    $br->save();
+                    $this->redirect($this->Url('booking/date'));
+                }
             }
         }
      
@@ -108,7 +117,7 @@ class bookingController extends coreController {
             '',
             8);
         $form->infants = $this->form->select('infants',
-            'Number of infants <small class="santa-subtext">(23 months and under)</small>',
+            'Number of infants <small class="santa-subtext">(18 months and under)</small>',
             $br->getInfants(),
             $infantchoices,
             '',
@@ -341,7 +350,7 @@ class bookingController extends coreController {
         $form->postcode = $this->form->text('postcode', 'Postcode', $br->getPostcode(), true);
         $form->phone = $this->form->text('phone', 'Phone', $br->getPhone());
         $form->einfo = $this->form->checkbox('einfo', 'Please send me emails about future events organised by the SRPS', $br->getEinfo());
-        $form->terms = $this->form->checkbox('terms', 'I have read and agree to the Santa Steam Trains ' . $termslink, false, true);
+        $form->terms = $this->form->checkbox('terms', 'Tick this box to confirm your agreement that you have read, understood and agree to our ' . $termslink, false, true);
         $form->buttons = $this->form->buttons('Next', 'Back', true);
 
     	$this->View('booking_contact', array(

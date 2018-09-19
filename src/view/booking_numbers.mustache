@@ -6,6 +6,8 @@
     <i class="fas fa-info-circle"></i> Please tell us how many adults, children and infants are in your party.
 </p>
 
+{{> formerrors }}
+
 <form role="form" class="form-horizontal" method="post" action="{{# path }}booking/numbers{{/ path }}">
     {{{ form.adults }}}
     {{{ form.children }}}
