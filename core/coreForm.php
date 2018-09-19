@@ -60,7 +60,7 @@ class coreForm {
         }
         $html .= '    <div class="col-sm-8">';
         $html .= '    <input type="' . $type . '" class="form-control input-sm" name="'.$name.'" id="'.$id.'" value="'.$value.'" '.
-            $this->attributes($attrs) . ' ' . $reqstr . ' ' . $disabledstr . ' autocapitalize="word"/>';  
+            $this->attributes($attrs) . ' ' . $reqstr . ' ' . $disabledstr . ' />';  
         $html .= '</div></div>';
 
         return $html;
@@ -191,6 +191,32 @@ class coreForm {
             $html .= '</label>';
             $html .= '</div>';
         }
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    /**
+     * Display checkbox
+     */
+    public function checkbox($name, $label, $selected, $required = false, $labelcol=4) {
+        $id = $name . 'Checkbox';
+        $inputcol = 12 - $labelcol;
+        $id = 'checkbox_' . $name;
+        $checked = $selected ? 'checked' : '';
+        $reqstr = $required ? 'required' : '';
+        if ($selected) {
+            $checked = 'checked';
+        } else {
+            $checked = '';
+        }
+        $html = '<div class="form-group">';
+        $html .= '<div class="form-check">';
+        $html .= '<input class="form-check-input" type="checkbox" name="' . $name . '" id="' . $id . '" ' . $checked . ' ' . $reqstr . '>';
+        $html .= '<label class="form-check-label" for="' . $id . '" >';
+        $html .= $label;
+        $html .= '</label>';
+        $html .= '</div>';
         $html .= '</div>';
 
         return $html;

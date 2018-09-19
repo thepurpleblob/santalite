@@ -279,6 +279,7 @@ class bookingController extends coreController {
         $br->setCounty($data['county']);
         $br->setCountry('GB');
         $br->setPhone($data['phone']);
+        $br->setEinfo($data['einfo']);
     }
 
     /**
@@ -308,11 +309,13 @@ class bookingController extends coreController {
     		    $rules['address1'] = 'required';
                     $rules['city'] = 'required';
                     $rules['postcode'] = 'required';
+                    $rules['terms'] = 'required';
                 }
     		$gump->validation_rules($rules);
 
-    		$this->set_record($br, $request);
+    		//$this->set_record($br, $request);
     		if ($data = $gump->run($request)) {
+                    $data['einfo'] = empty($data['einfo']) ? 0 : 1;
     		    $this->set_record($br, $data);
     		    $br->save();
                     if ($cancel) {
@@ -325,6 +328,7 @@ class bookingController extends coreController {
     	}
 
         // Create form
+        $termslink = '<a href="#" data-toggle="modal" data-target="#termsModal">Terms and Conditions</a>';
         $form = new \stdClass;
         $form->title = $this->form->text('title', 'Title', $br->getTitle());
         $form->firstname = $this->form->text('firstname', 'First name(s)', $br->getFirstname(), true);
@@ -336,10 +340,12 @@ class bookingController extends coreController {
         $form->county = $this->form->text('county', 'County', $br->getCounty());
         $form->postcode = $this->form->text('postcode', 'Postcode', $br->getPostcode(), true);
         $form->phone = $this->form->text('phone', 'Phone', $br->getPhone());
+        $form->einfo = $this->form->checkbox('einfo', 'Please send me emails about future events organised by the SRPS', $br->getEinfo());
+        $form->terms = $this->form->checkbox('terms', 'I have read and agree to the Santa Steam Trains ' . $termslink, false, true);
         $form->buttons = $this->form->buttons('Next', 'Back', true);
 
     	$this->View('booking_contact', array(
-    		'br' => $br,
+            'br' => $br,
             'form' => $form,
     	    'errors' => $errors,
     	));
