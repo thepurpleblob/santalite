@@ -111,13 +111,13 @@ class bookingController extends coreController {
             '',
             8);
         $form->children = $this->form->select('children',
-            'Number of children - £'.number_format($fares->child/100, 2).' each <small class="santa-subtext">(2 years to 15 years)</small>',
+            'Number of children - £'.number_format($fares->child/100, 2).' each <small class="santa-subtext">(18 months to 15 years)</small>',
             $br->getChildren(),
             $childrenchoices,
             '',
             8);
         $form->infants = $this->form->select('infants',
-            'Number of infants <small class="santa-subtext">(18 months and under)</small>',
+            'Number of infants <small class="santa-subtext">(17 months and under)</small>',
             $br->getInfants(),
             $infantchoices,
             '',
