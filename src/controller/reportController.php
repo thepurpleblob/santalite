@@ -110,7 +110,7 @@ class reportController extends coreController {
                 $class = '';
                 $displaystatus = 'OK';
             } else {
-                $class = 'santa-fail';
+                $class = 'bg-warning';
                 $displaystatus = $purchase->status;
             }
             if (!$displaystatus) {
