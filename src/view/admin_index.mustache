@@ -1,7 +1,38 @@
 {{> header }}
 
-<h2 class="page-title"><i class="fas fa-cogs"></i> Admin functions</h2>
+<h2 class="page-title"><i class="fas fa-cogs"></i> Admin statistics</h2>
 
-<p>Please use top menu (this page to have basic stats)</p>
+<div class="row">
+    <div class="col text-right">
+        Number of completed purchases today
+    </div>
+    <div class="col text-left">
+        {{ stats.today_count }}
+    </div>
+</div>
+<div class="row">
+    <div class="col text-right">
+        Total of completed purchases today
+    </div>
+    <div class="col text-left">
+        &pound;{{ stats.today_sum }}
+    </div>
+</div>
+<div class="row">
+    <div class="col text-right">
+        Number of completed purchases all
+    </div>
+    <div class="col text-left">
+        {{ stats.all_count }}
+    </div>
+</div>
+<div class="row">
+    <div class="col text-right">
+        Total of completed purchases all
+    </div>
+    <div class="col text-left">
+        &pound;{{ stats.all_sum }}
+    </div>
+</div>
 
 {{> footer }}

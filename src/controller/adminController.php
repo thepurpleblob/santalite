@@ -10,41 +10,25 @@
 namespace thepurpleblob\santa\controller;
 
 use thepurpleblob\core\coreController;
+use thepurpleblob\santa\lib\bookinglib;
 
 class adminController extends coreController {
+
+    protected $bm;
+
+    public function __construct() {
+        parent::__construct();
+        $this->bm = new bookinglib;
+    }
 
     public function indexAction() {
         $this->require_login('organiser', $this->Url('admin/index'));
         $user = $this->getUser();
+        $stats = $this->bm->getStats();
         $this->View('admin_index', array(
             'user' => $user,
+            'stats' => $stats,
         ));
-    }
-
-    public function cssAction() {
-        echo $this->getHeaderAssets();
-    }
-
-    public function jsAction() {
-        echo $this->getFooterAssets();
-    }
-
-    public function imageAction($image) {
-    	global $CFG;
-    	
-    	$file_extension = strtolower(substr(strrchr($image,"."),1));
-    	
-    	switch( $file_extension ) {
-    	    case "gif": $ctype="image/gif"; break;
-    	    case "png": $ctype="image/png"; break;
-    	    case "jpeg":
-    	    case "jpg": $ctype="image/jpg"; break;
-    	    default:
-    	}
-    	
-    	header('Content-type: ' . $ctype);
-
-    	readfile($CFG->dirroot . '/assets/images/' . $image);
     }
 
 }

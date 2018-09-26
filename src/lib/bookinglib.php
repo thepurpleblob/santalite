@@ -523,6 +523,21 @@ class bookinglib {
         return $purchase;
     }
 
+    /**
+     * Get some stats for the admin/index page
+     * @return object
+     */
+    public function getStats() {
+        $stats = new \stdClass;
+        $stats->all_count = \ORM::for_table('purchase')->where('status', 'OK')->count();
+        $stats->all_sum = number_format(\ORM::for_table('purchase')->where('status', 'OK')->sum('payment') / 100, 2);
+        
+        $today = date('Ymd');
+        $stats->today_count = \ORM::for_table('purchase')->where(['status' => 'OK', 'bkgdate' => $today])->count();
+        $stats->today_sum = number_format(\ORM::for_table('purchase')->where(['status' => 'OK', 'bkgdate' => $today])->sum('payment') / 100, 2);
+
+        return $stats;
+    }
 
 }
 
