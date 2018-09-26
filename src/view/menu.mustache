@@ -4,29 +4,31 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item {{# active }}time{{/ active }}">
-        <a class="nav-link" href="{{# path }}time/index{{/ path }}">Times<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item {{# active }}date{{/ active }}">
-        <a class="nav-link" href="{{# path }}date/index{{/ path }}">Dates</a>
-      </li>
-      <li class="nav-item {{# active }}fares{{/ active }}">
-        <a class="nav-link" href="{{# path }}fares/index{{/ path }}">Fares</a>
-      </li>
-      <li class="nav-item {{# active }}user{{/ active }}">
-        <a class="nav-link" href="{{# path }}user/index{{/ path }}">Users</a>
-      </li>
-      <li class="nav-item {{# active }}limit{{/ active }}">
-        <a class="nav-link" href="{{# path }}limit/index{{/ path }}">Limits</a>
-      </li>
+      {{# system.admin }}
+          <li class="nav-item {{# active }}time{{/ active }}">
+              <a class="nav-link" href="{{# path }}time/index{{/ path }}">Times<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item {{# active }}date{{/ active }}">
+              <a class="nav-link" href="{{# path }}date/index{{/ path }}">Dates</a>
+          </li>
+          <li class="nav-item {{# active }}fares{{/ active }}">
+              <a class="nav-link" href="{{# path }}fares/index{{/ path }}">Fares</a>
+          </li>
+          <li class="nav-item {{# active }}user{{/ active }}">
+              <a class="nav-link" href="{{# path }}user/index{{/ path }}">Users</a>
+          </li>
+          <li class="nav-item {{# active }}limit{{/ active }}">
+              <a class="nav-link" href="{{# path }}limit/index{{/ path }}">Limits</a>
+          </li>
+      {{/ system.admin }}
       <li class="nav-item {{# active }}purchases{{/ active }}">
-        <a class="nav-link" href="{{# path }}report/purchases{{/ path }}">Purchases</a>
+          <a class="nav-link" href="{{# path }}report/purchases{{/ path }}">Purchases</a>
       </li>
       <li class="nav-item {{# active }}export{{/ active }}">
-        <a class="nav-link" href="{{# path }}report/export{{/ path }}">Export</a>
+          <a class="nav-link" href="{{# path }}report/export{{/ path }}">Export</a>
       </li>
       <li class="nav-item {{# active }}booking{{/ active }}">
-        <a class="nav-link" href="{{# path }}booking/start{{/ path }}">Booking</a>
+          <a class="nav-link" href="{{# path }}booking/start{{/ path }}">Booking</a>
       </li>
     </ul>
   </div>
