@@ -101,27 +101,23 @@ class reportController extends coreController {
         }
 
         // get completed purchases
-        $purchases = \ORM::for_table('purchase')->order_by_desc('id')->find_many();
+        $purchases = \ORM::for_table('purchase')->where('completed', 1)->order_by_desc('id')->find_many();
 
         // filter by reduction
         $filtered = array();
         foreach ($purchases as $purchase) {
-            if (empty($purchase->status) || ($purchase->status == '-')) {
-                $class = 'santa-reconcile';
-                $value = $this->Url('report/reconcile/'.$purchase->id());
-                $displaystatus = '<button type="button" class="btn btn-success btn-sm reconcile" value="'.$value.'">Reconcile</button>';
-            } else if ($purchase->status == 'OK') {
+            if ($purchase->status == 'OK') {
                 $class = '';
                 $displaystatus = 'OK';
             } else {
                 $class = 'santa-fail';
                 $displaystatus = $purchase->status;
             }
+            if (!$displaystatus) {
+                $displaystatus = '-';
+            }
             $purchase->class = $class;
             $purchase->displaystatus = $displaystatus;
-            if ($status=='reconcile' && !empty($purchase->status)) {
-                continue;
-            }
             if ($status=='ok' && $purchase->status !== 'OK') {
                 continue;
             }
