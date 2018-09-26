@@ -34,5 +34,8 @@ $(function() {
     console.log('cancel clicked');
         $('form').attr("novalidate", "novalidate");
     });
+
+    // Enable data tables
+    $('#purchasesTable').DataTable();
 });
 
