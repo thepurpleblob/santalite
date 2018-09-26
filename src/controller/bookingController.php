@@ -89,7 +89,7 @@ class bookingController extends coreController {
                 $adults = $data['adults'];
                 $children = $data['children'];
                 $infants = $data['infants'];
-                $partysize = $adults + $children + $infants;
+                $partysize = $adults + $children;
                 if ($partysize > $CFG->select_limit) {
                     $errors[] = 'The total party size may not be greater than ' . $CFG->select_limit;
                 } else {

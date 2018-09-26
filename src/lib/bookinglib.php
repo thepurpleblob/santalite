@@ -480,7 +480,7 @@ class bookinglib {
         $purchase->statusdetail = $data['StatusDetail'];
         $purchase->cardtype = $data['CardType'];
         $purchase->last4digits = empty($data['Last4Digits']) ? '0000' : $data['Last4Digits'];
-        $purchase->bankauthcode = $data['BankAuthCode'];
+        $purchase->bankauthcode = empty($data['BankAuthCode']) ? '0000' : $data['BankAuthCode'];
         $purchase->declinecode = empty($data['DeclineCode']) ? '0000' : $data['DeclineCode'];
         $purchase->completed = 1;
         $purchase->save();

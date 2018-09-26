@@ -93,7 +93,7 @@ class maillib {
      */
     protected function getReadableTime($number) {
         $times = \ORM::for_table('traintime')->order_by_asc('time')->find_many();
-        $count == 1;
+        $count = 1;
         foreach ($times as $time) {
             if ($count == $number) {
                 return $time->time;
@@ -136,7 +136,7 @@ class maillib {
             ->addPart($body, 'text/html');
 
             $this->mailer->send($message);
-            $this->controller->log('Sending confirm email to ' . $this->purchase->bkggref );
+            $this->controller->log('Sending confirm email to ' . $recipient . ' ' . $this->purchase->bkgref );
         }
     }
 
