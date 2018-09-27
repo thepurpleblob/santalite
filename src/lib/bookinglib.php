@@ -72,6 +72,8 @@ class bookinglib {
             $slot = new \stdClass();
             $slot->time = $time->time;
             $slot->timeid = $time->id;
+            $limit = \ORM::forTable('trainlimit')->where(['timeid' => $time->id, 'dateid' => $dateid])->findOne();
+            $slot->trainlimitid = $limit->id;
             if ($seats) {
                 $slot->remaining = $seats[$time->id];
                 $slot->available = $slot->remaining > $seatsneeded;

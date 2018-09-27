@@ -160,11 +160,13 @@ class bookingController extends coreController {
             $gump->validation_rules(array(
                     'dateid' => "required|numeric|min_numeric,1",
                     'timeid' => "required|numeric|min_numeric,1",
+                    'trainlimitid' => "required|numeric|min_numeric,1",
             ));
 
             if ($data = $gump->run($request)) {
                 $dateid = $data['dateid'];
                 $timeid = $data['timeid'];
+                $trainlimitid = $data['trainlimitid'];
 
                 // Recheck limit
                 if (!isset($pcounts[$dateid][$timeid])) {
@@ -175,6 +177,7 @@ class bookingController extends coreController {
                 } else {
                     $br->setDateid($dateid);
                     $br->setTimeid($timeid);
+                    $br->setTrainlimitid($trainlimitid);
                     $br->save();
                     $this->redirect($this->Url('booking/ages'));
                 }

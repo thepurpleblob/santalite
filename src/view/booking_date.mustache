@@ -20,6 +20,7 @@
 	                            <form method="post" action="{{# path }}booking/date{{/ path }}">
 	                                <input type="hidden" name="dateid" value="{{ dateid }}">
 	                                <input type="hidden" name="timeid" value="{{ timeid }}">
+                                        <input type="hidden" name="trainlimitid" value="{{ trainlimitid }}">
 		                            <button class="btn btn-block btn-info">
 		                                <span class="ridetime"><i class="far fa-clock"></i> {{ time }}</span>
 		                                <span class="availability">{{ message }}</span>
