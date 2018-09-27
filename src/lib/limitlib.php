@@ -29,19 +29,21 @@ class limitlib {
             foreach ($times as $time) {
             
                 // check if this entry is in the database
-                $limit = \ORM::for_table('trainlimit')->where(array(
+                $trainlimit = \ORM::for_table('trainlimit')->where(array(
                     'dateid' => $date->id,
                     'timeid' => $time->id,
                 ))->find_one();
-                if (!$limit) {
-                    $limit = \ORM::for_table('trainlimit')->create();
-                    $limit->timeid = $time->id;
-                    $limit->dateid = $date->id;
-                    $limit->maxlimit = $CFG->default_limit;
-                    $limit->partysize = $CFG->default_party;
-                    $limit->save();
+                if (!$trainlimit) {
+                    $trainlimit = \ORM::for_table('trainlimit')->create();
+                    $trainlimit->timeid = $time->id;
+                    $trainlimit->dateid = $date->id;
+                    $trainlimit->maxlimit = $CFG->default_limit;
+                    $trainlimit->partysize = $CFG->default_party;
+                    $trainlimit->save();
                 }
-                $limit->count = $this->getPassengerCount($limit->id());
+                $limit = new \stdClass;
+                $limit->trainlimit = $trainlimit;
+                $limit->count = $this->getPassengerCount($trainlimit->id());
                 $limit->formid = $date->id . '_' . $time->id;
                 $limits[$date->id][$time->id] = $limit;
             }
