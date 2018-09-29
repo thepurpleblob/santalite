@@ -53,11 +53,14 @@ class userController extends coreController {
                 $this->redirect($this->Url('user/index'));
             }
             
-            $gump->validation_rules(array(
-                'username' => 'required',  
+            $rules = array(
                 'fullname' => 'required',
                 'role' => 'required|role'
-            ));
+	    );
+            if (!$isadmin) {
+                $rules['username'] = 'required';
+            }
+            $gump->validation_rules($rules);
             if ($validated_data = $gump->run($request)) {
                 if (!$isadmin) {
                     $user->username = $request['username'];
