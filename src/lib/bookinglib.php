@@ -457,8 +457,8 @@ class bookinglib {
         $purchase->action = 'N';
         $purchase->eticket = 'N';
         $purchase->einfo = $br->getEinfo() ? 'Y' : 'N';
-        $purchase->bankauthcode = 0;
-        $purchase->declinecode = 0;
+        $purchase->bankauthcode = '-';
+        $purchase->declinecode = '-';
         $purchase->emailsent = 0;
         $purchase->completed = 0;
 

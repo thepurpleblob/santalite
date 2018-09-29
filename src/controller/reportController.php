@@ -187,6 +187,8 @@ class reportController extends coreController {
             'Sage detail' => $purchase->statusdetail,
             'Sage auth number' => $purchase->txauthno,
             'Sage last 4 digits' => $purchase->last4digits,
+            'Bank auth code' => $purchase->bankauthcode,
+            'Decline code' => $purchase->declinecode,
         );
         $items = [];
         foreach ($rows as $label => $value) {
