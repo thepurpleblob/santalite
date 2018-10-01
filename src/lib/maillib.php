@@ -155,7 +155,7 @@ class maillib {
 
         foreach ($this->getRecipients() as $recipient) {
             $message = (new \Swift_Message())
-            ->setSubject('B&KR Santa Trains - Payment Declined (' . $this->purchase->bookingref . ')')
+            ->setSubject('B&KR Santa Trains - Payment Declined (' . $this->purchase->bkgref . ')')
             ->setFrom('noreply@srps.org.uk')
             ->setTo($recipient)
             ->setBody($bodytxt)
