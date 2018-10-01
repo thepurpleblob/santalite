@@ -338,7 +338,7 @@ class bookinglib {
             }
             $count++;
         }
-        throw new Exception('ID '.$id.' not found in table '.$table);
+        throw new \Exception('ID '.$id.' not found in table '.$table);
     }
 
     /**
