@@ -153,6 +153,21 @@ class reportController extends coreController {
         return $html;
     }
 
+    /** 
+     * Decode (hex) ages string
+     * @param string $ages
+     * @return string
+     */
+    public function formatAges($agestring) {
+        $ages = str_split($agestring);
+        $decages = [];
+        foreach ($ages as $age) {
+            $decages[] = hexdec($age);
+        }
+
+        return implode(', ', $decages);
+    }
+
     public function purchaseAction($id) {
 
         $this->require_login('organiser', $this->url('report/purchase/'.$id));
@@ -181,8 +196,8 @@ class reportController extends coreController {
             'Adults' => $purchase->adult,
             'Children' => $purchase->child,
             'Infants' => $purchase->infant,
-            'Boys ages' => implode(', ', str_split($purchase->childagesboy)),
-            'Girls ages' => implode(', ', str_split($purchase->childagesgirl)),
+            'Boys ages' => $this->formatAges($purchase->childagesboy),
+            'Girls ages' => $this->formatAges($purchase->childagesgirl),
             'Payment' => '£' . number_format($purchase->payment / 100, 2),
             'Sage detail' => $purchase->statusdetail,
             'Sage auth number' => $purchase->txauthno,

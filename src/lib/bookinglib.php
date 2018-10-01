@@ -479,6 +479,11 @@ class bookinglib {
      */
     public function updateSagepayPurchase($purchase, $data) {
         $purchase->status = $data['Status'];
+
+        // deal with OK REPEATED
+        if ($purchase->status == 'OK REPEATED') {
+            $purchase->status = 'OK';
+        }
         $purchase->statusdetail = $data['StatusDetail'];
         $purchase->cardtype = $data['CardType'];
         $purchase->last4digits = empty($data['Last4Digits']) ? '0000' : $data['Last4Digits'];
