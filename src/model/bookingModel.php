@@ -58,12 +58,8 @@ class bookingModel {
             $daymax[$date->id()] = 0;
             foreach ($times as $time) {
                 $limit = $this->getTrainlimit($date->id(), $time->id());
-                $filter = array(
-                        'trainlimitid' => $limit->id(),
-                        'status' => 'OK',
-                );
-                $sumadult = \ORM::for_table('purchase')->where($filter)->sum('adult');
-                $sumchild = \ORM::for_table('purchase')->where($filter)->sum('child');
+                $sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->where_like('status', 'OK%')->sum('adult');
+                $sumchild = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->where_like('status', 'OK%')->sum('child');
                 $total = $limit->maxlimit - ($sumadult + $sumchild);
                 $pcounts[$date->id()][$time->id()] = $total;
                 if ($total > $daymax[$date->id()]) {
@@ -306,7 +302,7 @@ class bookingModel {
         }
         
         // if the purchase already has a status then something is wrong
-        if ($purchase->status == 'OK') {
+        if (($purchase->status == 'OK') || ($purchase->status == 'OK REPEATED')) {
             throw new \Exception('This sale has already been successfully recorded.');
         }
 

@@ -189,8 +189,8 @@ class bookinglib {
                         'trainlimitid' => $limit->id(),
                         'status' => 'OK',
                 );
-                $sumadult = \ORM::for_table('purchase')->where($filter)->sum('adult');
-                $sumchild = \ORM::for_table('purchase')->where($filter)->sum('child');
+                $sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->where_like('status', 'OK%')->sum('adult');
+                $sumchild = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->where_like('status', 'OK%')->sum('child');
                 $total = $limit->maxlimit - ($sumadult + $sumchild);
                 $pcounts[$date->id()][$time->id()] = $total;
                 if ($total > $daymax[$date->id()]) {
@@ -480,10 +480,6 @@ class bookinglib {
     public function updateSagepayPurchase($purchase, $data) {
         $purchase->status = $data['Status'];
 
-        // deal with OK REPEATED
-        if ($purchase->status == 'OK REPEATED') {
-            $purchase->status = 'OK';
-        }
         $purchase->statusdetail = $data['StatusDetail'];
         $purchase->cardtype = $data['CardType'];
         $purchase->last4digits = empty($data['Last4Digits']) ? '0000' : $data['Last4Digits'];
@@ -516,7 +512,7 @@ class bookinglib {
         }
         
         // if the purchase already has a status then something is wrong
-        if ($purchase->status == 'OK') {
+        if (($purchase->status == 'OK') || ($purchase->status == 'OK REPEATED')) {
             throw new \Exception('This sale has already been successfully recorded.');
         }
 
@@ -536,12 +532,12 @@ class bookinglib {
      */
     public function getStats() {
         $stats = new \stdClass;
-        $stats->all_count = \ORM::for_table('purchase')->where('status', 'OK')->count();
-        $stats->all_sum = number_format(\ORM::for_table('purchase')->where('status', 'OK')->sum('payment') / 100, 2);
+        $stats->all_count = \ORM::for_table('purchase')->where_like('status', 'OK%')->count();
+        $stats->all_sum = number_format(\ORM::for_table('purchase')->where_like('status', 'OK%')->sum('payment') / 100, 2);
         
         $today = date('Ymd');
-        $stats->today_count = \ORM::for_table('purchase')->where(['status' => 'OK', 'bkgdate' => $today])->count();
-        $stats->today_sum = number_format(\ORM::for_table('purchase')->where(['status' => 'OK', 'bkgdate' => $today])->sum('payment') / 100, 2);
+        $stats->today_count = \ORM::for_table('purchase')->where_like('status', 'OK%')->where('bkgdate', $today)->count();
+        $stats->today_sum = number_format(\ORM::for_table('purchase')->where_like('status', 'OK%')->where('bkgdate', $today)->sum('payment') / 100, 2);
 
         return $stats;
     }

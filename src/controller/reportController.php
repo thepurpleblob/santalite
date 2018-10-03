@@ -42,7 +42,7 @@ class reportController extends coreController {
     public function exportAction() {
 
         // get completed purchases
-        $purchases = \ORM::for_table('purchase')->where('status', 'OK')->find_many();
+        $purchases = \ORM::for_table('purchase')->where_like('status', 'OK%')->find_many();
 
         $date = date('Y');
         header("Content-type: text/csv");
@@ -106,22 +106,22 @@ class reportController extends coreController {
         // filter by reduction
         $filtered = array();
         foreach ($purchases as $purchase) {
-            if ($purchase->status == 'OK') {
+            $purchaseok = ($purchase->status == 'OK') || ($purchase->status == 'OK REPEATED');
+            if ($purchaseok) {
                 $class = '';
-                $displaystatus = 'OK';
             } else {
                 $class = 'bg-warning';
-                $displaystatus = $purchase->status;
             }
+            $displaystatus = $purchase->status;
             if (!$displaystatus) {
                 $displaystatus = '-';
             }
             $purchase->class = $class;
             $purchase->displaystatus = $displaystatus;
-            if ($status=='ok' && $purchase->status !== 'OK') {
+            if ($status=='ok' && $purchaseok) {
                 continue;
             }
-            if ($status=='fail' && (empty($purchase->status) || ($purchase->status=='OK'))) {
+            if ($status=='fail' && (empty($purchase->status) || $purchaseok)) {
                 continue;
             }
             $purchase->formattedpayment = number_format($purchase->payment/100, 2);
@@ -215,7 +215,7 @@ class reportController extends coreController {
 
         $this->View('report_purchase', array(
             'purchase' => $purchase,
-            'statusok' => $purchase->status == 'OK',
+            'statusok' => ($purchase->status == 'OK') || ($purchase->status == 'OK REPEATED'),
             'items' => $items,
         ));
     }

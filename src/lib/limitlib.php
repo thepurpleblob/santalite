@@ -12,12 +12,8 @@ namespace thepurpleblob\santa\lib;
 class limitlib {
     
     public function getPassengerCount($limitid) {
-        $filter = array(
-                'trainlimitid' => $limitid,
-                'status' => 'OK',
-        );
-        $sumadult = \ORM::for_table('purchase')->where($filter)->sum('adult');
-        $sumchild = \ORM::for_table('purchase')->where($filter)->sum('child');
+        $sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limitid)->where_like('status', 'OK%')->sum('adult');
+        $sumchild = \ORM::for_table('purchase')->where('trainlimitid', $limitid)->where_like('status', 'OK%')->sum('child');
         return $sumadult + $sumchild;
     }
     
@@ -108,11 +104,11 @@ class limitlib {
                 'trainlimitid' => $limit->id(),
                 'status' => 'OK',
         );
-        $details->sumadult = \ORM::for_table('purchase')->where($filter)->sum('adult');
+        $details->sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->where_like('status', 'OK%')->sum('adult');
         if (!$details->sumadult) {
             $details->sumadult = 0;
         }
-        $details->sumchild = \ORM::for_table('purchase')->where($filter)->sum('child');
+        $details->sumchild = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->where_like('status', 'OK%')->sum('child');
         if (!$details->sumchild) {
             $details->sumchild = 0;
         }
