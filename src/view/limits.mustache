@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 {{# times }} 
-                    <tr>
+                    <tr class="{{ bgclass }}">
                         <td class="lead">
                             {{ time }}
                         </td>
@@ -43,7 +43,7 @@
                 {{/ times }}
             </tbody>
         </table>
-        <div class="limitbuttons">
+        <div class="limitbuttons mt-1">
             {{{ buttons }}}
         </div>
     {{/ formdates }}

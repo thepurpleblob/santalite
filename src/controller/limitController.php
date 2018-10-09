@@ -71,7 +71,9 @@ class limitController extends coreController {
                  $formtime->time = $time->time;
                  $formtime->formlimit = $this->form->text('limit'.$formid, '', $limits[$date->id][$time->id]->trainlimit->maxlimit, true, null, 'number'); 
                  $formtime->partysize = $this->form->text('party'.$formid, '', $limits[$date->id][$time->id]->trainlimit->partysize, true, null, 'number');
-                 $formtime->remaining = $limits[$date->id][$time->id]->trainlimit->maxlimit - $limits[$date->id][$time->id]->count;
+                 $formtime->remaining = $limits[$date->id][$time->id]->trainlimit->maxlimit - $limits[$date->id][$time->id]->count; 
+                 $formtime->bgclass = $formtime->remaining < 10 ? 'bg-warning' : '';
+                 $formtime->bgclass = $formtime->remaining < 1 ? 'bg-danger' : $formtime->bgclass;
                  $formtime->count = $limits[$date->id][$time->id]->count;
                  $formtime->detail = $date->id . '/' . $time->id;
                  $date->times[] = $formtime;

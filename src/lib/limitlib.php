@@ -100,10 +100,6 @@ class limitlib {
         
         // create a filter and do some sums
         $limit = $this->getTrainlimit($dateid, $timeid);
-        $filter = array(
-                'trainlimitid' => $limit->id(),
-                'status' => 'OK',
-        );
         $details->sumadult = \ORM::for_table('purchase')->where('trainlimitid', $limit->id())->where_like('status', 'OK%')->sum('adult');
         if (!$details->sumadult) {
             $details->sumadult = 0;

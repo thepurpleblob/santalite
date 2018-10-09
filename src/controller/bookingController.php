@@ -524,7 +524,7 @@ class bookingController extends coreController {
         // Check Status.
         // Work out what next action should be
         $status = $purchase->status;
-        if ($status == 'OK') {
+        if ($status == 'OK' || ($status == 'OK REPEATED')) {
 
             // Send confirmation email
             $url = $this->Url('booking/complete') . '/' . $VendorTxCode;
