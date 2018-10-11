@@ -543,6 +543,9 @@ class bookingController extends coreController {
             $sagepay->notificationreceipt('OK', $url, $purchase->statusdetail);
         }
 
+        $purchase->completed = 1;
+        $purchase->save();
+
         die;
     }
 

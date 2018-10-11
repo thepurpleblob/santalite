@@ -108,7 +108,7 @@ class limitlib {
         if (!$details->sumchild) {
             $details->sumchild = 0;
         }
-        $details->count = \ORM::for_table('purchase')->where($filter)->count();
+        $details->count = \ORM::for_table('purchase')->where_like('status', 'OK%')->count();
         $details->limit = $limit->maxlimit;
         $details->total = $details->sumadult + $details->sumchild;
         $details->remaining = $details->limit - $details->total;

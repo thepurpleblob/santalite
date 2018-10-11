@@ -101,7 +101,7 @@ class reportController extends coreController {
         }
 
         // get completed purchases
-        $purchases = \ORM::for_table('purchase')->where('completed', 1)->order_by_desc('id')->find_many();
+        $purchases = \ORM::for_table('purchase')->where_not_null('status')->order_by_desc('id')->find_many();
 
         // filter by reduction
         $filtered = array();
