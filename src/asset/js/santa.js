@@ -38,6 +38,10 @@ $(function() {
     // Enable data tables
     $('#purchasesTable').DataTable({
         "lengthMenu": [25, 50, 75, 100],
+	columDefs: [{
+            type: 'natural',
+	    targets: 0
+	}],
         "order": [[0, 'desc']]
     });
 });
