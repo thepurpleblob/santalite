@@ -39,7 +39,7 @@ $(function() {
     $('#purchasesTable').DataTable({
         "lengthMenu": [25, 50, 75, 100],
 	columDefs: [{
-            type: 'natural',
+            type: 'num-string',
 	    targets: 0
 	}],
         "order": [[0, 'desc']]
