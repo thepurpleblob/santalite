@@ -76,7 +76,7 @@ class bookinglib {
             $slot->trainlimitid = $limit->id;
             if ($seats) {
                 $slot->remaining = $seats[$time->id];
-                $slot->available = $slot->remaining > $seatsneeded;
+                $slot->available = $slot->remaining >= $seatsneeded;
                 $slot->message = $this->availableMessage($slot->remaining);
             } else {
                 $slot->remaining = 0;
